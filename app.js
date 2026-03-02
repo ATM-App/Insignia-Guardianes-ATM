@@ -416,6 +416,7 @@ function renderEvaluacionList() {
                     <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'Mejora', 'fa-chart-line')"><i class="fas fa-chart-line"></i><span>+2</span>Mejora</button>
                     <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal')"><i class="fas fa-medal"></i><span>+2</span>MVP</button>
                 </div></div>
+                
                 <div class="category-block" style="border:none;">
                     <div class="category-header">📜 Historial Reciente</div>
                     <div class="history-list">
@@ -471,16 +472,16 @@ function sumar(id, pts, statKey, accionNombre, iconClass) {
         }
     }
 
-    // GUARDA EN FIREBASE Y LUEGO AVISA (SOLUCIONA EL BLOQUEO)
+    // GUARDA EN FIREBASE Y LUEGO AVISA
     update(ref(db, 'porteros/' + id), { 
         puntos: newPts, 
         stats: { ...s, [statKey]: s[statKey] + pts },
         historial: hist 
     }).then(() => {
         if (unlockedMessage) {
-            alert(unlockedMessage); // Alerta de insignia desbloqueada
+            alert(unlockedMessage); 
         } else {
-            showToast(`+${pts} ${accionNombre}`); // Toast normal
+            showToast(`+${pts} ${accionNombre}`); 
         }
     }).catch(e => alert("Error guardando puntos: " + e.message));
 }
@@ -538,9 +539,20 @@ function renderDashboard(porteroId) {
         { name: "Muro Diamante", limit: 500, icon: "gem" }, { name: "Comunicador", limit: 600, icon: "bullhorn" },
         { name: "Leyenda", limit: 900, icon: "star" }, { name: "Reto Superado", limit: 9999, icon: "check-circle" }
     ];
+    
+    // AQUI ESTÁ EL CAMBIO PARA MOSTRAR LOS PUNTOS NECESARIOS EN LAS INSIGNIAS
     document.getElementById('insignias-container').innerHTML = badges.map(b => {
         const isUnlocked = Number(p.puntos || 0) >= b.limit;
-        return `<div class="insignia-item"><div class="insignia-box ${isUnlocked ? 'unlocked' : 'locked'}"><i class="fas fa-${b.icon}"></i></div><div class="insignia-name">${b.name}</div></div>`;
+        return `
+        <div class="insignia-item">
+            <div class="insignia-box ${isUnlocked ? 'unlocked' : 'locked'}">
+                <i class="fas fa-${b.icon}"></i>
+            </div>
+            <div class="insignia-name">
+                ${b.name}<br>
+                <span style="font-size:0.55rem; color:var(--text-sec); font-weight:normal;">${b.limit === 9999 ? 'Especial' : b.limit + ' pts'}</span>
+            </div>
+        </div>`;
     }).join('');
     
     renderRadar(p);
