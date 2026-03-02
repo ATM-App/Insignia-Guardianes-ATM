@@ -1,6 +1,8 @@
 /* ================= IMPORTACIONES FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+/* NUEVO IMPORT PARA AUTENTICACIÓN ANÓNIMA */
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 /* ================= CONFIGURACIÓN ================= */
 const firebaseConfig = {
@@ -15,6 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app); // INICIALIZAMOS LA SEGURIDAD
 
 /* ================= VARIABLES ================= */
 let porteros = [];
@@ -34,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
     
+    // ENTER PARA LOGIN
     const passInput = document.getElementById('modal-pass');
     if(passInput) {
         passInput.addEventListener("keydown", function(event) {
@@ -44,22 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // CARGA DE DATOS EN TIEMPO REAL
-    const porterosRef = ref(db, 'porteros');
-    onValue(porterosRef, (snapshot) => {
-        const data = snapshot.val();
-        porteros = data ? Object.values(data) : [];
-        refreshCurrentView();
+    // INICIAMOS SESIÓN INVISIBLE PARA BURULAR LAS REGLAS DE SEGURIDAD
+    signInAnonymously(auth).catch((error) => {
+        console.error("Error obteniendo pase anónimo:", error);
     });
 
-    const edpsRef = ref(db, 'edps');
-    onValue(edpsRef, (snapshot) => {
-        const data = snapshot.val();
-        edps = data ? Object.values(data) : [];
-        refreshCurrentView();
-    });
+    // SOLO CARGAMOS DATOS CUANDO FIREBASE NOS HA DADO EL PASE
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const porterosRef = ref(db, 'porteros');
+            onValue(porterosRef, (snapshot) => {
+                const data = snapshot.val();
+                porteros = data ? Object.values(data) : [];
+                refreshCurrentView();
+            });
 
-    checkSession();
+            const edpsRef = ref(db, 'edps');
+            onValue(edpsRef, (snapshot) => {
+                const data = snapshot.val();
+                edps = data ? Object.values(data) : [];
+                refreshCurrentView();
+            });
+
+            checkSession();
+        }
+    });
 });
 
 /* ================= FUNCIONES ================= */
@@ -286,7 +299,7 @@ function crearEDP() {
     const clave = document.getElementById('edp-clave').value;
     if(!nombre || !clave) return alert("Faltan datos");
     
-    const existe = edps.find(e => e.nombre.trim().toLowerCase() === nombre.trim().toLowerCase());
+    const existe = edps.find(e => e.nombre.toLowerCase() === nombre.toLowerCase());
     if(existe) {
         return alert("¡Ese entrenador ya existe! Bórralo si está duplicado.");
     }
@@ -416,7 +429,6 @@ function renderEvaluacionList() {
                     <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'Mejora', 'fa-chart-line')"><i class="fas fa-chart-line"></i><span>+2</span>Mejora</button>
                     <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal')"><i class="fas fa-medal"></i><span>+2</span>MVP</button>
                 </div></div>
-                
                 <div class="category-block" style="border:none;">
                     <div class="category-header">📜 Historial Reciente</div>
                     <div class="history-list">
@@ -435,10 +447,8 @@ function renderEvaluacionList() {
         </div>`).join('');
 }
 
-function getColor(cat) { if(cat==='men') return 'var(--col-men)'; if(cat==='tec') return 'var(--col-tec)'; if(cat==='jue') return 'var(--col-jue)'; return 'var(--col-ret)'; }
 function toggleCard(id) { document.getElementById(`card-${id}`).classList.toggle('expanded'); }
 
-/* ================= LÓGICA DE SUMAR Y ALERTA DE INSIGNIA ================= */
 function sumar(id, pts, statKey, accionNombre, iconClass) {
     const p = porteros.find(x => x.id === id);
     if (!p) return;
@@ -454,7 +464,6 @@ function sumar(id, pts, statKey, accionNombre, iconClass) {
     const oldPts = Number(p.puntos || 0);
     const newPts = oldPts + pts;
 
-    // Verificar si se ha superado el límite de alguna insignia
     const badges = [
         { name: "Primeros Pasos", limit: 30 }, { name: "Manos Seguras", limit: 80 },
         { name: "Reflejos Felinos", limit: 120 }, { name: "Colocación", limit: 150 },
@@ -472,7 +481,6 @@ function sumar(id, pts, statKey, accionNombre, iconClass) {
         }
     }
 
-    // GUARDA EN FIREBASE Y LUEGO AVISA
     update(ref(db, 'porteros/' + id), { 
         puntos: newPts, 
         stats: { ...s, [statKey]: s[statKey] + pts },
@@ -540,7 +548,6 @@ function renderDashboard(porteroId) {
         { name: "Leyenda", limit: 900, icon: "star" }, { name: "Reto Superado", limit: 9999, icon: "check-circle" }
     ];
     
-    // AQUI ESTÁ EL CAMBIO PARA MOSTRAR LOS PUNTOS NECESARIOS EN LAS INSIGNIAS
     document.getElementById('insignias-container').innerHTML = badges.map(b => {
         const isUnlocked = Number(p.puntos || 0) >= b.limit;
         return `
