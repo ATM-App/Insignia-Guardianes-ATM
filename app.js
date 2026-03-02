@@ -26,61 +26,106 @@ let chartInstance = null;
 let rankingMode = "global";
 const FRASES_MOTIVACIONALES = ["Confía en tu talento.", "Seguridad y mando.", "Portería a cero es el objetivo.", "El trabajo vence al talento.", "Hoy serás un muro."];
 
-// LISTA DE 12 INSIGNIAS
-const BADGES = [
-    { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, 
-    { name: "Manos Seguras", limit: 80, icon: "hand-paper" },
-    { name: "Reflejos Felinos", limit: 120, icon: "bolt" }, 
-    { name: "Colocación", limit: 150, icon: "compass" },
-    { name: "Mentalidad Pro", limit: 200, icon: "brain" }, 
-    { name: "Espíritu Indio", limit: 250, icon: "heart" },
-    { name: "Valiente 1vs1", limit: 300, icon: "shield-alt" }, 
-    { name: "Rey del Área", limit: 400, icon: "crown" },
-    { name: "Muro Diamante", limit: 500, icon: "gem" }, 
-    { name: "Comunicador", limit: 600, icon: "bullhorn" },
-    { name: "Leyenda", limit: 900, icon: "star" }, 
-    { name: "Reto Superado", limit: 1000, icon: "check-circle" }
-];
+/* ================= INICIO (DOM) ================= */
+document.addEventListener('DOMContentLoaded', () => {
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
 
-/* ================= FUNCIONES GLOBALES (Window) ================= */
-
-// Función corregida para enviar mensaje
-window.guardarFeedback = function(id) {
-    const inputId = `feedback-input-${id}`;
-    const input = document.getElementById(inputId);
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
     
-    if (!input) return;
-
-    const msg = input.value;
-    if (!msg.trim()) {
-        alert("Por favor, escribe un mensaje.");
-        return;
+    const passInput = document.getElementById('modal-pass');
+    if(passInput) {
+        passInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                confirmarLogin();
+            }
+        });
     }
 
-    // Actualizar en Firebase
-    update(ref(db, 'porteros/' + id), { mensajeManual: msg })
-        .then(() => {
-            showToast("Mensaje enviado correctamente");
-            input.value = ""; 
-        })
-        .catch((error) => {
-            alert("Error al enviar mensaje: " + error.message);
-        });
-};
+    // CARGA DE DATOS EN TIEMPO REAL
+    const porterosRef = ref(db, 'porteros');
+    onValue(porterosRef, (snapshot) => {
+        const data = snapshot.val();
+        porteros = data ? Object.values(data) : [];
+        refreshCurrentView();
+    });
 
-window.abrirLogin = function(role) { 
+    const edpsRef = ref(db, 'edps');
+    onValue(edpsRef, (snapshot) => {
+        const data = snapshot.val();
+        edps = data ? Object.values(data) : [];
+        refreshCurrentView();
+    });
+
+    checkSession();
+});
+
+/* ================= FUNCIONES ================= */
+
+// Función visual para mensajes
+function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    if(!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas fa-check-circle"></i> <span>${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function checkSession() {
+    const session = JSON.parse(localStorage.getItem('guardianes_session'));
+    if (session) {
+        roleType = session.role;
+        setTimeout(() => {
+            if (roleType === 'admin') {
+                navTo('view-admin');
+            } else if (roleType === 'edp') {
+                currentUser = edps.find(e => e.id == session.id);
+                if (currentUser) navTo('view-edp');
+            } else if (roleType === 'portero') {
+                currentUser = porteros.find(p => p.id == session.id);
+                if (currentUser) navTo('view-portero');
+            }
+        }, 1000);
+    }
+}
+
+function refreshCurrentView() {
+    const currentView = document.querySelector('section[style*="block"]');
+    if (!currentView) return;
+    
+    if (currentView.id === 'view-admin') {
+        renderAdminList(); renderEDPListAdmin(); cargarSelectEDP();
+    } else if (currentView.id === 'view-edp' && currentUser) {
+        renderEvaluacionList();
+    } else if (currentView.id === 'view-portero' && currentUser) {
+        currentUser = porteros.find(p => p.id === currentUser.id);
+        if(currentUser) renderDashboard(currentUser.id);
+    } else if (currentView.id === 'view-ranking') {
+        renderRankingList();
+    }
+}
+
+function abrirLogin(role) { 
     roleType = role; 
     document.getElementById('modal-login').style.display = 'flex'; 
     const passInput = document.getElementById('modal-pass');
     passInput.value = ''; 
     setTimeout(() => passInput.focus(), 100); 
-};
+}
 
-window.cerrarModal = function() { document.getElementById('modal-login').style.display = 'none'; };
+function cerrarModal() { document.getElementById('modal-login').style.display = 'none'; }
 
-window.confirmarLogin = function() {
+function confirmarLogin() {
     const pass = document.getElementById('modal-pass').value;
     if(!pass) return;
+    
     let success = false;
     let sessionData = null;
 
@@ -114,14 +159,14 @@ window.confirmarLogin = function() {
     } else {
         alert("Clave incorrecta o datos cargando...");
     }
-};
+}
 
-window.logout = function() { 
+function logout() { 
     localStorage.removeItem('guardianes_session');
     location.reload(); 
-};
+}
 
-window.toggleTheme = function() {
+function toggleTheme() {
     const current = document.body.getAttribute('data-theme');
     const newTheme = current === 'dark' ? 'light' : 'dark';
     document.body.setAttribute('data-theme', newTheme);
@@ -130,9 +175,42 @@ window.toggleTheme = function() {
     if(currentUser && document.getElementById('view-portero').style.display === 'block') {
         renderRadar(currentUser);
     }
-};
+}
 
-window.navPortero = function(tab) {
+function updateThemeIcon(theme) { 
+    const btn = document.getElementById('btn-theme');
+    if(btn) btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
+}
+
+function togglePasswordVisibility() {
+    const input = document.getElementById('modal-pass');
+    const icon = document.querySelector('.toggle-password');
+    if (input.type === 'password') { 
+        input.type = 'text'; 
+        icon.classList.replace('fa-eye', 'fa-eye-slash'); 
+    } else { 
+        input.type = 'password'; 
+        icon.classList.replace('fa-eye-slash', 'fa-eye'); 
+    }
+}
+
+function navTo(viewId) {
+    document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+    document.getElementById(viewId).style.display = 'block';
+    document.getElementById('btn-logout').style.display = 'block';
+    
+    const navBar = document.getElementById('nav-portero');
+    if(viewId === 'view-portero' || viewId === 'view-ranking') {
+        if(roleType === 'portero') navBar.style.display = 'flex';
+    } else {
+        navBar.style.display = 'none';
+    }
+
+    if(viewId === 'view-admin') limpiarFormAdmin();
+    refreshCurrentView();
+}
+
+function navPortero(tab) {
     document.getElementById('view-portero').style.display = tab === 'home' ? 'block' : 'none';
     document.getElementById('view-ranking').style.display = tab === 'ranking' ? 'block' : 'none';
     
@@ -147,18 +225,9 @@ window.navPortero = function(tab) {
         btnRank.classList.add('active');
         renderRankingList();
     }
-};
+}
 
-window.toggleRanking = function(mode) { 
-    rankingMode = mode; 
-    document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active')); 
-    if(mode === 'global') document.getElementById('rank-global').classList.add('active'); 
-    else if(mode === 'CD Alcalá') document.getElementById('rank-alcala').classList.add('active'); 
-    else if(mode === 'Cotorruelo') document.getElementById('rank-cotorruelo').classList.add('active'); 
-    renderRankingList(); 
-};
-
-window.procesarImagenSegura = function(event) {
+function procesarImagenSegura(event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -177,9 +246,9 @@ window.procesarImagenSegura = function(event) {
         }
     }
     reader.readAsDataURL(file);
-};
+}
 
-window.guardarPortero = function() {
+function guardarPortero() {
     const idEdit = document.getElementById('reg-id').value; 
     const nombre = document.getElementById('reg-nombre').value; 
     const clave = document.getElementById('reg-clave').value;
@@ -208,37 +277,45 @@ window.guardarPortero = function() {
     };
 
     set(ref(db, 'porteros/' + nuevoId), datos)
-        .then(() => { alert("Guardado"); limpiarFormAdmin(); })
+        .then(() => { showToast("Portero Guardado"); limpiarFormAdmin(); })
         .catch((e) => alert("Error Firebase: " + e.message));
-};
+}
 
-window.crearEDP = function() {
+function crearEDP() {
     const nombre = document.getElementById('edp-nombre').value;
     const clave = document.getElementById('edp-clave').value;
     if(!nombre || !clave) return alert("Faltan datos");
     
-    const existe = edps.find(e => e.nombre.toLowerCase() === nombre.toLowerCase());
-    if(existe) { return alert("¡Ese entrenador ya existe!"); }
+    const existe = edps.find(e => e.nombre.trim().toLowerCase() === nombre.trim().toLowerCase());
+    if(existe) {
+        return alert("¡Ese entrenador ya existe! Bórralo si está duplicado.");
+    }
     
     const id = Date.now();
     set(ref(db, 'edps/' + id), { id, nombre, clave })
         .then(() => {
-            alert("Entrenador Creado");
+            showToast("Entrenador Creado");
             document.getElementById('edp-nombre').value = "";
             document.getElementById('edp-clave').value = "";
         });
-};
+}
 
-window.borrarPortero = function(id) { if(confirm("¿Eliminar Portero?")) { remove(ref(db, 'porteros/' + id)); } };
-window.borrarEDP = function(id) { if(confirm("¿Eliminar Entrenador?")) { remove(ref(db, 'edps/' + id)); } };
-window.limpiarFormAdmin = function() {
+function borrarPortero(id) {
+    if(confirm("¿Eliminar Portero?")) { remove(ref(db, 'porteros/' + id)); }
+}
+
+function borrarEDP(id) {
+    if(confirm("¿Eliminar Entrenador?")) { remove(ref(db, 'edps/' + id)); }
+}
+
+function limpiarFormAdmin() {
     document.querySelectorAll('#view-admin input').forEach(i => i.value = "");
     document.getElementById('fotoPreview').src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=";
     document.getElementById('reg-id').value = "";
     fotoTemp = "";
-};
+}
 
-window.editarPortero = function(id) {
+function editarPortero(id) {
     const p = porteros.find(x => x.id === id);
     if(!p) return;
     document.getElementById('reg-id').value = p.id;
@@ -252,78 +329,6 @@ window.editarPortero = function(id) {
     document.getElementById('reg-mano').value = p.mano;
     if(p.foto) { document.getElementById('fotoPreview').src = p.foto; fotoTemp = p.foto; }
     document.querySelector('.modern-card').scrollIntoView({behavior: 'smooth'});
-};
-
-window.toggleCard = function(id) { document.getElementById(`card-${id}`).classList.toggle('expanded'); };
-
-window.sumar = function(id, pts, statKey, accionNombre) {
-    const p = porteros.find(x => x.id === id);
-    if (!p) return;
-    let s = p.stats || { men:60, tec:60, jue:60, ret:60 };
-    if(s[statKey] === undefined) s[statKey] = 60;
-    
-    let hist = p.historial || [];
-    const fecha = new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}) + ' ' + new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-    hist.unshift({ fecha, accion: accionNombre, puntos: pts, categoria: statKey });
-    if(hist.length > 20) hist.pop();
-    
-    const oldPts = p.puntos || 0;
-    const newPts = oldPts + pts;
-    BADGES.forEach(b => {
-        if(oldPts < b.limit && newPts >= b.limit) {
-            alert(`¡${p.nombre} ha desbloqueado: ${b.name}!`);
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#CB3524', '#ffffff', '#1C2C5B'] });
-        }
-    });
-
-    update(ref(db, 'porteros/' + id), { 
-        puntos: newPts, 
-        stats: { ...s, [statKey]: s[statKey] + pts },
-        historial: hist 
-    }).then(() => {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `<i class="fas fa-check-circle"></i> <span>+${pts} ${accionNombre}</span>`;
-        document.getElementById('toast-container').appendChild(toast);
-        setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 2500);
-    });
-};
-
-window.togglePasswordVisibility = function() {
-    const input = document.getElementById('modal-pass');
-    const icon = document.querySelector('.toggle-password');
-    if (input.type === 'password') { 
-        input.type = 'text'; 
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else { 
-        input.type = 'password'; 
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-};
-
-/* ================= FUNCIONES INTERNAS ================= */
-
-function updateThemeIcon(theme) { 
-    const btn = document.getElementById('btn-theme');
-    if(btn) btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
-}
-
-function navTo(viewId) {
-    document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
-    document.getElementById(viewId).style.display = 'block';
-    document.getElementById('btn-logout').style.display = 'block';
-    
-    const navBar = document.getElementById('nav-portero');
-    if(viewId === 'view-portero' || viewId === 'view-ranking') {
-        if(roleType === 'portero') navBar.style.display = 'flex';
-    } else {
-        navBar.style.display = 'none';
-    }
-
-    if(viewId === 'view-admin') window.limpiarFormAdmin();
-    refreshCurrentView();
 }
 
 function renderAdminList() { 
@@ -384,43 +389,44 @@ function renderEvaluacionList() {
             </div>
             <div class="points-container">
                 <div class="category-block"><div class="chat-input-container"><input type="text" id="feedback-input-${p.id}" class="chat-input" placeholder="Escribir mensaje..."><button class="btn-chat-send" onclick="window.guardarFeedback(${p.id})"><i class="fas fa-paper-plane"></i></button></div></div>
-                
                 <div class="category-block"><div class="category-header cat-men"><i class="fas fa-brain"></i> ACTITUD</div><div class="points-grid-modern">
-                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Puntual')"><i class="fas fa-clock"></i><span>+2</span>Puntual</button>
-                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Escucha')"><i class="fas fa-ear-listen"></i><span>+2</span>Escucha</button>
-                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 3, 'men', 'Reacción')"><i class="fas fa-bolt"></i><span>+3</span>Reacción</button>
-                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Ayuda')"><i class="fas fa-handshake"></i><span>+2</span>Ayuda</button>
-                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 1, 'men', 'Espíritu')"><i class="fas fa-fire"></i><span>+1</span>Espíritu</button>
+                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Puntual', 'fa-clock')"><i class="fas fa-clock"></i><span>+2</span>Puntual</button>
+                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Escucha', 'fa-ear-listen')"><i class="fas fa-ear-listen"></i><span>+2</span>Escucha</button>
+                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 3, 'men', 'Reacción', 'fa-bolt')"><i class="fas fa-bolt"></i><span>+3</span>Reacción</button>
+                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Ayuda', 'fa-handshake')"><i class="fas fa-handshake"></i><span>+2</span>Ayuda</button>
+                    <button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 1, 'men', 'Espíritu', 'fa-fire')"><i class="fas fa-fire"></i><span>+1</span>Espíritu</button>
                 </div></div>
-
                 <div class="category-block"><div class="category-header cat-tec"><i class="fas fa-mitten"></i> TÉCNICA</div><div class="points-grid-modern">
-                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Blocaje')"><i class="fas fa-hand-rock"></i><span>+1</span>Blocaje</button>
-                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Caída')"><i class="fas fa-arrow-down"></i><span>+1</span>Caída</button>
-                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Despeje')"><i class="fas fa-futbol"></i><span>+1</span>Despeje</button>
-                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 2, 'tec', 'Reflejo')"><i class="fas fa-bolt"></i><span>+2</span>Reflejo</button>
-                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 3, 'tec', 'TOP')"><i class="fas fa-star"></i><span>+3</span>TOP</button>
+                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Blocaje', 'fa-hand-rock')"><i class="fas fa-hand-rock"></i><span>+1</span>Blocaje</button>
+                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Caída', 'fa-arrow-down')"><i class="fas fa-arrow-down"></i><span>+1</span>Caída</button>
+                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Despeje', 'fa-futbol')"><i class="fas fa-futbol"></i><span>+1</span>Despeje</button>
+                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 2, 'tec', 'Reflejo', 'fa-bolt')"><i class="fas fa-bolt"></i><span>+2</span>Reflejo</button>
+                    <button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 3, 'tec', 'TOP', 'fa-star')"><i class="fas fa-star"></i><span>+3</span>TOP</button>
                 </div></div>
-
                 <div class="category-block"><div class="category-header cat-jue"><i class="fas fa-running"></i> JUEGO</div><div class="points-grid-modern">
-                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 2, 'jue', '1vs1')"><i class="fas fa-shield-alt"></i><span>+2</span>1vs1</button>
-                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 2, 'jue', 'Salida')"><i class="fas fa-rocket"></i><span>+2</span>Salida</button>
-                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Decisión')"><i class="fas fa-lightbulb"></i><span>+1</span>Decisión</button>
-                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Voz')"><i class="fas fa-bullhorn"></i><span>+1</span>Voz</button>
-                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Posición')"><i class="fas fa-map-marker-alt"></i><span>+1</span>Posición</button>
+                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 2, 'jue', '1vs1', 'fa-shield-alt')"><i class="fas fa-shield-alt"></i><span>+2</span>1vs1</button>
+                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 2, 'jue', 'Salida', 'fa-rocket')"><i class="fas fa-rocket"></i><span>+2</span>Salida</button>
+                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Decisión', 'fa-lightbulb')"><i class="fas fa-lightbulb"></i><span>+1</span>Decisión</button>
+                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Voz', 'fa-bullhorn')"><i class="fas fa-bullhorn"></i><span>+1</span>Voz</button>
+                    <button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Posición', 'fa-map-marker-alt')"><i class="fas fa-map-marker-alt"></i><span>+1</span>Posición</button>
                 </div></div>
-
                 <div class="category-block"><div class="category-header cat-ret"><i class="fas fa-trophy"></i> RETOS</div><div class="points-grid-modern">
-                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 4, 'ret', 'Reto')"><i class="fas fa-check-circle"></i><span>+4</span>Reto</button>
-                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 6, 'ret', 'Perfecto')"><i class="fas fa-fire-alt"></i><span>+6</span>Perfect</button>
-                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'Mejora')"><i class="fas fa-chart-line"></i><span>+2</span>Mejora</button>
-                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP')"><i class="fas fa-medal"></i><span>+2</span>MVP</button>
+                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 4, 'ret', 'Reto', 'fa-check-circle')"><i class="fas fa-check-circle"></i><span>+4</span>Reto</button>
+                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 6, 'ret', 'Perfecto', 'fa-fire-alt')"><i class="fas fa-fire-alt"></i><span>+6</span>Perfect</button>
+                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'Mejora', 'fa-chart-line')"><i class="fas fa-chart-line"></i><span>+2</span>Mejora</button>
+                    <button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal')"><i class="fas fa-medal"></i><span>+2</span>MVP</button>
                 </div></div>
-
                 <div class="category-block" style="border:none;">
                     <div class="category-header">📜 Historial Reciente</div>
                     <div class="history-list">
                         ${p.historial && p.historial.length > 0 
-                            ? p.historial.slice(0, 5).map(h => `<div class="history-item"><span class="hist-date">${h.fecha.split(' ')[1] || h.fecha}</span><span class="hist-action">${h.accion}</span><span class="hist-pts" style="color:var(--atm-red)">+${h.puntos}</span></div>`).join('') 
+                            ? p.historial.slice(0, 5).map(h => `
+                                <div class="history-item">
+                                    <span class="hist-date">${h.fecha.split(' ')[1] || h.fecha}</span>
+                                    <span class="hist-icon" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
+                                    <span class="hist-action">${h.accion}</span>
+                                    <span class="hist-pts" style="color:var(--atm-red)">+${h.puntos}</span>
+                                </div>`).join('') 
                             : '<div style="text-align:center;font-size:0.75rem;color:var(--text-sec);">Sin actividad.</div>'}
                     </div>
                 </div>
@@ -428,13 +434,64 @@ function renderEvaluacionList() {
         </div>`).join('');
 }
 
-function showToast(message) {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = `<i class="fas fa-check-circle"></i> <span>${message}</span>`;
-    container.appendChild(toast);
-    setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 2500);
+function getColor(cat) { if(cat==='men') return 'var(--col-men)'; if(cat==='tec') return 'var(--col-tec)'; if(cat==='jue') return 'var(--col-jue)'; return 'var(--col-ret)'; }
+function toggleCard(id) { document.getElementById(`card-${id}`).classList.toggle('expanded'); }
+
+/* ================= LÓGICA DE SUMAR Y ALERTA DE INSIGNIA ================= */
+function sumar(id, pts, statKey, accionNombre, iconClass) {
+    const p = porteros.find(x => x.id === id);
+    if (!p) return;
+    
+    let s = p.stats || { men:60, tec:60, jue:60, ret:60 };
+    if(s[statKey] === undefined) s[statKey] = 60;
+    
+    let hist = p.historial || [];
+    const fecha = new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}) + ' ' + new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+    hist.unshift({ fecha, accion: accionNombre, puntos: pts, categoria: statKey, icon: iconClass });
+    if(hist.length > 20) hist.pop();
+
+    const oldPts = Number(p.puntos || 0);
+    const newPts = oldPts + pts;
+
+    // Verificar si se ha superado el límite de alguna insignia
+    const badges = [
+        { name: "Primeros Pasos", limit: 30 }, { name: "Manos Seguras", limit: 80 },
+        { name: "Reflejos Felinos", limit: 120 }, { name: "Colocación", limit: 150 },
+        { name: "Mentalidad Pro", limit: 200 }, { name: "Espíritu Indio", limit: 250 },
+        { name: "Valiente 1vs1", limit: 300 }, { name: "Rey del Área", limit: 400 },
+        { name: "Muro Diamante", limit: 500 }, { name: "Comunicador", limit: 600 },
+        { name: "Leyenda", limit: 900 }, { name: "Reto Superado", limit: 9999 }
+    ];
+
+    let unlockedMessage = "";
+    for(let b of badges) {
+        if(oldPts < b.limit && newPts >= b.limit) {
+            unlockedMessage = `¡${p.nombre} ha desbloqueado: ${b.name}!`;
+            break;
+        }
+    }
+
+    // GUARDA EN FIREBASE Y LUEGO AVISA (SOLUCIONA EL BLOQUEO)
+    update(ref(db, 'porteros/' + id), { 
+        puntos: newPts, 
+        stats: { ...s, [statKey]: s[statKey] + pts },
+        historial: hist 
+    }).then(() => {
+        if (unlockedMessage) {
+            alert(unlockedMessage); // Alerta de insignia desbloqueada
+        } else {
+            showToast(`+${pts} ${accionNombre}`); // Toast normal
+        }
+    }).catch(e => alert("Error guardando puntos: " + e.message));
+}
+
+function guardarFeedback(id) {
+    const input = document.getElementById(`feedback-input-${id}`);
+    if(!input || !input.value) return;
+    update(ref(db, 'porteros/' + id), { mensajeManual: input.value }).then(() => { 
+        showToast("Mensaje Enviado"); 
+        input.value = ""; 
+    });
 }
 
 function renderDashboard(porteroId) {
@@ -459,35 +516,33 @@ function renderDashboard(porteroId) {
     document.getElementById('stat-men').innerText = Math.min(99, s.men).toFixed(0);
     document.getElementById('stat-tac').innerText = Math.min(99, s.ret).toFixed(0);
     
-    document.getElementById('dash-puntos-badge').innerText = p.puntos + " PTS";
-    const percent = Math.min(100, (p.puntos / 1000) * 100);
-    document.getElementById('progress-fill').style.width = percent + "%";
-
-    const container = document.getElementById('insignias-container');
+    let w=0, step=1, lvlName="Iniciación", lvlColor="var(--lvl-1)";
+    if(p.puntos<=150) { w=(p.puntos/150)*100; }
+    else if(p.puntos<=350) { lvlName="Formación"; lvlColor="var(--lvl-2)"; w=((p.puntos-150)/200)*100; step=2; }
+    else if(p.puntos<=650) { lvlName="Consolidación"; lvlColor="var(--lvl-3)"; w=((p.puntos-350)/300)*100; step=3; }
+    else if(p.puntos<=900) { lvlName="Rendimiento"; lvlColor="var(--lvl-4)"; w=((p.puntos-650)/250)*100; step=4; }
+    else { lvlName="Referente"; lvlColor="var(--lvl-5)"; w=100; step=5; }
     
-    // RENDERIZADO DEL MURO
-    let html = `
-        <div class="trophy-section">
-            <div class="trophy-title">Muro de Trofeos</div>
-            <div class="trophy-subtitle">Colecciona las insignias que definen tu legado.</div>
-            <div class="trophy-list">
-    `;
-
-    html += BADGES.map(b => {
-        const unlocked = p.puntos >= b.limit;
-        return `
-            <div class="trophy-item ${unlocked ? 'unlocked' : 'locked'}">
-                <div class="trophy-circle ${unlocked ? 'unlocked' : 'locked'}">
-                    <i class="fas fa-${b.icon}"></i>
-                </div>
-                <div class="trophy-name">${b.name}</div>
-            </div>
-        `;
+    document.getElementById('level-title').innerText = "Nivel: " + lvlName;
+    document.getElementById('level-title').style.color = lvlColor;
+    document.getElementById('dash-puntos-badge').innerText = p.puntos + " PTS";
+    document.getElementById('dash-puntos-badge').style.backgroundColor = lvlColor;
+    document.getElementById('progress-fill').style.width = Math.min(w, 100) + "%";
+    document.getElementById('progress-fill').style.background = lvlColor;
+    
+    const badges = [
+        { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Manos Seguras", limit: 80, icon: "hand-paper" },
+        { name: "Reflejos Felinos", limit: 120, icon: "bolt" }, { name: "Colocación", limit: 150, icon: "compass" },
+        { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" },
+        { name: "Valiente 1vs1", limit: 300, icon: "shield-alt" }, { name: "Rey del Área", limit: 400, icon: "crown" },
+        { name: "Muro Diamante", limit: 500, icon: "gem" }, { name: "Comunicador", limit: 600, icon: "bullhorn" },
+        { name: "Leyenda", limit: 900, icon: "star" }, { name: "Reto Superado", limit: 9999, icon: "check-circle" }
+    ];
+    document.getElementById('insignias-container').innerHTML = badges.map(b => {
+        const isUnlocked = Number(p.puntos || 0) >= b.limit;
+        return `<div class="insignia-item"><div class="insignia-box ${isUnlocked ? 'unlocked' : 'locked'}"><i class="fas fa-${b.icon}"></i></div><div class="insignia-name">${b.name}</div></div>`;
     }).join('');
-
-    html += `</div></div>`;
-    container.innerHTML = html;
-
+    
     renderRadar(p);
 }
 
@@ -510,11 +565,24 @@ function renderRadar(p) {
     });
 }
 
+function toggleRanking(mode) { 
+    window.rankingMode = mode; 
+    document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+    if(mode === 'global') document.getElementById('rank-global').classList.add('active');
+    else if(mode === 'CD Alcalá') document.getElementById('rank-alcala').classList.add('active');
+    else if(mode === 'Cotorruelo') document.getElementById('rank-cotorruelo').classList.add('active');
+    renderRankingList(); 
+}
+
 function renderRankingList() {
     const div = document.getElementById('ranking-list-container');
     const smartDiv = document.getElementById('smart-rankings');
     let lista = [...porteros];
-    if(rankingMode && rankingMode !== 'global') { lista = lista.filter(p => p.sede === rankingMode); }
+    
+    if(window.rankingMode && window.rankingMode !== 'global') {
+        lista = lista.filter(p => p.sede && p.sede.trim() === window.rankingMode);
+    }
+    
     lista.sort((a,b) => b.puntos - a.puntos);
     const bestMen = [...lista].sort((a,b) => (b.stats?.men||0) - (a.stats?.men||0))[0];
     const bestTec = [...lista].sort((a,b) => (b.stats?.tec||0) - (a.stats?.tec||0))[0];
@@ -532,64 +600,22 @@ function renderRankingList() {
     `).join('');
 }
 
-function checkSession() {
-    const session = JSON.parse(localStorage.getItem('guardianes_session'));
-    if (session) {
-        roleType = session.role;
-        setTimeout(() => {
-            if (roleType === 'admin') {
-                navTo('view-admin');
-            } else if (roleType === 'edp') {
-                currentUser = edps.find(e => e.id == session.id);
-                if (currentUser) navTo('view-edp');
-            } else if (roleType === 'portero') {
-                currentUser = porteros.find(p => p.id == session.id);
-                if (currentUser) navTo('view-portero');
-            }
-        }, 1000);
-    }
-}
-
-function refreshCurrentView() {
-    const currentView = document.querySelector('section[style*="block"]');
-    if (!currentView) return;
-    if (currentView.id === 'view-admin') { renderAdminList(); renderEDPListAdmin(); cargarSelectEDP(); }
-    else if (currentView.id === 'view-edp' && currentUser) { renderEvaluacionList(); }
-    else if (currentView.id === 'view-portero' && currentUser) { currentUser = porteros.find(p => p.id === currentUser.id); if(currentUser) renderDashboard(currentUser.id); }
-    else if (currentView.id === 'view-ranking') { renderRankingList(); }
-}
-
-/* ================= INICIO (DOM) ================= */
-document.addEventListener('DOMContentLoaded', () => {
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
-
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.body.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-    
-    const passInput = document.getElementById('modal-pass');
-    if(passInput) {
-        passInput.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                window.confirmarLogin();
-            }
-        });
-    }
-
-    const porterosRef = ref(db, 'porteros');
-    onValue(porterosRef, (snapshot) => {
-        const data = snapshot.val();
-        porteros = data ? Object.values(data) : [];
-        refreshCurrentView();
-    });
-
-    const edpsRef = ref(db, 'edps');
-    onValue(edpsRef, (snapshot) => {
-        const data = snapshot.val();
-        edps = data ? Object.values(data) : [];
-        refreshCurrentView();
-    });
-
-    checkSession();
-});
+/* ================= EXPOSICIÓN FINAL ================= */
+window.abrirLogin = abrirLogin;
+window.cerrarModal = cerrarModal;
+window.confirmarLogin = confirmarLogin;
+window.logout = logout;
+window.toggleTheme = toggleTheme;
+window.navPortero = navPortero;
+window.toggleRanking = toggleRanking;
+window.procesarImagenSegura = procesarImagenSegura;
+window.guardarPortero = guardarPortero;
+window.limpiarFormAdmin = limpiarFormAdmin;
+window.editarPortero = editarPortero;
+window.borrarPortero = borrarPortero;
+window.borrarEDP = borrarEDP;
+window.crearEDP = crearEDP;
+window.toggleCard = toggleCard;
+window.sumar = sumar;
+window.guardarFeedback = guardarFeedback;
+window.togglePasswordVisibility = togglePasswordVisibility;
