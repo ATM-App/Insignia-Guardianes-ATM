@@ -1,7 +1,6 @@
 /* ================= IMPORTACIONES FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-/* NUEVO IMPORT PARA AUTENTICACIÓN ANÓNIMA */
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 /* ================= CONFIGURACIÓN ================= */
@@ -17,7 +16,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const auth = getAuth(app); // INICIALIZAMOS LA SEGURIDAD
+const auth = getAuth(app);
 
 /* ================= VARIABLES ================= */
 let porteros = [];
@@ -37,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
     
-    // ENTER PARA LOGIN
     const passInput = document.getElementById('modal-pass');
     if(passInput) {
         passInput.addEventListener("keydown", function(event) {
@@ -48,12 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // INICIAMOS SESIÓN INVISIBLE PARA BURULAR LAS REGLAS DE SEGURIDAD
+    // INICIAMOS SESIÓN INVISIBLE
     signInAnonymously(auth).catch((error) => {
         console.error("Error obteniendo pase anónimo:", error);
     });
 
-    // SOLO CARGAMOS DATOS CUANDO FIREBASE NOS HA DADO EL PASE
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const porterosRef = ref(db, 'porteros');
@@ -77,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ================= FUNCIONES ================= */
 
-// Función visual para mensajes
 function showToast(msg) {
     const container = document.getElementById('toast-container');
     if(!container) return;
@@ -142,13 +138,17 @@ function confirmarLogin() {
     let success = false;
     let sessionData = null;
 
-    if(roleType === 'admin' && pass === 'ATLETI2024') { 
+    // CORRECCIÓN: Limpiamos la clave de espacios invisibles antes de comparar
+    const passClean = pass.trim().toLowerCase();
+
+    if(roleType === 'admin' && pass.trim() === 'ATLETI2024') { 
         navTo('view-admin'); 
         success = true; 
         sessionData = { role: 'admin', id: 'admin' };
     }
     else if(roleType === 'edp') {
-        const found = edps.find(e => e.clave === pass);
+        // CORRECCIÓN: Comparamos ignorando mayúsculas/minúsculas y espacios
+        const found = edps.find(e => e && e.clave && String(e.clave).trim().toLowerCase() === passClean);
         if (found) {
             currentUser = found;
             navTo('view-edp');
@@ -157,7 +157,8 @@ function confirmarLogin() {
         }
     }
     else if(roleType === 'portero') {
-        const found = porteros.find(p => p.clave === pass);
+        // CORRECCIÓN: Comparamos ignorando mayúsculas/minúsculas y espacios
+        const found = porteros.find(p => p && p.clave && String(p.clave).trim().toLowerCase() === passClean);
         if (found) {
             currentUser = found;
             navTo('view-portero');
@@ -281,7 +282,7 @@ function guardarPortero() {
         entrenador: document.getElementById('reg-entrenador-select').value || "",
         pierna: document.getElementById('reg-pierna').value || "", 
         mano: document.getElementById('reg-mano').value || "", 
-        clave,
+        clave: clave.trim(), // Limpiamos espacios al guardar por seguridad
         foto: fotoTemp || (original ? original.foto : ""),
         puntos: original ? (original.puntos || 0) : 0,
         stats: original ? (original.stats || statsBase) : statsBase,
@@ -299,13 +300,13 @@ function crearEDP() {
     const clave = document.getElementById('edp-clave').value;
     if(!nombre || !clave) return alert("Faltan datos");
     
-    const existe = edps.find(e => e.nombre.toLowerCase() === nombre.toLowerCase());
+    const existe = edps.find(e => e.nombre.trim().toLowerCase() === nombre.trim().toLowerCase());
     if(existe) {
         return alert("¡Ese entrenador ya existe! Bórralo si está duplicado.");
     }
     
     const id = Date.now();
-    set(ref(db, 'edps/' + id), { id, nombre, clave })
+    set(ref(db, 'edps/' + id), { id, nombre: nombre.trim(), clave: clave.trim() }) // Limpiamos espacios al guardar
         .then(() => {
             showToast("Entrenador Creado");
             document.getElementById('edp-nombre').value = "";
@@ -384,7 +385,8 @@ function cargarSelectEDP() {
 
 function renderEvaluacionList() {
     const div = document.getElementById('edp-lista-porteros');
-    const misPorteros = porteros.filter(p => p.entrenador === currentUser.nombre);
+    // CORRECCIÓN: Filtramos asegurándonos de que los nombres coinciden independientemente de espacios
+    const misPorteros = porteros.filter(p => p.entrenador && currentUser && p.entrenador.trim().toLowerCase() === currentUser.nombre.trim().toLowerCase());
     
     if(misPorteros.length === 0) { div.innerHTML = "<p style='text-align:center;'>No tienes porteros asignados.</p>"; return; }
     
@@ -447,6 +449,7 @@ function renderEvaluacionList() {
         </div>`).join('');
 }
 
+function getColor(cat) { if(cat==='men') return 'var(--col-men)'; if(cat==='tec') return 'var(--col-tec)'; if(cat==='jue') return 'var(--col-jue)'; return 'var(--col-ret)'; }
 function toggleCard(id) { document.getElementById(`card-${id}`).classList.toggle('expanded'); }
 
 function sumar(id, pts, statKey, accionNombre, iconClass) {
