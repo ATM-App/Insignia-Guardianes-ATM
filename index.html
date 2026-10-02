@@ -875,11 +875,15 @@
             const r2t = document.getElementById('rec2-title').value.trim(); const r2p = parseInt(document.getElementById('rec2-pts').value);
             const r3t = document.getElementById('rec3-title').value.trim(); const r3p = parseInt(document.getElementById('rec3-pts').value);
 
-            if(!r1t || isNaN(r1p) || !r2t || isNaN(r2p) || !r3t || isNaN(r3p)) {
-                return showToast("Completa todos los campos y puntos", true);
-            }
-
-            const recompensas = [ {title: r1t, req: r1p}, {title: r2t, req: r2p}, {title: r3t, req: r3p} ];
+            // CHANGED: Removed the strict check that blocked saving if everything wasn't filled perfectly.
+            // Now, it saves whatever is there, allowing the coach to edit points or titles independently.
+            const recompensas = [ 
+                {title: r1t || "Recompensa 1", req: isNaN(r1p) ? 150 : r1p}, 
+                {title: r2t || "Recompensa 2", req: isNaN(r2p) ? 300 : r2p}, 
+                {title: r3t || "Recompensa 3", req: isNaN(r3p) ? 800 : r3p} 
+            ];
+            
+            // Firebase UPDATE: We only update the 'recompensas' field in the EDP's profile
             update(ref(db, `edps/${currentUser.id}`), { recompensas }).then(() => {
                 showToast("Recompensas de Equipo Guardadas");
                 document.getElementById('modal-recompensas-config').style.display = 'none';
