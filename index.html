@@ -487,6 +487,10 @@
         let evalViewMode = "porteros"; // porteros, jugadores (Para panel EDP)
         let targetDeleteId = null;
         let targetDeleteType = null;
+        
+        // Variables QR Visita
+        let isReadOnlyMode = false;
+        let readOnlyId = null;
 
         // Audios (Sintetizador Web)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -511,6 +515,25 @@
             
             const passInput = document.getElementById('home-pass');
             if(passInput) { passInput.addEventListener("keydown", function(event) { if (event.key === "Enter") { event.preventDefault(); window.confirmarLogin(); } }); }
+
+            // Lógica para detectar si venimos escaneando un Código QR
+            const urlParams = new URLSearchParams(window.location.search);
+            const fichaId = urlParams.get('ficha');
+            const tipoFicha = urlParams.get('tipo');
+
+            if (fichaId && tipoFicha) {
+                isReadOnlyMode = true;
+                readOnlyId = fichaId;
+                roleType = tipoFicha;
+                document.getElementById('view-home').style.display = 'none';
+                document.getElementById('main-header').style.display = 'flex';
+                document.getElementById('app-container').style.display = 'block';
+                document.getElementById('view-dashboard').style.display = 'block';
+                
+                // Ocultar botón de apagar para los visitantes
+                const btnLogout = document.querySelector('.fa-power-off');
+                if(btnLogout) btnLogout.parentElement.style.display = 'none';
+            }
 
             signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
 
@@ -649,12 +672,40 @@
         }
 
         function refreshCurrentView() {
+            // MODO VISITANTE (Por QR)
+            if (isReadOnlyMode) {
+                const arr = roleType === 'portero' ? porteros : jugadores;
+                const p = arr.find(x => x.id == readOnlyId);
+                if (p) {
+                    currentUser = p;
+                    renderDashboard(p.id, roleType);
+                    // Ocultamos el botón de compartir y de cambiar fondos al visitante
+                    const fondosSection = document.getElementById('fondos-container');
+                    if(fondosSection) fondosSection.parentElement.style.display = 'none';
+                    const shareBtn = document.querySelector('button[onclick="window.compartirFicha()"]');
+                    if(shareBtn) shareBtn.style.display = 'none';
+                }
+                return;
+            }
+
+            // MODO NORMAL (Recuperar sesión si se había perdido antes de cargar Firebase)
+            const session = JSON.parse(localStorage.getItem('guardianes_session'));
+            if (!currentUser && session && session.role !== 'admin') {
+                const arr = session.role === 'portero' ? porteros : (session.role === 'jugador' ? jugadores : edps);
+                currentUser = arr.find(x => x.id == session.id);
+            }
+
             if(roleType === 'admin') { renderAdminLists(); cargarSelectEDP(); }
             else if(roleType === 'edp' && currentUser) { renderEvaluacionList(); }
             else if((roleType === 'portero' || roleType === 'jugador') && currentUser) { 
                 const arr = roleType === 'portero' ? porteros : jugadores;
-                currentUser = arr.find(x => x.id === currentUser.id); 
-                if(currentUser) renderDashboard(currentUser.id, roleType); 
+                const updatedUser = arr.find(x => x.id == currentUser.id); 
+                if(updatedUser) { 
+                    currentUser = updatedUser;
+                    if(document.getElementById('view-dashboard').style.display === 'block') {
+                        renderDashboard(currentUser.id, roleType); 
+                    }
+                } 
             }
             if(document.getElementById('view-ranking').style.display === 'block') { renderRankingList(); }
         }
@@ -1102,14 +1153,21 @@
 
         window.compartirFicha = function() {
             if(!currentUser) return;
-            const t = encodeURIComponent(`🛡 GUARDIANES ATM 🛡\nDeportista: ${currentUser.nombre}\nPuntos: ${currentUser.puntos||0} PTS\n`);
-            document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${t}&color=1C2C5B`;
+            // Obtenemos la URL actual de GitHub y le añadimos el ID del jugador
+            const currentUrl = window.location.origin + window.location.pathname;
+            const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${roleType}`;
+            
+            // Creamos un código QR que enlaza a esa URL
+            document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(fichaUrl)}&color=1C2C5B`;
             document.getElementById('modal-qr').style.display = 'flex';
         };
         
         window.compartirNativo = function() {
             if(!currentUser) return;
-            const t = `🔴⚪ ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos||0} puntos en la Academia Guardianes ATM.\n\n🛡 ¡Trabajando para ser el mejor!`;
+            const currentUrl = window.location.origin + window.location.pathname;
+            const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${roleType}`;
+            
+            const t = `🔴⚪ ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos||0} puntos en la Academia Guardianes ATM.\n\n🛡 ¡Mira mi carta oficial aquí!\n${fichaUrl}`;
             if (navigator.share) navigator.share({ title: 'Mi Ficha ATM', text: t }).catch(()=>console.log('Error compartiendo')); else showToast("Tu navegador no soporta compartir directamente.", true);
         };
         
