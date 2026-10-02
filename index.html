@@ -356,16 +356,16 @@
                     <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel 1</h3>
                     <span id="dash-puntos-badge" class="bg-lvl1 text-black px-4 py-1.5 rounded-full font-black text-sm shadow-[0_0_15px_rgba(46,204,113,0.4)]">0 PTS</span>
                 </div>
-                <div class="bg-black/30 h-4 rounded-full overflow-hidden mb-5 border border-white/10 shadow-inner">
+                <div class="bg-black/30 h-4 rounded-full overflow-hidden mb-5 border border-[var(--input-border)] shadow-inner">
                     <div class="h-full bg-gradient-to-r from-lvl1 to-lvl5 rounded-full transition-all duration-[1.5s] ease-out shadow-[0_0_15px_rgba(241,196,15,0.5)]" id="progress-fill" style="width:0%"></div>
                 </div>
                 <div class="flex justify-between text-center relative">
-                    <div class="absolute top-[14px] left-[10%] right-[10%] h-[2px] bg-white/10 z-0"></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">1</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Inicio</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">2</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Plata</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">3</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Oro</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">4</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Élite</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1"><i class="fas fa-star text-xs"></i></div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Leyenda</div></div>
+                    <div class="absolute top-[14px] left-[10%] right-[10%] h-[2px] bg-[var(--input-border)] z-0"></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#d4a373] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-shoe-prints"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Inicio</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-medal"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Plata</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#f59e0b] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-trophy"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Oro</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#06b6d4] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-gem"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Élite</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#8b5cf6] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-crown"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Leyenda</div></div>
                 </div>
             </div>
 
@@ -373,7 +373,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="glass-card rounded-2xl p-5">
                     <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Academia)</span></h3>
-                    <div class="relative h-64 w-full"><canvas id="adnChart"></canvas></div>
+                    <div class="relative h-64 w-full p-2"><canvas id="adnChart"></canvas></div>
                 </div>
                 <div class="glass-card rounded-2xl p-5">
                     <h3 class="font-black text-sm uppercase tracking-widest mb-4">EVOLUCIÓN PUNTOS</h3>
@@ -471,6 +471,7 @@
         
         let isReadOnlyMode = false;
         let readOnlyId = null;
+        let readOnlyTipoPlural = null;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
@@ -502,8 +503,12 @@
             if (fichaId && tipoFicha) {
                 isReadOnlyMode = true;
                 readOnlyId = fichaId;
-                if (tipoFicha === 'portero') tipoFicha = 'porteros';
-                if (tipoFicha === 'jugador') tipoFicha = 'jugadores';
+                if (tipoFicha === 'portero' || tipoFicha === 'porteros') {
+                    tipoFicha = 'porteros';
+                } else if (tipoFicha === 'jugador' || tipoFicha === 'jugadores') {
+                    tipoFicha = 'jugadores';
+                }
+                readOnlyTipoPlural = tipoFicha;
                 roleType = tipoFicha; 
                 
                 document.getElementById('view-home').style.display = 'none';
@@ -521,7 +526,7 @@
                 if(navBottom) navBottom.style.display = 'none';
                 
                 const sectionVestuario = document.getElementById('section-vestuario');
-                if(sectionVestuario) sectionVestuario.style.display = 'none';
+                if(sectionVestuario) sectionVestuario.style.opacity = '0.5';
             }
 
             signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
@@ -531,7 +536,7 @@
                     onValue(ref(db, 'porteros'), (snapshot) => { const data = snapshot.val(); porteros = data ? Object.values(data) : []; refreshCurrentView(); });
                     onValue(ref(db, 'jugadores'), (snapshot) => { const data = snapshot.val(); jugadores = data ? Object.values(data) : []; refreshCurrentView(); });
                     onValue(ref(db, 'edps'), (snapshot) => { const data = snapshot.val(); edps = data ? Object.values(data) : []; refreshCurrentView(); });
-                    checkSession();
+                    if(!isReadOnlyMode) checkSession();
                 }
             });
         });
@@ -552,10 +557,13 @@
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-            if(currentUser && (roleType === 'portero' || roleType === 'jugador' || roleType === 'porteros' || roleType === 'jugadores')) { 
-                const tipoPlural = (roleType === 'portero' || roleType === 'porteros') ? 'porteros' : 'jugadores';
-                renderRadar(currentUser, tipoPlural); 
-                renderEvoChart(currentUser); 
+            if((currentUser || isReadOnlyMode) && (roleType === 'portero' || roleType === 'jugador' || roleType === 'porteros' || roleType === 'jugadores')) { 
+                const tipoPlural = isReadOnlyMode ? readOnlyTipoPlural : ((roleType === 'portero' || roleType === 'porteros') ? 'porteros' : 'jugadores');
+                const targetUser = isReadOnlyMode ? (tipoPlural === 'porteros' ? porteros.find(p=>String(p.id)===String(readOnlyId)) : jugadores.find(j=>String(j.id)===String(readOnlyId))) : currentUser;
+                if(targetUser) {
+                    renderRadar(targetUser, tipoPlural); 
+                    renderEvoChart(targetUser); 
+                }
             }
         }
 
@@ -671,12 +679,10 @@
 
         function refreshCurrentView() {
             if (isReadOnlyMode) {
-                const tipoPlural = (roleType === 'portero' || roleType === 'porteros') ? 'porteros' : 'jugadores';
-                const arr = tipoPlural === 'porteros' ? porteros : jugadores;
+                const arr = readOnlyTipoPlural === 'porteros' ? porteros : jugadores;
                 const p = arr.find(x => String(x.id) === String(readOnlyId));
                 if (p) {
-                    currentUser = p;
-                    renderDashboard(p.id, tipoPlural);
+                    renderDashboard(p.id, readOnlyTipoPlural);
                 }
                 return;
             }
@@ -926,10 +932,10 @@
 
                     <div class="bg-yellow-500/10 p-4 rounded-xl border border-yellow-500/30 mb-4">
                         <div class="text-gold font-black text-xs uppercase text-center mb-3"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
-                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo..." class="w-full input-glass p-2 rounded-lg text-sm mb-2 outline-none">
+                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" class="w-full bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
                         <div class="flex gap-2 mb-3">
-                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (ej: 5)" class="w-1/2 input-glass p-2 rounded-lg text-sm outline-none text-center">
-                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 input-glass p-2 rounded-lg text-sm outline-none">
+                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: 5 o -5)" class="w-1/2 bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
+                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
                                 <option value="men">Actitud</option>
                                 <option value="tec">Técnica</option>
                                 <option value="${tipo === 'porteros' ? 'jue' : 'fis'}">${tipo === 'porteros' ? 'Juego' : 'Físico'}</option>
