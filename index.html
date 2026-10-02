@@ -13,540 +13,445 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        atmRed: '#CB3524',
+                        atmBlue: '#1C2C5B',
+                        gold: '#FFD700',
+                        lvl1: '#2ecc71', lvl2: '#3498db', lvl3: '#e67e22', lvl4: '#e74c3c', lvl5: '#f1c40f'
+                    },
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
 
     <style>
         :root { 
-            --radius-l: 24px; --radius-m: 16px; 
-            --lvl-1: #2ecc71; --lvl-2: #3498db; --lvl-3: #e67e22; --lvl-4: #e74c3c; --lvl-5: #f1c40f;
-            --col-men: #9b59b6; --col-tec: #3498db; --col-jue: #2ecc71; --col-ret: #f1c40f;
-            --atm-red: #CB3524; --atm-blue: #1C2C5B;
-            --gold: #FFD700;
+            --bg-body: #f0f2f5; --bg-card: rgba(255, 255, 255, 0.85); --text-main: #1c1e21; --text-sec: #65676b;
+            --input-bg: #ffffff; --input-border: #d1d5db; --card-border: rgba(0,0,0,0.1);
+            --segment-bg: #e4e6eb; --segment-active: #ffffff;
+            --col-men: #9b59b6; --col-tec: #3498db; --col-jue: #2ecc71; --col-ret: #f1c40f; --col-fis: #e67e22; --col-tac: #e74c3c;
         }
 
         [data-theme="dark"] {
-            --bg-body: #0b1120; --bg-card: rgba(30, 41, 59, 0.75); --text-main: #f8fafc; --text-sec: #94a3b8;
-            --input-bg: rgba(15, 23, 42, 0.8); --input-border: rgba(255,255,255,0.1);
-            --icon-circle-bg: rgba(203,53,36,0.15); --btn-score-bg: rgba(255, 255, 255, 0.05);
+            --bg-body: #0b1120; --bg-card: rgba(30, 41, 59, 0.7); --text-main: #f8fafc; --text-sec: #94a3b8;
+            --input-bg: rgba(15, 23, 42, 0.8); --input-border: rgba(255,255,255,0.15); --card-border: rgba(255,255,255,0.1);
             --segment-bg: rgba(0,0,0,0.4); --segment-active: #1e293b;
-            --card-border: rgba(255,255,255,0.08);
-            --history-bg: rgba(0,0,0,0.3);
-        }
-        [data-theme="light"] {
-            --bg-body: #f0f2f5; --bg-card: rgba(255, 255, 255, 0.9); --text-main: #1c1e21; --text-sec: #65676b;
-            --input-bg: #ffffff; --input-border: #ccc;
-            --icon-circle-bg: rgba(203,53,36,0.1); --btn-score-bg: rgba(0, 0, 0, 0.03);
-            --segment-bg: #e4e6eb; --segment-active: #ffffff;
-            --card-border: #e0e0e0;
-            --history-bg: #f9f9f9;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background-color: var(--bg-body); color: var(--text-main); 
-            min-height: 100vh; transition: background-color 0.3s; 
+            min-height: 100vh; transition: background-color 0.3s;
             background-image: radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.5) 0%, var(--bg-body) 70%);
             background-attachment: fixed; overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        /* DISEÑO PANTALLA INICIO TIPO "SPLIT SCREEN" */
-        .home-container { display: flex; min-height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; z-index: 1000; background: var(--bg-body); }
-        .home-left { width: 100%; max-width: 400px; background: #111a36; box-shadow: 10px 0 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; padding: 50px 40px; position: relative; z-index: 10; border-right: 1px solid rgba(255,255,255,0.05); }
-        .home-right { flex: 1; background: linear-gradient(135deg, #1C2C5B 0%, #0b1120 100%); display: flex; flex-direction: column; justify-content: center; padding: 80px; position: relative; overflow: hidden; }
+        /* Utilidades Glassmorphism */
+        .glass-card { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--card-border); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .input-glass { background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); }
+        .input-glass:focus { border-color: #CB3524; outline: none; box-shadow: 0 0 10px rgba(203,53,36,0.3); }
+
+        /* SPLIT SCREEN LOGIN Premium */
+        .split-layout { display: flex; min-height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 1000; background: var(--bg-body); }
+        .split-left { width: 100%; max-width: 450px; background: #0b1120; box-shadow: 15px 0 50px rgba(0,0,0,0.7); display: flex; flex-direction: column; padding: 40px 35px; position: relative; z-index: 10; border-right: 1px solid rgba(255,255,255,0.05); }
+        .split-right { flex: 1; background: linear-gradient(135deg, #1C2C5B 0%, #080c17 100%); display: flex; flex-direction: column; justify-content: center; padding: 80px; position: relative; overflow: hidden; }
         
-        .home-logo-container { text-align: center; margin-bottom: 50px; }
-        .home-logo-container img { height: 60px; margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
-        .home-logo-container h1 { font-style: italic; font-weight: 900; font-size: 1.5rem; letter-spacing: 1px; color: #ffffff; margin-bottom: 5px; text-transform: uppercase; }
-        .home-logo-container h1 span { color: var(--atm-red); }
-        .home-logo-container p { font-size: 0.65rem; color: #94a3b8; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; line-height: 1.4; }
-        .home-logo-container p span { color: var(--atm-red); }
-
-        .role-btn { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #ffffff; padding: 16px 20px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; text-align: left; display: flex; align-items: center; gap: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 1px; }
-        .role-btn:hover { border-color: var(--atm-red); background: rgba(203,53,36,0.1); transform: translateX(5px); box-shadow: 0 5px 15px rgba(203,53,36,0.2); }
-        .role-btn i { font-size: 1.2rem; color: var(--atm-red); width: 25px; text-align: center; }
-
-        .home-footer-text { text-align: center; margin-top: auto; font-size: 0.6rem; color: #64748b; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* Estilo input minimalista (como en la imagen proporcionada por el usuario) */
-        .input-group-modern { margin-bottom: 30px; position: relative; }
-        .input-group-modern label { display: block; font-size: 0.65rem; color: #94a3b8; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-        .input-group-modern input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); color: #ffffff; font-size: 1.2rem; padding: 8px 0; outline: none; transition: 0.3s; letter-spacing: 2px; border-radius: 0; }
-        .input-group-modern input:focus { border-bottom-color: var(--atm-red); }
-        .input-group-modern .toggle-password { position: absolute; right: 0; bottom: 12px; color: #94a3b8; cursor: pointer; transition: 0.3s; }
-        .input-group-modern .toggle-password:hover { color: var(--atm-red); }
-
-        .btn-red-glow { width: 100%; background: linear-gradient(90deg, #E63946, #CB3524); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 900; font-size: 0.9rem; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(203,53,36,0.4); text-transform: uppercase; }
-        .btn-red-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(203,53,36,0.6); }
-        .btn-red-glow:active { transform: translateY(1px); }
-
-        .hero-quote { font-size: 1.6rem; font-weight: 900; font-style: italic; color: var(--atm-red); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .hero-main-text { font-size: 6rem; font-weight: 900; font-style: italic; line-height: 1; letter-spacing: -2px; margin-bottom: 20px; text-transform: uppercase; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .hero-main-text span { color: var(--atm-red); }
-        .hero-description { display: flex; align-items: center; gap: 20px; margin-top: 40px; }
-        .hero-description .red-line { width: 4px; height: 50px; background: var(--atm-red); box-shadow: 0 0 10px rgba(203,53,36,0.5); }
-        .hero-description p { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 450px; line-height: 1.5; font-weight: 600; }
-
         @media (max-width: 900px) {
-            .home-right { display: none; }
-            .home-left { max-width: 100%; padding: 40px 25px; justify-content: center; background: linear-gradient(135deg, #1C2C5B 0%, #0b1120 100%); }
-            .hero-main-text { font-size: 4rem; }
+            .split-right { display: none; }
+            .split-left { max-width: 100%; justify-content: center; background: linear-gradient(135deg, #1C2C5B 0%, #0b1120 100%); }
         }
 
-        .app-content { display: none; padding-bottom: 90px; }
-        
-        header { background: linear-gradient(180deg, rgba(28, 44, 91, 0.95) 0%, rgba(11, 17, 32, 0) 100%); padding: 20px; display:flex; justify-content:space-between; align-items:center; backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; }
-        .escudo-img { height: 45px; margin-right: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
-        .header-text h1 { font-size: 1.1rem; font-weight: 900; font-style: italic; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.5px; }
-        .header-text .highlight { color: var(--atm-red); }
-        .btn-logout-clean { background: none; border: none; color: var(--atm-red); font-size: 1.6rem; cursor: pointer; transition: transform 0.2s; }
-        
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; min-width: 250px; animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; font-weight: 600; border: 1px solid var(--input-border); }
-        .toast.error { border-left-color: var(--atm-red); }
-        .toast.error i { color: var(--atm-red); }
-        .toast i { font-size: 1.2rem; color: #2ecc71; }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px);}
-        .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; max-width:320px; text-align:center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(15px); }
-        .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* Controles y Formularios */
-        input[type="text"], input[type="number"], select { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); padding: 12px; border-radius: 10px; color: var(--text-main); margin-bottom: 10px; outline:none; transition: 0.3s; }
-        input:focus, select:focus { border-color: var(--atm-red); }
-        
-        .btn-main { width: 100%; background: linear-gradient(135deg, var(--atm-red), #902012); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor:pointer; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(203,53,36,0.4); }
-        .btn-secondary { background: transparent; border: 1px solid var(--text-sec); color: var(--text-sec); padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
-        .btn-excel { background: linear-gradient(135deg, #107c41, #185c37); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(16,124,65,0.4); }
-        
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .form-full { grid-column: span 2; }
-        .section-divider { text-align: center; color: var(--atm-red); font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin: 35px 0 20px 0; font-size: 1.1rem; border-bottom: 2px solid rgba(203, 53, 36, 0.2); padding-bottom: 8px; }
-
-        .modern-card, .portero-card { background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--card-border); border-radius: var(--radius-m); box-shadow: 0 8px 32px rgba(0,0,0,0.3); color: var(--text-main); padding: 20px; margin-bottom: 20px; }
-        .portero-card { padding: 0; overflow: hidden; margin: 0 auto 15px auto; border-left: 4px solid var(--atm-red); width: 98%; max-width: 600px; }
-        
-        .ranking-card-style { display: flex; align-items: center; background: var(--bg-card); backdrop-filter: blur(10px); padding: 12px 15px; border-radius: 16px; margin: 0 auto 10px auto; width: 95%; max-width: 350px; border: 1px solid var(--card-border); transition: transform 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .rank-pos { font-weight: 900; font-size: 1.1rem; width: 30px; text-align: center; margin-right: 10px; color: var(--text-sec); }
-        .rank-info { flex: 1; min-width: 0; }
-        .rank-name { font-weight: 800; font-size: 0.95rem; color: var(--text-main); line-height: 1.2; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
-        .rank-team { font-size: 0.75rem; color: var(--text-sec); display: flex; align-items: center; gap: 4px; }
-        .rank-score { background: linear-gradient(135deg, var(--atm-red), #902012); color: white; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 2px 8px rgba(203, 53, 36, 0.4); flex-shrink: 0; }
-        .mini-foto-list { width: 50px !important; height: 50px !important; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--atm-red); margin-right: 12px; }
-
-        .rank-1 { border: 2px solid #FFD700; background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), var(--bg-card)); transform: scale(1.03); margin-bottom: 12px; box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2); }
-        .rank-1 .rank-pos { color: #FFD700; font-size: 1.6rem; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.5); }
-        .rank-1 .mini-foto-list { border-color: #FFD700; width: 55px !important; height: 55px !important; }
-
-        .card-header-flex { display: flex; justify-content: space-between; align-items: center; padding: 15px; cursor: pointer; }
-        .points-container { display: none; padding: 0 15px 15px 15px; background: rgba(0,0,0,0.15); border-top: 1px solid rgba(255,255,255,0.05); }
-        .portero-card.expanded .points-container { display: block; animation: fadeIn 0.3s; }
-        .category-header { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .points-grid-modern { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
-        
-        .btn-modern-score { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 10px; width: 90px; color: var(--text-main); font-size: 0.7rem; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: 0.2s; min-height: 80px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-modern-score i { font-size: 1.8rem; margin-bottom: 5px; }
-        .btn-modern-score span { font-weight: 900; font-size: 0.95rem; }
-        .btn-modern-score:active { transform: scale(0.9); }
-        
-        .cat-men { color: var(--col-men); } .btn-men i, .btn-men span { color: var(--col-men); } .btn-men:hover { border-color: var(--col-men); box-shadow: 0 0 10px rgba(155, 89, 182, 0.3); }
-        .cat-tec { color: var(--col-tec); } .btn-tec i, .btn-tec span { color: var(--col-tec); } .btn-tec:hover { border-color: var(--col-tec); box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
-        .cat-jue { color: var(--col-jue); } .btn-jue i, .btn-jue span { color: var(--col-jue); } .btn-jue:hover { border-color: var(--col-jue); box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
-        .cat-ret { color: var(--col-ret); } .btn-ret i, .btn-ret span { color: var(--col-ret); } .btn-ret:hover { border-color: var(--col-ret); box-shadow: 0 0 10px rgba(241, 196, 15, 0.3); }
-
-        .history-list { max-height: 200px; overflow-y: auto; background: var(--history-bg); border-radius: 12px; padding: 10px; border: 1px solid var(--input-border); }
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--input-border); font-size: 0.8rem; }
-        .history-item:last-child { border-bottom: none; }
-        .hist-date { color: var(--text-sec); font-size: 0.7rem; width: 65px; }
-        .hist-icon { width: 30px; text-align: center; font-size: 1.1rem; margin-right: 5px; }
-        .hist-action { font-weight: bold; flex: 1; text-align: left; }
-        .hist-pts { font-weight: 900; }
-
-        .fifa-card-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; perspective: 1000px; }
-        .fifa-card-simple { width: 270px; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: all 0.5s ease; }
+        /* CARTAS FIFA MEJORADAS */
+        .fifa-card-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; perspective: 1000px; }
+        .fifa-card-simple { width: 270px; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
         .card-bronce { background: linear-gradient(135deg, #a67c52 0%, #8b5a2b 50%, #5c3a21 100%); border: 2px solid #d4a373; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.2); color: #fff; }
-        .card-bronce .fifa-simple-bottom { background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6)); border-top: 2px solid #a67c52; }
-        .card-bronce .fifa-stats-grid span { color: #d4a373; }
-
         .card-plata { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #9e9e9e 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.5); color: #111; }
-        .card-plata .fifa-simple-bottom { background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6)); color: white; border-top: 2px solid #e0e0e0; }
-        .card-plata .fifa-stats-grid span { color: #e0e0e0; }
-
         .card-oro { background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.4); color: #111; }
-        .card-oro .fifa-simple-bottom { background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6)); color: white; border-top: 2px solid #FFD700; }
-        .card-oro .fifa-stats-grid span { color: #f1c40f; }
-
         .card-diamante { background: linear-gradient(135deg, #00b4db 0%, #0083b0 50%, #005275 100%); border: 2px solid #00FFFF; box-shadow: 0 15px 35px rgba(0, 255, 255, 0.3), inset 0 0 25px rgba(0,255,255,0.5); color: #fff; }
-        .card-diamante .fifa-simple-bottom { background: linear-gradient(to top, rgba(0,20,40,0.9), rgba(0,40,70,0.7)); border-top: 2px solid #00FFFF; }
-        .card-diamante .fifa-stats-grid span { color: #00FFFF; text-shadow: 0 0 5px #00FFFF; }
-
         .card-leyenda { background: linear-gradient(135deg, #111 0%, #2b003b 50%, #000 100%); border: 2px solid #FFD700; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4), inset 0 0 30px rgba(138, 43, 226, 0.6); color: #FFD700; }
-        .card-leyenda .fifa-simple-bottom { background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(20,0,30,0.8)); border-top: 2px solid #FFD700; }
-        .card-leyenda .fifa-stats-grid span { color: #FFD700; text-shadow: 0 0 8px #FFD700; }
-
-        .fifa-card-simple::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 3;}
-        .fifa-simple-top { display: flex; padding: 15px; align-items: flex-start; position: relative; z-index: 2; }
-        .fifa-rating-simple { font-size: 3rem; font-weight: 900; line-height: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .fifa-pos-simple { font-size: 1.1rem; font-weight: 800; text-align: center; }
         
-        .fifa-photo-frame { height: 180px; width: 100%; display: flex; justify-content: center; align-items: flex-end; position: relative; z-index: 1; transition: background 0.4s ease, border 0.4s ease, box-shadow 0.4s ease; border-top-left-radius: 12px; border-top-right-radius: 12px; margin-top: -85px; padding-top: 85px; }
+        .fifa-card-simple::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 3;}
+        @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
+
+        /* FONDOS DESBLOQUEABLES */
         .fondo-base { background: transparent; }
         .fondo-escudo { background: repeating-linear-gradient(45deg, rgba(203,53,36,0.1), rgba(203,53,36,0.1) 15px, transparent 15px, transparent 30px); }
-        .fondo-metropolitano { background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.5) 0%, transparent 50%), radial-gradient(circle at 50% 100%, rgba(203,53,36,0.8) 0%, transparent 60%); }
+        .fondo-metropolitano { background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 50%), radial-gradient(circle at 50% 100%, rgba(203,53,36,0.7) 0%, transparent 60%); }
         .fondo-neptuno { background: linear-gradient(135deg, rgba(0,48,135,0.7) 0%, rgba(0,180,219,0.5) 50%, rgba(203,53,36,0.4) 100%); }
         .fondo-oblak { border-top: 3px solid rgba(255,255,255,0.9); border-left: 3px solid rgba(255,255,255,0.9); border-right: 3px solid rgba(255,255,255,0.9); box-shadow: inset 0 20px 30px rgba(203,53,36,0.6); background: rgba(0,0,0,0.3); }
 
-        .fifa-player-img-simple { max-height: 100%; max-width: 95%; object-fit: contain; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5)); }
-        .fifa-simple-bottom { padding: 15px 10px; text-align: center; z-index: 2; position: relative; }
-        .fifa-name-simple { font-weight: 900; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .fifa-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-weight: 700; font-size: 0.95rem; }
-        .fifa-stats-grid span { font-weight: 900; margin-right: 5px; }
+        /* MODALES Y TOASTS */
+        .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
+        .toast.error { border-left-color: #CB3524; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        .btn-share-card { background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 800; margin-top: 15px; cursor: pointer; display: flex; align-items: center; justify-content:center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); transition: transform 0.2s; width:100%; max-width: 270px;}
-        .btn-share-card:active { transform: scale(0.95); }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px);}
+        .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; max-width:350px; text-align:center; border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(15px); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        @keyframes flame { 0%, 100% { transform: scale(1) rotate(-5deg); } 50% { transform: scale(1.2) rotate(5deg); } }
-        .on-fire { color: #e74c3c; filter: drop-shadow(0 0 8px #f1c40f); animation: flame 1s infinite alternate; font-size: 1.1em; margin-left:5px; }
-
-        .progress-track { background: rgba(0,0,0,0.3); height: 18px; border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--lvl-1), var(--lvl-5)); transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 20px; box-shadow: 0 0 15px rgba(241, 196, 15, 0.5); }
-        
-        .insignias-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        .insignia-item { display: flex; flex-direction: column; align-items: center; width: 85px; text-align:center; }
-        .insignia-box { width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: transform 0.3s; }
-        .insignia-box:hover { transform: scale(1.1); }
-        .insignia-box.locked { background: rgba(0,0,0,0.2) !important; border: 2px dashed rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.3) !important; }
-        .insignia-box.unlocked { background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.3)) !important; border: 2px solid #FFD700 !important; color: #FFD700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 15px rgba(255, 215, 0, 0.3) !important; }
-        .insignia-name { font-size: 0.65rem; color: var(--text-sec); margin-top: 8px; line-height: 1.3; font-weight: 600; text-align: center; }
-        .insignia-box.unlocked + .insignia-name { color: #FFD700 !important; font-weight: 800 !important; }
-
-        .shop-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top:15px; }
-        .shop-item { background: var(--bg-card); border: 1px solid var(--card-border); padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
-        .shop-icon { font-size: 1.5rem; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .shop-info { flex: 1; }
-        .shop-title { font-weight: 800; font-size: 0.9rem; color: var(--text-main); }
-        .shop-req { font-size: 0.75rem; color: var(--text-sec); font-weight: 600; }
-        
-        .shop-item.locked { opacity: 0.6; filter: grayscale(1); }
-        .shop-item.locked .shop-icon { background: rgba(0,0,0,0.2); color: var(--text-sec); }
-        .shop-item.unlocked { border-color: #FFD700; background: linear-gradient(90deg, rgba(255,215,0,0.05), transparent); }
-        .shop-item.unlocked .shop-icon { background: rgba(255,215,0,0.2); color: #FFD700; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
-
+        /* NAVEGACIÓN FLOTANTE */
         .floating-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); padding: 12px 25px; border-radius: 40px; display:flex; gap:20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 90;}
-        .floating-nav button { background: none; border: none; color: #64748b; font-size: 1rem; font-weight: 700; cursor:pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
-        .floating-nav button i { font-size: 1.4rem; }
-        .floating-nav button.active { color: var(--atm-red); text-shadow: 0 0 10px rgba(203,53,36,0.5); }
-        .floating-nav button.active i { transform: translateY(-3px); }
+        .floating-nav button { background: none; border: none; color: #64748b; font-size: 1rem; cursor:pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
+        .floating-nav button.active { color: #CB3524; text-shadow: 0 0 10px rgba(203,53,36,0.5); }
 
-        .ios-segmented-control { background: var(--segment-bg); padding: 5px; border-radius: 12px; display: flex; gap: 5px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .segment-btn { flex: 1; background: transparent; border: none; padding: 10px; border-radius: 10px; color: var(--text-sec); font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .segment-btn.active { background: var(--segment-active); color: var(--text-main); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-        @keyframes fadeIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
-        @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
+        .on-fire { color: #e74c3c; filter: drop-shadow(0 0 8px #f1c40f); animation: flame 1s infinite alternate; font-size: 1.1em; margin-left:5px; }
+        @keyframes flame { 0%, 100% { transform: scale(1) rotate(-5deg); } 50% { transform: scale(1.2) rotate(5deg); } }
+        
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
     </style>
 </head>
-<body data-theme="dark">
+<body data-theme="dark" class="antialiased selection:bg-atmRed selection:text-white">
 
-    <div id="toast-container" class="toast-container"></div>
+    <div id="toast-container"></div>
 
-    <!-- MODAL DE CONFIRMACIÓN ELIMINAR -->
+    <!-- MODALES -->
     <div id="modal-confirm" class="modal-overlay" style="display:none;">
-        <div class="modal-box animate-pop" style="border-color:var(--atm-red);">
-            <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; color:var(--atm-red); margin-bottom:15px;"></i>
-            <h3 style="color:var(--text-main); margin-bottom:10px; font-weight: 800;">¿Estás seguro?</h3>
-            <p id="confirm-msg" style="color:var(--text-sec); font-size:0.9rem; margin-bottom:20px;">Esta acción no se puede deshacer.</p>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-secondary" onclick="document.getElementById('modal-confirm').style.display='none'">CANCELAR</button>
-                <button class="btn-main" id="btn-confirm-action" style="margin-top:0; background:var(--atm-red);">ELIMINAR</button>
+        <div class="modal-box" style="border-color:#CB3524;">
+            <i class="fas fa-exclamation-triangle text-atmRed text-4xl mb-4"></i>
+            <h3 class="text-xl font-black mb-2 text-white">¿Estás seguro?</h3>
+            <p class="text-sm text-gray-400 mb-5">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-2">
+                <button class="flex-1 input-glass py-3 rounded-xl font-bold" onclick="document.getElementById('modal-confirm').style.display='none'">CANCELAR</button>
+                <button class="flex-1 bg-atmRed text-white py-3 rounded-xl font-bold shadow-lg shadow-atmRed/30" id="btn-confirm-action">ELIMINAR</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL QR COMPARTIR FICHA -->
+    <!-- MODAL QR COMPARTIR -->
     <div id="modal-qr" class="modal-overlay" style="display:none;">
-        <div class="modal-box animate-pop">
-            <h3 style="color:var(--text-main); margin-bottom:15px; font-weight:900;"><i class="fas fa-qrcode"></i> TU FICHA EN VIVO</h3>
-            <div style="background:white; padding:15px; border-radius:15px; display:inline-block; margin-bottom:15px; border: 3px solid var(--atm-red); box-shadow: 0 5px 20px rgba(203,53,36,0.3);">
-                <img id="qr-image" src="" alt="QR Ficha" style="width:180px; height:180px; display:block;">
+        <div class="modal-box">
+            <h3 class="text-xl font-black mb-4 text-[var(--text-main)]"><i class="fas fa-qrcode"></i> TU FICHA EN VIVO</h3>
+            <div class="bg-white p-4 rounded-2xl inline-block mb-4 border-4 border-atmRed shadow-xl shadow-atmRed/30">
+                <img id="qr-image" src="" alt="QR" class="w-48 h-48 block">
             </div>
-            <p style="color:var(--text-sec); font-size:0.85rem; margin-bottom:20px;">Escanea este código para ver el resumen de tus estadísticas.</p>
-            <div style="display:flex; gap:10px; flex-direction:column;">
-                <button class="btn-share-card" onclick="window.compartirNativo()" style="margin:0; width:100%;"><i class="fab fa-whatsapp"></i> Enviar por WhatsApp</button>
-                <button class="btn-secondary" onclick="document.getElementById('modal-qr').style.display='none'">CERRAR</button>
+            <p class="text-sm text-[var(--text-sec)] mb-5">Escanea para ver el resumen de tus estadísticas.</p>
+            <div class="flex flex-col gap-2">
+                <button class="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform" onclick="window.compartirNativo()"><i class="fab fa-whatsapp text-xl"></i> Enviar por WhatsApp</button>
+                <button class="input-glass py-3 rounded-xl font-bold hover:bg-white/5" onclick="document.getElementById('modal-qr').style.display='none'">CERRAR</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL HISTORIAL COMPLETO (ENTRENADORES) -->
+    <!-- MODAL HISTORIAL COMPLETO -->
     <div id="modal-history" class="modal-overlay" style="display:none;">
-        <div class="modal-box animate-pop" style="max-width:450px; width:95%; max-height:80vh; display:flex; flex-direction:column; padding: 20px;">
-            <h3 style="color:var(--text-main); margin-bottom:5px; font-weight:900; text-transform:uppercase;" id="history-modal-title">HISTORIAL</h3>
-            <p style="color:var(--text-sec); font-size:0.8rem; font-style:italic; margin-bottom:15px;">Registro completo de acciones</p>
-            <div id="history-modal-content" style="flex:1; overflow-y:auto; text-align:left; margin-bottom:15px; padding-right:10px;" class="history-list"></div>
-            <button class="btn-secondary" onclick="document.getElementById('modal-history').style.display='none'">CERRAR PANEL</button>
+        <div class="modal-box w-full max-w-md max-h-[80vh] flex flex-col p-6">
+            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase" id="history-modal-title">HISTORIAL</h3>
+            <p class="text-xs text-[var(--text-sec)] italic mb-4">Registro completo de acciones</p>
+            <div id="history-modal-content" class="flex-1 overflow-y-auto text-left mb-4 pr-2 space-y-2 custom-scrollbar"></div>
+            <button class="input-glass py-3 rounded-xl font-bold w-full mt-auto" onclick="document.getElementById('modal-history').style.display='none'">CERRAR PANEL</button>
         </div>
     </div>
 
-    <section id="view-home" class="home-container">
-        <!-- Panel Izquierdo (Login) -->
-        <div class="home-left">
-            <div class="home-logo-container">
-                <img src="logo.png" alt="Logo Atleti" onerror="this.style.display='none'">
-                <h1>GUARDIANES <span>ATM</span></h1>
-                <p>Departamento de Porteros<br><span>Atlético de Madrid</span></p>
+    <section id="view-home" class="split-layout">
+        <div class="split-left">
+            <div class="text-center mb-10 mt-6">
+                <img src="logo.png" alt="Logo Atleti" class="h-16 mx-auto mb-4 drop-shadow-lg" onerror="this.style.display='none'">
+                <h1 class="text-2xl font-black italic tracking-wider text-white">GUARDIANES <span class="text-atmRed">ATM</span></h1>
+                <p class="text-[0.65rem] text-gray-400 font-extrabold tracking-[0.2em] uppercase mt-1">ACADEMIA DE TECNIFICACIÓN</p>
             </div>
 
-            <!-- Paso 1: Selección de Perfil -->
-            <div id="home-role-selection">
-                <p style="font-size: 0.65rem; color: #94a3b8; font-weight: 800; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase;">Selecciona tu perfil</p>
-                <button class="role-btn" onclick="window.abrirLogin('portero')">
-                    <i class="fas fa-mitten"></i> PORTERO
-                </button>
-                <button class="role-btn" onclick="window.abrirLogin('edp')">
-                    <i class="fas fa-stopwatch"></i> ENTRENADOR (EDP)
-                </button>
-                <button class="role-btn" onclick="window.abrirLogin('admin')">
-                    <i class="fas fa-shield-alt"></i> ADMINISTRADOR
-                </button>
+            <!-- Menú de Roles -->
+            <div id="home-role-selection" class="flex-1 flex flex-col justify-center animate-[popIn_0.3s_ease]">
+                <p class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-4 text-center">Selecciona tu perfil</p>
+                <div class="space-y-3">
+                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('portero')">
+                        <i class="fas fa-mitten text-xl text-atmRed w-6 text-center group-hover:scale-110 transition-transform"></i> PORTERO
+                    </button>
+                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('jugador')">
+                        <i class="fas fa-running text-xl text-atmRed w-6 text-center group-hover:scale-110 transition-transform"></i> JUGADOR DE CAMPO
+                    </button>
+                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('edp')">
+                        <i class="fas fa-stopwatch text-xl text-atmRed w-6 text-center group-hover:scale-110 transition-transform"></i> ENTRENADOR / STAFF
+                    </button>
+                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('admin')">
+                        <i class="fas fa-shield-alt text-xl text-atmRed w-6 text-center group-hover:scale-110 transition-transform"></i> ADMINISTRADOR
+                    </button>
+                </div>
             </div>
 
-            <!-- Paso 2: Input de Contraseña (integrado, sin modal) -->
-            <div id="home-login-form" style="display: none; animation: fadeIn 0.3s;">
-                <p id="login-role-title" style="font-size: 0.8rem; color: var(--atm-red); font-weight: 900; letter-spacing: 1px; margin-bottom: 25px; text-transform: uppercase;"><i class="fas fa-lock"></i> ACCESO</p>
+            <!-- Formulario de Contraseña Integrado -->
+            <div id="home-login-form" class="flex-1 flex flex-col justify-center hidden animate-[popIn_0.3s_ease]">
+                <p id="login-role-title" class="text-sm text-atmRed font-black tracking-wider uppercase mb-8 flex items-center gap-2"><i class="fas fa-lock"></i> ACCESO</p>
                 
-                <div class="input-group-modern">
-                    <label>CONTRASEÑA</label>
-                    <input type="password" id="home-pass" placeholder="Ingresa tu clave...">
-                    <i class="fas fa-eye toggle-password" onclick="window.togglePasswordVisibility()"></i>
+                <div class="relative mb-8">
+                    <label class="block text-[0.65rem] text-gray-400 font-extrabold tracking-widest uppercase mb-2">CONTRASEÑA</label>
+                    <input type="password" id="home-pass" placeholder="Ingresa tu clave..." class="w-full bg-transparent border-b-2 border-white/20 text-white text-xl py-2 outline-none transition-colors duration-300 focus:border-atmRed tracking-widest rounded-none">
+                    <i class="fas fa-eye absolute right-0 bottom-3 text-gray-400 cursor-pointer hover:text-atmRed transition-colors" onclick="window.togglePasswordVisibility()"></i>
                 </div>
                 
-                <button class="btn-red-glow" onclick="window.confirmarLogin()">ACCEDER</button>
-                <button onclick="window.volverRoles()" style="background:none; border:none; color:#64748b; width:100%; margin-top:20px; font-weight:700; font-size:0.8rem; cursor:pointer; text-transform:uppercase; letter-spacing:1px;"><i class="fas fa-arrow-left"></i> Volver a perfiles</button>
+                <button class="w-full bg-gradient-to-r from-[#E63946] to-[#CB3524] text-white py-4 rounded-xl font-black text-sm tracking-wider uppercase shadow-[0_10px_30px_rgba(203,53,36,0.4)] hover:translate-y-[-2px] hover:shadow-[0_15px_40px_rgba(203,53,36,0.6)] transition-all active:scale-95" onclick="window.confirmarLogin()">ACCEDER</button>
+                
+                <button onclick="window.volverRoles()" class="mt-6 text-gray-400 font-bold text-xs uppercase tracking-wider hover:text-white transition-colors"><i class="fas fa-arrow-left mr-1"></i> Volver atrás</button>
             </div>
 
-            <div class="home-footer-text">- CONVIERTE IDEAS EN SESIONES -</div>
+            <div class="text-center mt-auto text-[0.6rem] text-gray-500 font-black tracking-widest uppercase">
+                - CONVIERTE IDEAS EN SESIONES -
+            </div>
         </div>
 
-        <!-- Panel Derecho (Branding Gigante) -->
-        <div class="home-right">
-            <!-- Toggle de Tema Movido a la derecha arriba -->
-            <button id="btn-theme-home" class="btn-logout-clean" onclick="window.toggleTheme()" style="position: absolute; top: 30px; right: 30px; color: white;"><i class="fas fa-sun"></i></button>
-            
+        <div class="split-right">
+            <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i class="fas fa-sun" id="btn-theme-home"></i></button>
             <div>
-                <h2 class="hero-quote">"NUNCA DEJES DE CREER"</h2>
-                <h1 class="hero-main-text">
-                    TRABAJA.<br>
-                    <span>APRENDE.</span><br>
-                    MEJORA.
+                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">"NUNCA DEJES DE CREER"</h2>
+                <h1 class="text-[5rem] xl:text-[6.5rem] font-black italic leading-[0.9] tracking-tighter uppercase text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-8">
+                    TRABAJA.<br><span class="text-atmRed">APRENDE.</span><br>MEJORA.
                 </h1>
-                <div class="hero-description">
-                    <div class="red-line"></div>
-                    <p>Exclusivo ecosistema para la gestión y evolución técnico-táctica de nuestros porteros.</p>
+                <div class="flex items-center gap-6 mt-12">
+                    <div class="w-1.5 h-16 bg-atmRed shadow-[0_0_15px_rgba(203,53,36,0.6)]"></div>
+                    <p class="text-white/70 text-lg max-w-md leading-relaxed font-semibold">Exclusivo ecosistema gamificado para la gestión y evolución técnica de nuestros deportistas.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <header id="main-header" style="display: none;">
-        <div class="header-content" style="display: flex; align-items: center;">
-            <img src="logo.png" class="escudo-img" alt="Escudo Atleti" onerror="this.style.display='none'">
-            <div class="header-text">
-                <h1 style="font-size: 1.15rem;">GUARDIANES <span class="highlight">ATM</span></h1>
+    <header id="main-header" class="hidden sticky top-0 z-50 bg-gradient-to-b from-[#1C2C5B] to-transparent pb-6 pt-4 px-5 backdrop-blur-sm">
+        <div class="flex justify-between items-center max-w-4xl mx-auto w-full">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" class="h-10 drop-shadow-md" alt="Escudo Atleti" onerror="this.style.display='none'">
+                <h1 class="text-lg font-black italic uppercase text-white tracking-wide">GUARDIANES <span class="text-atmRed">ATM</span></h1>
             </div>
-        </div>
-        <div style="display:flex; gap:15px; align-items:center;">
-            <button id="btn-theme" class="btn-logout-clean" onclick="window.toggleTheme()"><i class="fas fa-sun"></i></button>
-            <button id="btn-logout" class="btn-logout-clean" onclick="window.logout()"><i class="fas fa-power-off"></i></button>
+            <div class="flex gap-4 items-center text-white">
+                <button onclick="window.toggleTheme()" class="text-xl hover:scale-110 transition-transform"><i class="fas fa-sun" id="btn-theme"></i></button>
+                <button onclick="window.logout()" class="text-xl text-atmRed hover:scale-110 transition-transform"><i class="fas fa-power-off"></i></button>
+            </div>
         </div>
     </header>
 
-    <main>
+    <main id="app-container" class="max-w-4xl mx-auto w-full px-4 pb-28 hidden">
+        
         <!-- VISTA ADMIN -->
-        <section id="view-admin" class="app-content">
-            <div class="modern-card" style="margin-top: 20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
-                    <h2 style="font-weight:900;">Gestión Porteros</h2>
-                    <span style="background:var(--atm-red); color:white; padding:4px 10px; border-radius:8px; font-size:0.7rem; font-weight:bold;">ALTA</span>
+        <section id="view-admin" class="hidden">
+            <div class="glass-card rounded-2xl p-5 mb-6 mt-4">
+                <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3">
+                    <h2 class="font-black text-xl">Gestión Deportistas</h2>
+                    <span class="bg-atmRed text-white px-3 py-1 rounded-lg text-xs font-bold">ALTA</span>
                 </div>
                 
-                <div style="width:110px; height:110px; margin:0 auto 20px; position:relative; cursor:pointer;" onclick="document.getElementById('fileInput').click()">
-                    <img id="fotoPreview" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid var(--atm-red); box-shadow: 0 5px 15px rgba(203,53,36,0.4);">
-                    <div style="position:absolute; bottom:0; right:0; background:var(--atm-red); width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--bg-card); color:white;"><i class="fas fa-camera"></i></div>
+                <div class="w-28 h-28 mx-auto mb-6 relative cursor-pointer group" onclick="document.getElementById('fileInput').click()">
+                    <img id="fotoPreview" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=" class="w-full h-full object-cover rounded-full border-4 border-atmRed shadow-[0_5px_15px_rgba(203,53,36,0.4)] group-hover:scale-105 transition-transform">
+                    <div class="absolute bottom-0 right-0 bg-atmRed w-9 h-9 rounded-full flex items-center justify-center border-2 border-[var(--bg-card)] text-white shadow-lg"><i class="fas fa-camera"></i></div>
                 </div>
-                <input type="file" id="fileInput" accept="image/*" onchange="window.procesarImagenSegura(event)" style="display:none;">
-
+                <input type="file" id="fileInput" accept="image/*" onchange="window.procesarImagenSegura(event)" class="hidden">
                 <input type="hidden" id="reg-id">
                 
-                <div class="form-grid">
-                    <div class="form-full"><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Nombre Completo</label><input type="text" id="reg-nombre" placeholder="Nombre y Apellidos"></div>
-                    <div><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Equipo</label><input type="text" id="reg-equipo" placeholder="Ej: Alevín A"></div>
-                    <div><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Año Nac.</label><input type="number" id="reg-ano" placeholder="Ej: 2012"></div>
-                    <div><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Sede</label><select id="reg-sede"><option value="" disabled selected>Selecciona...</option><option value="CD Alcalá">CD Alcalá</option><option value="Cotorruelo">Cotorruelo</option></select></div>
-                    <div><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Entrenador</label><select id="reg-entrenador-select"><option value="">Asignar EDP...</option></select></div>
-                    <div><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Pierna</label><select id="reg-pierna"><option value="">Selecciona...</option><option>Derecha</option><option>Izquierda</option></select></div>
-                    <div><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Mano</label><select id="reg-mano"><option value="">Selecciona...</option><option>Derecha</option><option>Izquierda</option></select></div>
-                    <div class="form-full"><label style="font-size:0.75rem; color:var(--text-sec); font-weight:bold; margin-bottom:5px; display:block; text-transform:uppercase;">Contraseña Acceso</label><input type="text" id="reg-clave" placeholder="Clave personal"></div>
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="col-span-2">
+                        <label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Tipo de Ficha</label>
+                        <select id="reg-tipo" class="w-full input-glass p-3 rounded-xl font-bold bg-opacity-50" onchange="window.actualizarOpcionesPosicion()">
+                            <option value="porteros">🧤 Portero</option>
+                            <option value="jugadores">🏃‍♂️ Jugador de Campo</option>
+                        </select>
+                    </div>
+                    
+                    <div id="div-posicion" class="col-span-2" style="display:none;">
+                        <label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Posición Específica</label>
+                        <select id="reg-posicion" class="w-full input-glass p-3 rounded-xl font-bold">
+                            <option value="DEF">🛡️ Defensa (DEF)</option>
+                            <option value="LAT">🏃 Lateral (LAT)</option>
+                            <option value="MED">🧠 Centrocampista (MED)</option>
+                            <option value="EXT">⚡ Extremo (EXT)</option>
+                            <option value="DEL">🎯 Delantero (DEL)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-2"><label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Nombre</label><input type="text" id="reg-nombre" placeholder="Nombre Completo" class="w-full input-glass p-3 rounded-xl"></div>
+                    <div><label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Equipo</label><input type="text" id="reg-equipo" placeholder="Ej: Alevín A" class="w-full input-glass p-3 rounded-xl"></div>
+                    <div><label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Año Nac.</label><input type="number" id="reg-ano" placeholder="2012" class="w-full input-glass p-3 rounded-xl"></div>
+                    <div><label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Sede</label><select id="reg-sede" class="w-full input-glass p-3 rounded-xl"><option value="">Selecciona...</option><option value="CD Alcalá">CD Alcalá</option><option value="Cotorruelo">Cotorruelo</option></select></div>
+                    <div><label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Entrenador</label><select id="reg-entrenador-select" class="w-full input-glass p-3 rounded-xl"><option value="">Asignar...</option></select></div>
+                    <div class="col-span-2"><label class="block text-[0.7rem] text-gray-500 font-bold mb-1 uppercase">Contraseña Acceso</label><input type="text" id="reg-clave" placeholder="Clave personal" class="w-full input-glass p-3 rounded-xl"></div>
                 </div>
 
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <button class="btn-secondary" onclick="window.limpiarFormAdmin()">LIMPIAR</button>
-                    <button class="btn-main" onclick="window.guardarPortero()" style="margin-top:0;">GUARDAR PORTERO</button>
+                <div class="flex gap-2 mt-5">
+                    <button class="flex-1 input-glass py-3 rounded-xl font-bold hover:bg-white/5" onclick="window.limpiarFormAdmin()">LIMPIAR</button>
+                    <button class="flex-[2] bg-gradient-to-r from-atmRed to-red-900 text-white py-3 rounded-xl font-black shadow-lg hover:scale-[1.02] transition-transform" onclick="window.guardarDeportista()">GUARDAR DEPORTISTA</button>
                 </div>
             </div>
             
-            <div class="modern-card" style="border-left: 4px solid var(--lvl-3);">
-                <h3 style="font-weight:900;">Gestión Staff</h3>
-                <div class="form-grid" style="margin-top:15px;">
-                    <input type="text" id="edp-nombre" placeholder="Nombre EDP">
-                    <input type="text" id="edp-clave" placeholder="Clave EDP">
+            <div class="glass-card rounded-2xl p-5 mb-8 border-l-4 border-[#3498db]">
+                <h3 class="font-black text-lg mb-3">Gestión Staff (EDP)</h3>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <input type="text" id="edp-nombre" placeholder="Nombre Staff" class="w-full input-glass p-3 rounded-xl">
+                    <input type="text" id="edp-clave" placeholder="Contraseña Staff" class="w-full input-glass p-3 rounded-xl">
                 </div>
-                <button class="btn-main" onclick="window.crearEDP()" style="margin-top:10px; background:linear-gradient(135deg, var(--lvl-3), #d35400);">CREAR ENTRENADOR</button>
+                <button class="w-full bg-gradient-to-r from-[#3498db] to-blue-700 text-white py-3 rounded-xl font-black shadow-lg hover:scale-[1.02] transition-transform" onclick="window.crearEDP()">CREAR ENTRENADOR</button>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin: 35px 0 20px 0; border-bottom: 2px solid rgba(203, 53, 36, 0.2); padding-bottom: 8px;">
-                <div style="color: var(--atm-red); font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; font-size: 1.1rem;">PORTEROS REGISTRADOS</div>
-                <button onclick="window.exportarExcel()" class="btn-excel" title="Exportar Estadísticas a Excel">
-                    <i class="fas fa-file-excel" style="font-size: 1.2rem;"></i> Exportar
-                </button>
+            <!-- Listas Admin -->
+            <div class="flex justify-between items-center mb-4 border-b-2 border-atmRed/20 pb-2">
+                <div class="text-atmRed font-black uppercase tracking-widest">PORTEROS</div>
+                <button onclick="window.exportarExcel('porteros')" class="bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-green-600 transition-colors"><i class="fas fa-file-excel"></i> Exportar</button>
             </div>
-            <div id="admin-lista-porteros"></div>
+            <div id="admin-lista-porteros" class="space-y-3 mb-8"></div>
+
+            <div class="flex justify-between items-center mb-4 border-b-2 border-atmRed/20 pb-2">
+                <div class="text-atmRed font-black uppercase tracking-widest">JUGADORES DE CAMPO</div>
+                <button onclick="window.exportarExcel('jugadores')" class="bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-green-600 transition-colors"><i class="fas fa-file-excel"></i> Exportar</button>
+            </div>
+            <div id="admin-lista-jugadores" class="space-y-3 mb-8"></div>
             
-            <div class="section-divider">CUERPO TÉCNICO</div>
-            <div id="admin-lista-edps"></div>
+            <div class="text-center text-atmRed font-black uppercase tracking-widest mb-4 border-b-2 border-atmRed/20 pb-2 mt-8">CUERPO TÉCNICO</div>
+            <div id="admin-lista-edps" class="space-y-3"></div>
         </section>
 
-        <section id="view-edp" class="app-content">
-            <div style="text-align:center; margin: 20px 0;">
-                <h2 id="edp-welcome" style="font-weight:900; font-size:1.5rem; text-transform:uppercase;">Panel Técnico</h2>
-                <p style="color:var(--text-sec); font-size:0.85rem; font-weight:bold;">Evaluación en tiempo real</p>
-            </div>
-            
-            <div style="width: 95%; max-width: 600px; margin: 0 auto 20px auto; position: relative;">
-                <input type="text" id="search-porteros-edp" placeholder="Buscar portero por nombre..." onkeyup="window.filtrarPorterosEDP()" style="padding-left: 40px; border-radius: 20px;">
-                <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-sec);"></i>
+        <!-- VISTA EDP (ENTRENADOR) -->
+        <section id="view-edp" class="hidden">
+            <div class="text-center mb-6 mt-4">
+                <h2 class="font-black text-2xl uppercase">Panel Técnico</h2>
+                <p class="text-sm text-[var(--text-sec)] font-bold">Evaluación en tiempo real</p>
             </div>
 
+            <!-- Toggles y Buscador -->
+            <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 mb-5 border border-white/5">
+                <button id="btn-edp-toggle-por" class="flex-1 py-2.5 rounded-lg text-sm font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-2" onclick="window.toggleEvalView('porteros')"><i class="fas fa-mitten"></i> Porteros</button>
+                <button id="btn-edp-toggle-jug" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-2" onclick="window.toggleEvalView('jugadores')"><i class="fas fa-running"></i> Jugadores</button>
+            </div>
+            
+            <div class="relative mb-6">
+                <input type="text" id="search-edp" placeholder="Buscar por nombre..." onkeyup="window.filtrarListasEDP()" class="w-full input-glass py-3 pl-12 pr-4 rounded-full font-semibold shadow-sm">
+                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+            </div>
+
+            <!-- Contenedores de Listas Evaluación -->
             <div id="edp-lista-porteros"></div>
+            <div id="edp-lista-jugadores" style="display:none;"></div>
         </section>
 
-        <section id="view-portero" class="app-content">
-            <div class="fifa-card-container">
+        <!-- VISTA DEPORTISTA (FICHA / DASHBOARD) -->
+        <section id="view-dashboard" class="hidden">
+            <div class="fifa-card-container mb-6 mt-2">
                 <div class="fifa-card-simple card-bronce" id="fifa-card-bg">
-                    <div class="fifa-simple-top">
-                        <div style="flex:1;">
-                            <div class="fifa-rating-simple" id="fifa-rating">60</div>
-                            <div class="fifa-pos-simple">POR</div>
+                    <div class="flex p-4 items-start relative z-10">
+                        <div class="flex-1">
+                            <div class="text-[3.2rem] font-black leading-none drop-shadow-md" id="fifa-rating">60</div>
+                            <div class="text-lg font-extrabold text-center w-12 tracking-wide" id="fifa-pos">POR</div>
                         </div>
-                        <img src="logo.png" style="width:50px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));" onerror="this.style.display='none'">
+                        <img src="logo.png" class="w-12 drop-shadow-md" onerror="this.style.display='none'">
                     </div>
-                    <div class="fifa-photo-frame fondo-base">
-                        <img id="card-foto" class="fifa-player-img-simple" src="" onerror="this.style.display='none'">
+                    <div class="h-44 w-full flex justify-center items-end relative z-0 transition-all duration-500 rounded-t-xl -mt-24 pt-24 fondo-base" id="card-fondo-marco">
+                        <img id="card-foto" class="max-h-full max-w-[95%] object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.6)]" src="" onerror="this.style.display='none'">
                     </div>
-                    <div class="fifa-simple-bottom">
-                        <div class="fifa-name-simple" id="dash-card-nombre">NOMBRE</div>
-                        <div class="fifa-stats-grid">
-                            <div><span id="stat-tec">60</span> TEC</div><div><span id="stat-fis">60</span> JUE</div>
-                            <div><span id="stat-men">60</span> ACT</div><div><span id="stat-tac">60</span> RET</div>
+                    <div class="p-4 text-center z-10 relative bg-gradient-to-t from-black/90 to-black/40 border-t border-white/20" id="card-bottom-bar">
+                        <div class="font-black text-2xl uppercase mb-3 tracking-wide flex items-center justify-center gap-2 text-white" id="dash-card-nombre">NOMBRE</div>
+                        <div class="grid grid-cols-2 gap-2 font-bold text-sm text-white/90">
+                            <div class="flex justify-between px-2"><span class="font-black text-white" id="stat-tec">60</span> TEC</div>
+                            <div class="flex justify-between px-2"><span class="font-black text-white" id="stat-fis">60</span> <span id="label-fis">JUE</span></div>
+                            <div class="flex justify-between px-2"><span class="font-black text-white" id="stat-men">60</span> ACT</div>
+                            <div class="flex justify-between px-2"><span class="font-black text-white" id="stat-tac">60</span> <span id="label-tac">RET</span></div>
                         </div>
                     </div>
                 </div>
-                <button class="btn-share-card" onclick="window.compartirFicha()">
-                    <i class="fas fa-qrcode"></i> Compartir mi Ficha
+                <button class="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white py-2.5 px-6 rounded-full font-extrabold mt-5 flex items-center gap-2 shadow-[0_5px_15px_rgba(37,211,102,0.4)] hover:scale-105 transition-transform" onclick="window.compartirFicha()">
+                    <i class="fas fa-qrcode text-lg"></i> Compartir mi Ficha
                 </button>
             </div>
 
-            <div style="background: rgba(203,53,36,0.1); padding: 20px; border-radius: 16px; border-left: 5px solid var(--atm-red); margin-top:25px; text-align: center; border: 1px solid rgba(203,53,36,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div style="color: var(--atm-red); font-weight: 900; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px;"><i class="fas fa-comment-dots"></i> Mensaje del Míster:</div>
-                <div id="dash-feedback-content" style="font-style: italic; font-weight: 700; font-size: 1.2rem; line-height: 1.4; color:var(--text-main);">...</div>
+            <!-- Feedback -->
+            <div class="bg-atmRed/10 p-5 rounded-2xl border-l-4 border-atmRed border-y border-r border-atmRed/20 shadow-sm mb-6 text-center">
+                <div class="text-atmRed font-black text-xs uppercase mb-2 tracking-widest"><i class="fas fa-comment-dots mr-1"></i> Mensaje del Míster</div>
+                <div id="dash-feedback-content" class="italic font-bold text-lg leading-snug">...</div>
             </div>
 
-            <div class="modern-card" style="margin-top:25px;">
-                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 id="level-title" style="color:var(--lvl-1); font-size:1.1rem; font-weight:900;">Nivel 1</h3>
-                    <span id="dash-puntos-badge" style="background:var(--lvl-1); color:black; padding:5px 12px; border-radius:20px; font-weight:900; box-shadow:0 0 10px rgba(46,204,113,0.5);">0 PTS</span>
+            <!-- Barra de Progreso Nivel -->
+            <div class="glass-card rounded-2xl p-5 mb-6">
+                 <div class="flex justify-between items-center mb-4">
+                    <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel 1</h3>
+                    <span id="dash-puntos-badge" class="bg-lvl1 text-black px-4 py-1.5 rounded-full font-black text-sm shadow-[0_0_15px_rgba(46,204,113,0.4)]">0 PTS</span>
                 </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+                <div class="bg-black/30 h-4 rounded-full overflow-hidden mb-5 border border-white/10 shadow-inner">
+                    <div class="h-full bg-gradient-to-r from-lvl1 to-lvl5 rounded-full transition-all duration-[1.5s] ease-out shadow-[0_0_15px_rgba(241,196,15,0.5)]" id="progress-fill" style="width:0%"></div>
                 </div>
-                <div style="display:grid; grid-template-columns:repeat(5, 1fr); text-align:center; position:relative;">
-                    <div style="position:absolute; top:15px; left:10%; right:10%; height:2px; background:rgba(255,255,255,0.1); z-index:1;"></div>
-                    <div style="display:flex; flex-direction:column; align-items:center; z-index:2;"><div style="width:30px; height:30px; background:var(--bg-card); border:2px solid var(--text-sec); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.8rem; color:var(--text-sec); margin-bottom:5px;">1</div><div style="font-size:0.5rem; color:var(--text-sec); text-transform:uppercase; font-weight:bold;">Iniciación</div></div>
-                    <div style="display:flex; flex-direction:column; align-items:center; z-index:2;"><div style="width:30px; height:30px; background:var(--bg-card); border:2px solid var(--text-sec); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.8rem; color:var(--text-sec); margin-bottom:5px;">2</div><div style="font-size:0.5rem; color:var(--text-sec); text-transform:uppercase; font-weight:bold;">Formación</div></div>
-                    <div style="display:flex; flex-direction:column; align-items:center; z-index:2;"><div style="width:30px; height:30px; background:var(--bg-card); border:2px solid var(--text-sec); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.8rem; color:var(--text-sec); margin-bottom:5px;">3</div><div style="font-size:0.5rem; color:var(--text-sec); text-transform:uppercase; font-weight:bold;">Consolidación</div></div>
-                    <div style="display:flex; flex-direction:column; align-items:center; z-index:2;"><div style="width:30px; height:30px; background:var(--bg-card); border:2px solid var(--text-sec); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.8rem; color:var(--text-sec); margin-bottom:5px;">4</div><div style="font-size:0.5rem; color:var(--text-sec); text-transform:uppercase; font-weight:bold;">Rendimiento</div></div>
-                    <div style="display:flex; flex-direction:column; align-items:center; z-index:2;"><div style="width:30px; height:30px; background:var(--bg-card); border:2px solid var(--text-sec); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.8rem; color:var(--text-sec); margin-bottom:5px;"><i class="fas fa-star"></i></div><div style="font-size:0.5rem; color:var(--text-sec); text-transform:uppercase; font-weight:bold;">Referente</div></div>
-                </div>
-            </div>
-
-            <!-- TIENDA DE FONDOS VESTUARIO -->
-            <div class="modern-card">
-                <h3 style="text-transform: uppercase; font-weight: 900; margin-bottom: 5px; font-size: 1.2rem;">Vestuario</h3>
-                <p style="font-size:0.85rem; color:var(--text-sec); margin-bottom:15px; font-style:italic;">Personaliza el fondo de tu carta según tus puntos.</p>
-                <div id="fondos-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;"></div>
-            </div>
-
-            <div class="modern-card">
-                <h3 style="text-transform: uppercase; font-weight: 900; margin-bottom: 5px; font-size: 1.2rem;">Muro de Trofeos</h3>
-                <p style="font-size:0.85rem; color:var(--text-sec); margin-bottom:20px; font-style:italic;">Colecciona las insignias que definen tu legado.</p>
-                <div id="insignias-container" class="insignias-grid"></div>
-            </div>
-
-            <div class="modern-card">
-                <h3 style="text-transform: uppercase; font-weight: 900; margin-bottom: 5px; font-size: 1.2rem;">Recompensas</h3>
-                <p style="font-size:0.85rem; color:var(--text-sec); margin-bottom:15px; font-style:italic;">Privilegios desbloqueados con tus puntos.</p>
-                <div id="shop-container" class="shop-grid"></div>
-            </div>
-            
-            <div class="modern-card">
-                <h3 style="margin-bottom:15px; font-weight:900; text-transform:uppercase;">Evolución de Puntos</h3>
-                <div style="position: relative; height:220px; width:100%;">
-                    <canvas id="evoChart"></canvas>
+                <div class="flex justify-between text-center relative">
+                    <div class="absolute top-[14px] left-[10%] right-[10%] h-[2px] bg-white/10 z-0"></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">1</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Inicio</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">2</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Plata</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">3</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Oro</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1">4</div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Élite</div></div>
+                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-gray-400 rounded-full flex items-center justify-center font-bold text-xs text-gray-400 mb-1"><i class="fas fa-star text-xs"></i></div><div class="text-[0.55rem] text-gray-400 font-bold uppercase">Leyenda</div></div>
                 </div>
             </div>
 
-            <div class="modern-card">
-                <h3 style="margin-bottom:15px; font-weight:900; text-transform:uppercase;">ADN Guardianes <span style="font-size:0.7rem; font-weight:normal; color:var(--text-sec);">(Vs Media Academia)</span></h3>
-                <div style="position: relative; height:320px; width:100%;">
-                    <canvas id="adnChart"></canvas>
+            <!-- Gráficos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="glass-card rounded-2xl p-5">
+                    <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Academia)</span></h3>
+                    <div class="relative h-64 w-full"><canvas id="adnChart"></canvas></div>
                 </div>
+                <div class="glass-card rounded-2xl p-5">
+                    <h3 class="font-black text-sm uppercase tracking-widest mb-4">EVOLUCIÓN PUNTOS</h3>
+                    <div class="relative h-56 w-full"><canvas id="evoChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Vestuario Fondos -->
+            <div class="glass-card rounded-2xl p-5 mb-6">
+                <h3 class="font-black text-lg uppercase tracking-wide mb-1">Vestuario</h3>
+                <p class="text-xs text-[var(--text-sec)] italic mb-4">Personaliza el fondo de tu carta según tus puntos.</p>
+                <div id="fondos-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+            </div>
+
+            <!-- Insignias y Tienda -->
+            <div class="glass-card rounded-2xl p-5 mb-6">
+                <h3 class="font-black text-lg uppercase tracking-wide mb-1">Muro de Trofeos</h3>
+                <p class="text-xs text-[var(--text-sec)] italic mb-5">Colecciona las insignias que definen tu legado.</p>
+                <div id="insignias-container" class="flex flex-wrap justify-center gap-4"></div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 mb-6">
+                <h3 class="font-black text-lg uppercase tracking-wide mb-1">Recompensas</h3>
+                <p class="text-xs text-[var(--text-sec)] italic mb-4">Privilegios desbloqueados con tus puntos.</p>
+                <div id="shop-container" class="grid gap-3"></div>
             </div>
         </section>
 
-        <section id="view-ranking" class="app-content">
-            <div style="background:rgba(255,215,0,0.1); border:1px solid rgba(255,215,0,0.3); padding:25px 20px; margin:20px auto 25px auto; width: 95%; max-width: 600px; border-radius:16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; color:var(--text-main); box-shadow:0 8px 20px rgba(0,0,0,0.2);">
-                <i class="fas fa-graduation-cap" style="font-size:2.5rem; color:var(--gold); margin-bottom:5px; filter:drop-shadow(0 2px 5px rgba(255,215,0,0.4));"></i>
-                <p style="font-style:italic; font-size:1.2rem; line-height:1.5; font-weight:800; text-align:center;">“Aquí no gana el que más para,<br>gana el que mejor aprende.”</p>
+        <!-- VISTA RANKING -->
+        <section id="view-ranking" class="hidden">
+            <div class="bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl flex flex-col items-center text-center gap-3 mb-6 shadow-lg">
+                <i class="fas fa-graduation-cap text-4xl text-gold drop-shadow-[0_2px_5px_rgba(255,215,0,0.5)]"></i>
+                <p class="italic text-lg leading-snug font-extrabold">“Aquí no gana el que más tiene,<br>gana el que más aprende.”</p>
             </div>
 
-            <div class="modern-card" style="text-align:center; padding-bottom:20px; margin: 0 auto; width: 95%; max-width: 600px;">
-                <i class="fas fa-trophy" style="color:var(--gold); font-size:2.5rem; margin-bottom:15px; filter:drop-shadow(0 2px 10px rgba(255,215,0,0.5));"></i>
-                <h2 style="margin-bottom:20px; font-weight:900; font-size:1.4rem; letter-spacing:1px;">CLASIFICACIÓN</h2>
-                <div class="ios-segmented-control">
-                    <button class="segment-btn active" id="rank-global" onclick="window.toggleRanking('global')"><i class="fas fa-globe"></i> Global</button>
-                    <button class="segment-btn" id="rank-alcala" onclick="window.toggleRanking('CD Alcalá')"><i class="fas fa-map-marker-alt"></i> Alcalá</button>
-                    <button class="segment-btn" id="rank-cotorruelo" onclick="window.toggleRanking('Cotorruelo')"><i class="fas fa-map-pin"></i> Cotorruelo</button>
+            <div class="glass-card rounded-2xl p-5 text-center mb-6">
+                <i class="fas fa-trophy text-4xl text-gold mb-3 drop-shadow-[0_2px_10px_rgba(255,215,0,0.5)]"></i>
+                <h2 class="font-black text-xl tracking-widest mb-4">CLASIFICACIÓN</h2>
+                <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 border border-white/5 overflow-x-auto custom-scrollbar">
+                    <button class="segment-btn active flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-1.5" id="rank-global" onclick="window.toggleRanking('global')"><i class="fas fa-globe"></i> Global</button>
+                    <button class="segment-btn flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-1.5" id="rank-por" onclick="window.toggleRanking('porteros')"><i class="fas fa-mitten"></i> Porteros</button>
+                    <button class="segment-btn flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-1.5" id="rank-jug" onclick="window.toggleRanking('jugadores')"><i class="fas fa-running"></i> Jugadores</button>
                 </div>
             </div>
 
-            <div id="smart-rankings" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin: 25px auto; width: 95%; max-width: 600px;"></div>
-            <div class="section-divider">TABLA GENERAL</div>
-            <div id="ranking-list-container"></div>
+            <div id="smart-rankings" class="grid grid-cols-2 gap-3 mb-8"></div>
+            <div class="text-center text-atmRed font-black uppercase tracking-widest mb-4 border-b-2 border-atmRed/20 pb-2" id="ranking-title-label">TABLA GLOBAL MVP</div>
+            <div id="ranking-list-container" class="space-y-3"></div>
         </section>
     </main>
 
-    <nav class="floating-nav" id="nav-portero" style="display:none;">
-        <button onclick="window.navPortero('home')" class="active" id="nav-btn-home">
-            <i class="fas fa-user" id="nav-home-icon"></i> 
-            <span id="nav-home-text" style="font-size:0.7rem; text-transform:uppercase; margin-top:2px; font-weight:800;">Mi Ficha</span>
+    <!-- MENU FLOTANTE INFERIOR -->
+    <nav class="floating-nav" id="nav-bottom" style="display:none;">
+        <button onclick="window.navApp('dashboard')" class="active" id="nav-btn-home">
+            <i class="fas fa-user text-2xl" id="nav-home-icon"></i> 
+            <span id="nav-home-text" class="text-[0.65rem] uppercase font-black mt-1">Mi Ficha</span>
         </button>
-        <button onclick="window.navPortero('ranking')" id="nav-btn-rank">
-            <i class="fas fa-list-ol"></i> 
-            <span style="font-size:0.7rem; text-transform:uppercase; margin-top:2px; font-weight:800;">Ranking</span>
+        <button onclick="window.navApp('ranking')" id="nav-btn-rank">
+            <i class="fas fa-list-ol text-2xl"></i> 
+            <span class="text-[0.65rem] uppercase font-black mt-1">Ranking</span>
         </button>
     </nav>
 
@@ -569,25 +474,27 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
+        // Variables de Estado
         let porteros = [];
+        let jugadores = [];
         let edps = [];
         let currentUser = null; 
-        let roleType = ""; 
+        let roleType = ""; // 'portero', 'jugador', 'edp', 'admin'
         let fotoTemp = ""; 
         let chartInstance = null; 
         let evoChartInstance = null;
-        let rankingMode = "global";
+        let rankingMode = "global"; // global, porteros, jugadores
+        let evalViewMode = "porteros"; // porteros, jugadores (Para panel EDP)
         let targetDeleteId = null;
         let targetDeleteType = null;
 
-        // Sonidos
+        // Audios (Sintetizador Web)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+            osc.connect(gainNode); gainNode.connect(audioCtx.destination);
             if (type === 'success') {
                 osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.5);
@@ -603,24 +510,15 @@
             updateThemeIcon(savedTheme);
             
             const passInput = document.getElementById('home-pass');
-            if(passInput) {
-                passInput.addEventListener("keydown", function(event) {
-                    if (event.key === "Enter") { event.preventDefault(); window.confirmarLogin(); }
-                });
-            }
+            if(passInput) { passInput.addEventListener("keydown", function(event) { if (event.key === "Enter") { event.preventDefault(); window.confirmarLogin(); } }); }
 
-            signInAnonymously(auth).catch((e) => {
-                showToast("Atención: Dominio no autorizado en Firebase", true);
-            });
+            signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    onValue(ref(db, 'porteros'), (snapshot) => {
-                        const data = snapshot.val(); porteros = data ? Object.values(data) : []; refreshCurrentView();
-                    });
-                    onValue(ref(db, 'edps'), (snapshot) => {
-                        const data = snapshot.val(); edps = data ? Object.values(data) : []; refreshCurrentView();
-                    });
+                    onValue(ref(db, 'porteros'), (snapshot) => { const data = snapshot.val(); porteros = data ? Object.values(data) : []; refreshCurrentView(); });
+                    onValue(ref(db, 'jugadores'), (snapshot) => { const data = snapshot.val(); jugadores = data ? Object.values(data) : []; refreshCurrentView(); });
+                    onValue(ref(db, 'edps'), (snapshot) => { const data = snapshot.val(); edps = data ? Object.values(data) : []; refreshCurrentView(); });
                     checkSession();
                 }
             });
@@ -629,13 +527,36 @@
         function showToast(msg, isError = false) {
             const container = document.getElementById('toast-container');
             if(!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${isError ? 'error' : ''}`;
-            toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> <span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.animation = 'fadeOut 0.3s ease forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
+            const t = document.createElement('div');
+            t.className = `toast ${isError ? 'error' : ''}`;
+            t.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'} text-xl"></i> <span class="font-bold">${msg}</span>`;
+            container.appendChild(t);
+            setTimeout(() => { t.style.animation = 'fadeOut 0.3s ease forwards'; setTimeout(() => t.remove(), 300); }, 3500);
         }
 
+        window.toggleTheme = function() {
+            const current = document.body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            if(currentUser && (roleType === 'portero' || roleType === 'jugador')) { renderRadar(currentUser, roleType); renderEvoChart(currentUser); }
+        }
+
+        function updateThemeIcon(theme) { 
+            const html = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            const btn1 = document.getElementById('btn-theme'); const btn2 = document.getElementById('btn-theme-home');
+            if(btn1) btn1.innerHTML = html; if(btn2) btn2.innerHTML = html;
+        }
+
+        window.togglePasswordVisibility = function() {
+            const input = document.getElementById('home-pass');
+            const icon = document.querySelector('.fa-eye, .fa-eye-slash');
+            if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
+            else { input.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+        }
+
+        // FLUJO DE LOGIN
         function checkSession() {
             const session = JSON.parse(localStorage.getItem('guardianes_session'));
             if (session) {
@@ -643,34 +564,26 @@
                 setTimeout(() => {
                     if (roleType === 'admin') { window.navTo('view-admin'); }
                     else if (roleType === 'edp') { currentUser = edps.find(e => e.id == session.id); if (currentUser) window.navTo('view-edp'); } 
-                    else if (roleType === 'portero') { currentUser = porteros.find(p => p.id == session.id); if (currentUser) window.navTo('view-portero'); }
+                    else if (roleType === 'portero') { currentUser = porteros.find(p => p.id == session.id); if (currentUser) window.navTo('view-dashboard'); }
+                    else if (roleType === 'jugador') { currentUser = jugadores.find(j => j.id == session.id); if (currentUser) window.navTo('view-dashboard'); }
                 }, 500);
             }
         }
 
-        function refreshCurrentView() {
-            const currentView = document.querySelector('.app-content[style*="block"]');
-            if (!currentView) return;
-            if (currentView.id === 'view-admin') { renderAdminList(); renderEDPListAdmin(); cargarSelectEDP(); } 
-            else if (currentView.id === 'view-edp' && currentUser) { renderEvaluacionList(); } 
-            else if (currentView.id === 'view-portero' && currentUser) { currentUser = porteros.find(p => p.id === currentUser.id); if(currentUser) renderDashboard(currentUser.id); } 
-            else if (currentView.id === 'view-ranking') { renderRankingList(); }
-        }
-
-        window.abrirLogin = function(role) { 
+        window.prepararLogin = function(role) { 
             roleType = role; 
             document.getElementById('home-role-selection').style.display = 'none';
-            document.getElementById('home-login-form').style.display = 'block';
+            document.getElementById('home-login-form').style.display = 'flex';
             document.getElementById('home-pass').value = ''; 
             
-            const titleMap = { 'portero': 'ACCESO PORTERO', 'edp': 'ACCESO ENTRENADOR', 'admin': 'ACCESO ADMINISTRADOR' };
+            const titleMap = { 'portero': 'ACCESO PORTERO', 'jugador': 'ACCESO JUGADOR', 'edp': 'ACCESO ENTRENADOR', 'admin': 'ADMINISTRADOR' };
             document.getElementById('login-role-title').innerHTML = `<i class="fas fa-lock"></i> ${titleMap[role]}`;
             setTimeout(() => document.getElementById('home-pass').focus(), 100); 
         }
 
         window.volverRoles = function() {
             document.getElementById('home-login-form').style.display = 'none';
-            document.getElementById('home-role-selection').style.display = 'block';
+            document.getElementById('home-role-selection').style.display = 'flex';
             document.getElementById('home-pass').value = '';
         }
 
@@ -680,86 +593,78 @@
             const passClean = pass.trim().toLowerCase();
             let success = false; let sessionData = null;
 
-            if(roleType === 'admin' && passClean === 'atleti2024') { success = true; sessionData = { role: 'admin', id: 'admin' }; }
-            else if(roleType === 'edp') {
-                const found = edps.find(e => e && e.clave && String(e.clave).trim().toLowerCase() === passClean);
-                if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; }
-            }
-            else if(roleType === 'portero') {
-                const found = porteros.find(p => p && p.clave && String(p.clave).trim().toLowerCase() === passClean);
-                if (found) { currentUser = found; success = true; sessionData = { role: 'portero', id: found.id }; }
-            }
+            if(roleType === 'admin' && passClean === 'atleti2024') { success = true; sessionData = { role: 'admin', id: 'admin' }; window.navTo('view-admin'); }
+            else if(roleType === 'edp') { const found = edps.find(e => e.clave && String(e.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; window.navTo('view-edp'); } }
+            else if(roleType === 'portero') { const found = porteros.find(p => p.clave && String(p.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'portero', id: found.id }; window.navTo('view-dashboard'); } }
+            else if(roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugador', id: found.id }; window.navTo('view-dashboard'); } }
 
-            if(success) {
-                localStorage.setItem('guardianes_session', JSON.stringify(sessionData));
-                window.navTo(roleType === 'admin' ? 'view-admin' : roleType === 'edp' ? 'view-edp' : 'view-portero');
-            } else {
-                showToast("Clave incorrecta o base de datos no cargada", true);
-            }
+            if(success) { localStorage.setItem('guardianes_session', JSON.stringify(sessionData)); } 
+            else { showToast("Clave incorrecta o esperando servidor", true); }
         }
 
         window.logout = function() { localStorage.removeItem('guardianes_session'); location.reload(); }
 
-        window.toggleTheme = function() {
-            const current = document.body.getAttribute('data-theme');
-            const newTheme = current === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-            if(currentUser && document.getElementById('view-portero').style.display === 'block') { renderRadar(currentUser); renderEvoChart(currentUser); }
-        }
-
-        function updateThemeIcon(theme) { 
-            const html = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            const btn = document.getElementById('btn-theme');
-            const btnHome = document.getElementById('btn-theme-home');
-            if(btn) btn.innerHTML = html;
-            if(btnHome) btnHome.innerHTML = html;
-        }
-
-        window.togglePasswordVisibility = function() {
-            const input = document.getElementById('home-pass');
-            const icon = document.querySelector('.toggle-password');
-            if (input.type === 'password') { input.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
-            else { input.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
-        }
-
         window.navTo = function(viewId) {
             document.getElementById('view-home').style.display = 'none';
             document.getElementById('main-header').style.display = 'flex';
+            document.getElementById('app-container').style.display = 'block';
             
-            document.querySelectorAll('.app-content').forEach(s => s.style.display = 'none');
+            document.getElementById('view-admin').style.display = 'none';
+            document.getElementById('view-edp').style.display = 'none';
+            document.getElementById('view-dashboard').style.display = 'none';
+            document.getElementById('view-ranking').style.display = 'none';
+            
             document.getElementById(viewId).style.display = 'block';
             
-            const navBar = document.getElementById('nav-portero');
-            if(roleType === 'portero' || roleType === 'edp') {
+            const navBar = document.getElementById('nav-bottom');
+            if(roleType !== 'admin') {
                 navBar.style.display = 'flex';
                 document.getElementById('nav-home-text').innerText = roleType === 'edp' ? 'Panel' : 'Mi Ficha';
-                document.getElementById('nav-home-icon').className = roleType === 'edp' ? 'fas fa-stopwatch' : 'fas fa-user';
-            } else {
-                navBar.style.display = 'none';
-            }
+                document.getElementById('nav-home-icon').className = roleType === 'edp' ? 'fas fa-stopwatch text-2xl' : 'fas fa-user text-2xl';
+                window.navApp(roleType === 'edp' && viewId === 'view-edp' ? 'dashboard' : viewId === 'view-dashboard' ? 'dashboard' : 'ranking');
+            } else { navBar.style.display = 'none'; }
+            
             if(viewId === 'view-admin') window.limpiarFormAdmin();
             refreshCurrentView();
         }
 
-        window.navPortero = function(tab) {
-            document.querySelectorAll('.app-content').forEach(s => s.style.display = 'none');
+        window.navApp = function(tab) {
+            document.getElementById('view-admin').style.display = 'none';
+            const homeViewId = roleType === 'edp' ? 'view-edp' : 'view-dashboard';
+            
             const btnHome = document.getElementById('nav-btn-home');
             const btnRank = document.getElementById('nav-btn-rank');
-            if(tab === 'home') {
-                document.getElementById(roleType === 'edp' ? 'view-edp' : 'view-portero').style.display = 'block';
+            
+            if(tab === 'dashboard') {
+                document.getElementById(homeViewId).style.display = 'block';
+                document.getElementById('view-ranking').style.display = 'none';
                 btnHome.classList.add('active'); btnRank.classList.remove('active');
                 refreshCurrentView();
             } else {
+                document.getElementById(homeViewId).style.display = 'none';
                 document.getElementById('view-ranking').style.display = 'block';
                 btnHome.classList.remove('active'); btnRank.classList.add('active');
                 renderRankingList();
             }
         }
 
-        function isRacha(p) { if(!p.historial || p.historial.length < 3) return false; return p.historial[0].puntos > 0 && p.historial[1].puntos > 0 && p.historial[2].puntos > 0; }
-        function getColor(cat) { if(cat==='men') return 'var(--col-men)'; if(cat==='tec') return 'var(--col-tec)'; if(cat==='jue') return 'var(--col-jue)'; return 'var(--col-ret)'; }
+        function refreshCurrentView() {
+            if(roleType === 'admin') { renderAdminLists(); cargarSelectEDP(); }
+            else if(roleType === 'edp' && currentUser) { renderEvaluacionList(); }
+            else if((roleType === 'portero' || roleType === 'jugador') && currentUser) { 
+                const arr = roleType === 'portero' ? porteros : jugadores;
+                currentUser = arr.find(x => x.id === currentUser.id); 
+                if(currentUser) renderDashboard(currentUser.id, roleType); 
+            }
+            if(document.getElementById('view-ranking').style.display === 'block') { renderRankingList(); }
+        }
+
+        window.actualizarOpcionesPosicion = function() {
+            const tipo = document.getElementById('reg-tipo').value;
+            const divPos = document.getElementById('div-posicion');
+            if(tipo === 'jugadores') { divPos.style.display = 'block'; } 
+            else { divPos.style.display = 'none'; }
+        }
 
         window.procesarImagenSegura = function(event) {
             const file = event.target.files[0]; if (!file) return;
@@ -777,264 +682,452 @@
             reader.readAsDataURL(file);
         }
 
-        window.guardarPortero = function() {
-            const idEdit = document.getElementById('reg-id').value; const nombre = document.getElementById('reg-nombre').value; const clave = document.getElementById('reg-clave').value;
-            if(!nombre || !clave) return showToast("Faltan datos", true);
-            const original = idEdit ? porteros.find(p => p.id == idEdit) : null;
+        window.guardarDeportista = function() {
+            const idEdit = document.getElementById('reg-id').value; 
+            const nombre = document.getElementById('reg-nombre').value; 
+            const clave = document.getElementById('reg-clave').value;
+            const tipo = document.getElementById('reg-tipo').value;
+            
+            if(!nombre || !clave) return showToast("Faltan datos (Nombre y Clave)", true);
+
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const original = idEdit ? arr.find(x => x.id == idEdit) : null;
             const nuevoId = idEdit ? parseInt(idEdit) : Date.now();
-            const statsBase = { men:60, tec:60, jue:60, ret:60 };
-            const datos = { id: nuevoId, nombre, equipo: document.getElementById('reg-equipo').value || "", sede: document.getElementById('reg-sede').value || "", ano: document.getElementById('reg-ano').value || "", entrenador: document.getElementById('reg-entrenador-select').value || "", pierna: document.getElementById('reg-pierna').value || "", mano: document.getElementById('reg-mano').value || "", clave: clave.trim(), foto: fotoTemp || (original ? original.foto : ""), puntos: original ? (original.puntos || 0) : 0, stats: original ? (original.stats || statsBase) : statsBase, mensajeManual: original ? (original.mensajeManual || "") : "", historial: original ? (original.historial || []) : [], fondoActivo: original ? (original.fondoActivo || "base") : "base" };
-            set(ref(db, 'porteros/' + nuevoId), datos).then(() => { showToast("Guardado"); window.limpiarFormAdmin(); }).catch((e) => showToast("Error Firebase", true));
+            
+            const statsBase = tipo === 'porteros' ? { men:60, tec:60, jue:60, ret:60 } : { men:60, tec:60, fis:60, tac:60 };
+            const posSeleccionada = tipo === 'jugadores' ? document.getElementById('reg-posicion').value : 'POR';
+
+            const datos = { 
+                id: nuevoId, nombre, equipo: document.getElementById('reg-equipo').value || "", 
+                sede: document.getElementById('reg-sede').value || "", ano: document.getElementById('reg-ano').value || "", 
+                entrenador: document.getElementById('reg-entrenador-select').value || "", 
+                clave: clave.trim(), foto: fotoTemp || (original ? original.foto : ""), 
+                puntos: original ? (original.puntos || 0) : 0, stats: original ? (original.stats || statsBase) : statsBase, 
+                mensajeManual: original ? (original.mensajeManual || "") : "", historial: original ? (original.historial || []) : [], 
+                fondoActivo: original ? (original.fondoActivo || "base") : "base",
+                posicion: posSeleccionada
+            };
+            
+            set(ref(db, tipo + '/' + nuevoId), datos)
+                .then(() => { showToast("Deportista guardado"); window.limpiarFormAdmin(); })
+                .catch((e) => { showToast("Error al guardar (Revisa Reglas Firebase)", true); console.error(e); });
         }
 
         window.crearEDP = function() {
             const nombre = document.getElementById('edp-nombre').value; const clave = document.getElementById('edp-clave').value;
             if(!nombre || !clave) return showToast("Faltan datos", true);
             const id = Date.now();
-            set(ref(db, 'edps/' + id), { id, nombre: nombre.trim(), clave: clave.trim() }).then(() => { showToast("Entrenador Creado"); document.getElementById('edp-nombre').value = ""; document.getElementById('edp-clave').value = ""; }).catch((e) => showToast("Error Firebase", true));
+            set(ref(db, 'edps/' + id), { id, nombre: nombre.trim(), clave: clave.trim() })
+                .then(() => { showToast("Entrenador Creado"); document.getElementById('edp-nombre').value = ""; document.getElementById('edp-clave').value = ""; })
+                .catch((e) => showToast("Error al guardar", true));
         }
 
-        window.borrarPortero = function(id) { targetDeleteId = id; targetDeleteType = 'porteros'; document.getElementById('modal-confirm').style.display = 'flex'; }
-        window.borrarEDP = function(id) { targetDeleteId = id; targetDeleteType = 'edps'; document.getElementById('modal-confirm').style.display = 'flex'; }
+        window.limpiarFormAdmin = function() { 
+            document.getElementById('reg-nombre').value = ""; document.getElementById('reg-equipo').value = ""; document.getElementById('reg-ano').value = ""; document.getElementById('reg-clave').value = ""; document.getElementById('reg-id').value = "";
+            document.getElementById('fotoPreview').src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4="; 
+            fotoTemp = ""; 
+            window.actualizarOpcionesPosicion();
+        }
+
+        window.editarDeportista = function(id, tipo) { 
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const p = arr.find(x => x.id === id); if(!p) return; 
+            document.getElementById('reg-tipo').value = tipo;
+            window.actualizarOpcionesPosicion();
+            if(tipo === 'jugadores' && p.posicion) { document.getElementById('reg-posicion').value = p.posicion; }
+            document.getElementById('reg-id').value = p.id; document.getElementById('reg-nombre').value = p.nombre; 
+            document.getElementById('reg-equipo').value = p.equipo; document.getElementById('reg-sede').value = p.sede; 
+            document.getElementById('reg-ano').value = p.ano; document.getElementById('reg-entrenador-select').value = p.entrenador; 
+            document.getElementById('reg-clave').value = p.clave; 
+            if(p.foto) { document.getElementById('fotoPreview').src = p.foto; fotoTemp = p.foto; } else { fotoTemp=""; document.getElementById('fotoPreview').src="data:image/svg+xml;base64,..."; } 
+            window.scrollTo({top: 0, behavior: 'smooth'}); 
+        }
+
+        window.confirmarBorrar = function(id, tipo) { targetDeleteId = id; targetDeleteType = tipo; document.getElementById('modal-confirm').style.display = 'flex'; }
         document.getElementById('btn-confirm-action').addEventListener('click', () => { if(targetDeleteId && targetDeleteType) { remove(ref(db, `${targetDeleteType}/${targetDeleteId}`)).then(() => { showToast("Eliminado"); document.getElementById('modal-confirm').style.display = 'none'; }); } });
 
-        window.limpiarFormAdmin = function() { document.querySelectorAll('#view-admin input').forEach(i => i.value = ""); document.getElementById('fotoPreview').src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4="; document.getElementById('reg-id').value = ""; fotoTemp = ""; }
-
-        window.editarPortero = function(id) { const p = porteros.find(x => x.id === id); if(!p) return; document.getElementById('reg-id').value = p.id; document.getElementById('reg-nombre').value = p.nombre; document.getElementById('reg-equipo').value = p.equipo; document.getElementById('reg-sede').value = p.sede; document.getElementById('reg-ano').value = p.ano; document.getElementById('reg-entrenador-select').value = p.entrenador; document.getElementById('reg-clave').value = p.clave; document.getElementById('reg-pierna').value = p.pierna; document.getElementById('reg-mano').value = p.mano; if(p.foto) { document.getElementById('fotoPreview').src = p.foto; fotoTemp = p.foto; } document.querySelector('.modern-card').scrollIntoView({behavior: 'smooth'}); }
-
-        function renderAdminList() { const container = document.getElementById('admin-lista-porteros'); if(!container) return; container.innerHTML = porteros.map(p => `<div class="ranking-card-style" style="border-left: 4px solid var(--atm-blue);"><img src="${p.foto || 'https://via.placeholder.com/50'}" class="mini-foto-list"><div class="rank-info"><div class="rank-name">${p.nombre}</div><div class="rank-team">${p.sede || '-'} | ${p.equipo || '-'}</div></div><div style="display:flex; gap:8px;"><button onclick="window.editarPortero(${p.id})" style="background:rgba(52,152,219,0.1); color:#3498db; border:none; width:35px; height:35px; border-radius:8px; cursor:pointer;"><i class="fas fa-edit"></i></button><button onclick="window.borrarPortero(${p.id})" style="background:rgba(231,76,60,0.1); color:#e74c3c; border:none; width:35px; height:35px; border-radius:8px; cursor:pointer;"><i class="fas fa-trash"></i></button></div></div>`).join(''); }
-        function renderEDPListAdmin() { const container = document.getElementById('admin-lista-edps'); if(!container) return; container.innerHTML = edps.map(e => `<div class="ranking-card-style" style="border-left: 4px solid var(--lvl-3);"><div style="width:50px; height:50px; background:var(--lvl-3); color:black; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; margin-right:12px;">${e.nombre.charAt(0)}</div><div class="rank-info"><div class="rank-name">${e.nombre}</div><div class="rank-team">Clave: ${e.clave}</div></div><button onclick="window.borrarEDP(${e.id})" style="background:rgba(231,76,60,0.1); color:#e74c3c; border:none; width:35px; height:35px; border-radius:8px; cursor:pointer; margin-left:auto;"><i class="fas fa-trash"></i></button></div>`).join(''); }
-        function cargarSelectEDP() { const select = document.getElementById('reg-entrenador-select'); if(select) { select.innerHTML = '<option value="">Asignar EDP...</option>' + edps.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join(''); } }
+        function renderAdminLists() { 
+            const cPor = document.getElementById('admin-lista-porteros'); const cJug = document.getElementById('admin-lista-jugadores');
+            if(cPor) cPor.innerHTML = porteros.map(p => adminCardHTML(p, 'porteros')).join('');
+            if(cJug) cJug.innerHTML = jugadores.map(j => adminCardHTML(j, 'jugadores')).join('');
+            
+            const cEdp = document.getElementById('admin-lista-edps');
+            if(cEdp) cEdp.innerHTML = edps.map(e => `
+                <div class="glass-card flex items-center p-3 rounded-xl border-l-4 border-lvl3">
+                    <div class="w-10 h-10 bg-lvl3 text-black rounded-full flex items-center justify-center font-black text-lg mr-3">${e.nombre.charAt(0)}</div>
+                    <div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${e.nombre}</div><div class="text-xs text-[var(--text-sec)]">Clave: ${e.clave}</div></div>
+                    <button onclick="window.confirmarBorrar(${e.id}, 'edps')" class="bg-red-500/10 text-atmRed w-10 h-10 rounded-lg ml-2 hover:bg-red-500/20"><i class="fas fa-trash"></i></button>
+                </div>`).join(''); 
+        }
         
-        window.filtrarPorterosEDP = function() { const query = document.getElementById('search-porteros-edp').value.toLowerCase(); document.querySelectorAll('.portero-card').forEach(t => { if(t.getAttribute('data-nombre').toLowerCase().includes(query)) t.style.display = 'block'; else t.style.display = 'none'; }); }
+        function adminCardHTML(p, tipo) {
+            const color = tipo === 'porteros' ? 'var(--atm-blue)' : '#e67e22';
+            const posLabel = p.posicion ? ` | ${p.posicion}` : (tipo === 'porteros' ? ' | POR' : ' | JUG');
+            return `<div class="glass-card flex items-center p-3 rounded-xl border-l-4" style="border-left-color:${color}">
+                <img src="${p.foto || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-full object-cover border-2 border-atmRed mr-3 flex-shrink-0">
+                <div class="flex-1 min-w-0"><div class="font-bold text-sm truncate">${p.nombre}</div><div class="text-[0.65rem] text-[var(--text-sec)] uppercase font-bold"><i class="fas fa-map-marker-alt"></i> ${p.sede || '-'} | ${p.equipo || '-'}${posLabel}</div></div>
+                <div class="flex gap-1.5 ml-2"><button onclick="window.editarDeportista(${p.id}, '${tipo}')" class="bg-blue-500/10 text-blue-400 w-9 h-9 rounded-lg"><i class="fas fa-edit"></i></button><button onclick="window.confirmarBorrar(${p.id}, '${tipo}')" class="bg-red-500/10 text-atmRed w-9 h-9 rounded-lg"><i class="fas fa-trash"></i></button></div>
+            </div>`;
+        }
+
+        function cargarSelectEDP() { const s = document.getElementById('reg-entrenador-select'); if(s) s.innerHTML = '<option value="">Asignar EDP...</option>' + edps.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join(''); }
+
+        window.toggleEvalView = function(tipo) {
+            evalViewMode = tipo;
+            document.getElementById('btn-edp-toggle-por').className = tipo === 'porteros' ? "flex-1 py-2.5 rounded-lg text-sm font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-2" : "flex-1 py-2.5 rounded-lg text-sm font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-2";
+            document.getElementById('btn-edp-toggle-jug').className = tipo === 'jugadores' ? "flex-1 py-2.5 rounded-lg text-sm font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-2" : "flex-1 py-2.5 rounded-lg text-sm font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-2";
+            document.getElementById('edp-lista-porteros').style.display = tipo === 'porteros' ? 'block' : 'none';
+            document.getElementById('edp-lista-jugadores').style.display = tipo === 'jugadores' ? 'block' : 'none';
+            renderEvaluacionList();
+        }
+
+        window.filtrarListasEDP = function() {
+            const q = document.getElementById('search-edp').value.toLowerCase();
+            document.querySelectorAll('.eval-card').forEach(c => { c.style.display = c.getAttribute('data-name').includes(q) ? 'block' : 'none'; });
+        }
 
         function renderEvaluacionList() {
-            const div = document.getElementById('edp-lista-porteros');
-            const misPorteros = porteros.filter(p => p.entrenador && currentUser && p.entrenador.trim().toLowerCase() === currentUser.nombre.trim().toLowerCase());
-            if(misPorteros.length === 0) { div.innerHTML = "<p style='text-align:center;'>No tienes porteros asignados.</p>"; return; }
-            div.innerHTML = misPorteros.map(p => `
-                <div class="portero-card" id="card-${p.id}" data-nombre="${p.nombre}">
-                    <div class="card-header-flex" onclick="window.toggleCard(${p.id})">
-                        <div style="display:flex; align-items:center; gap:15px; width:100%;">
-                            <img src="${p.foto || 'https://via.placeholder.com/50'}" class="mini-foto-list">
-                            <div><div style="font-weight:900; font-size:1.1rem; display:flex; align-items:center;">${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}</div><div style="font-size:0.8rem; color:var(--text-sec); font-weight:bold;">${p.puntos} PTS</div></div>
-                        </div><i class="fas fa-chevron-down" style="color:var(--text-sec)"></i>
-                    </div>
-                    <div class="points-container">
-                        <div style="margin-bottom:15px; display:flex; gap:10px; background:var(--input-bg); padding:5px; border-radius:50px; border:1px solid var(--input-border);">
-                            <input type="text" id="feedback-input-${p.id}" placeholder="Mensaje rápido..." style="flex:1; background:transparent; border:none; padding:10px 15px; color:var(--text-main); margin-bottom:0; outline:none;">
-                            <button onclick="window.guardarFeedback(${p.id})" style="background:linear-gradient(135deg, var(--atm-red), #902012); color:white; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 10px rgba(203,53,36,0.3);"><i class="fas fa-paper-plane"></i></button>
-                        </div>
-                        <div class="category-header cat-men"><i class="fas fa-brain"></i> ACTITUD</div><div class="points-grid-modern"><button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Puntual', 'fa-clock')"><i class="fas fa-clock"></i><span>+2</span>Puntual</button><button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Escucha', 'fa-ear-listen')"><i class="fas fa-ear-listen"></i><span>+2</span>Escucha</button><button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 3, 'men', 'Reacción', 'fa-bolt')"><i class="fas fa-bolt"></i><span>+3</span>Reacción</button></div>
-                        <div class="category-header cat-tec"><i class="fas fa-mitten"></i> TÉCNICA</div><div class="points-grid-modern"><button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Blocaje', 'fa-hand-rock')"><i class="fas fa-hand-rock"></i><span>+1</span>Blocaje</button><button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 1, 'tec', 'Caída', 'fa-arrow-down')"><i class="fas fa-arrow-down"></i><span>+1</span>Caída</button><button class="btn-modern-score btn-tec" onclick="window.sumar(${p.id}, 3, 'tec', 'TOP', 'fa-star')"><i class="fas fa-star"></i><span>+3</span>TOP</button></div>
-                        <div class="category-header cat-jue"><i class="fas fa-running"></i> JUEGO</div><div class="points-grid-modern"><button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 2, 'jue', '1vs1', 'fa-shield-alt')"><i class="fas fa-shield-alt"></i><span>+2</span>1vs1</button><button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 2, 'jue', 'Salida', 'fa-rocket')"><i class="fas fa-rocket"></i><span>+2</span>Salida</button><button class="btn-modern-score btn-jue" onclick="window.sumar(${p.id}, 1, 'jue', 'Posición', 'fa-map-marker-alt')"><i class="fas fa-map-marker-alt"></i><span>+1</span>Posición</button></div>
-                        <div class="category-header cat-ret"><i class="fas fa-trophy"></i> RETOS</div><div class="points-grid-modern"><button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 4, 'ret', 'Reto', 'fa-check-circle')"><i class="fas fa-check-circle"></i><span>+4</span>Reto</button><button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 6, 'ret', 'Perfecto', 'fa-fire-alt')"><i class="fas fa-fire-alt"></i><span>+6</span>Perfect</button><button class="btn-modern-score btn-ret" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal')"><i class="fas fa-medal"></i><span>+2</span>MVP</button></div>
-                        
-                        <div style="background: rgba(255,215,0,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,215,0,0.3); margin-bottom: 20px;">
-                            <div class="category-header" style="color: var(--gold); font-size: 0.9rem;"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
-                            <div style="display:flex; flex-direction:column; gap:10px;">
-                                <input type="text" id="custom-reason-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" style="background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); padding:10px; border-radius:8px; width:100%; outline:none; margin-bottom:0;">
-                                <div style="display:flex; gap:10px;">
-                                    <input type="number" id="custom-pts-${p.id}" placeholder="Pts (Ej: 5 o -5)" style="background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); padding:10px; border-radius:8px; flex:1; text-align:center; outline:none; margin-bottom:0;">
-                                    <select id="custom-cat-${p.id}" style="background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); padding:10px; border-radius:8px; flex:1; outline:none; margin-bottom:0;">
-                                        <option value="men" style="background:var(--bg-body)">Actitud</option>
-                                        <option value="tec" style="background:var(--bg-body)">Técnica</option>
-                                        <option value="jue" style="background:var(--bg-body)">Juego</option>
-                                        <option value="ret" style="background:var(--bg-body)">Retos</option>
-                                    </select>
-                                </div>
-                                <button onclick="window.sumarPersonalizado(${p.id})" style="background:linear-gradient(135deg, #f1c40f, #e67e22); color:black; font-weight:900; border:none; padding:12px; border-radius:10px; cursor:pointer;">APLICAR PUNTAJE</button>
-                            </div>
-                        </div>
-
-                        <!-- MODIFICACIÓN: HISTORIAL Y BOTÓN VER TODO -->
-                        <div style="background: var(--bg-card); border-radius: 12px; padding: 15px; border: 1px solid var(--card-border);">
-                            <div class="category-header" style="color:var(--text-sec); font-size: 0.8rem;"><i class="fas fa-history"></i> Historial Reciente</div>
-                            <div class="history-list" style="max-height: 120px; border:none; padding:0; background:transparent;">
-                                ${p.historial && p.historial.length > 0 
-                                    ? p.historial.slice(0, 3).map(h => `
-                                        <div class="history-item">
-                                            <span class="hist-date">${h.fecha.split(' ')[1] || h.fecha}</span>
-                                            <span class="hist-icon" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
-                                            <span class="hist-action">${h.accion}</span>
-                                            <span class="hist-pts" style="color:${h.puntos > 0 ? 'var(--lvl-1)' : 'var(--atm-red)'}">${h.puntos > 0 ? '+'+h.puntos : h.puntos}</span>
-                                        </div>`).join('') 
-                                    : '<div style="text-align:center;font-size:0.75rem;color:var(--text-sec); padding:10px;">Sin actividad.</div>'}
-                            </div>
-                            ${p.historial && p.historial.length > 0 ? `<button onclick="window.verHistorialCompleto(${p.id})" style="width:100%; margin-top:10px; padding:10px; border-radius:8px; background:var(--input-bg); border:1px solid var(--input-border); color:var(--atm-red); font-weight:800; cursor:pointer; font-size:0.8rem;"><i class="fas fa-list"></i> VER HISTORIAL COMPLETO</button>` : ''}
-                        </div>
-
-                    </div>
-                </div>`).join('');
-            if(document.getElementById('search-porteros-edp').value) window.filtrarPorterosEDP();
+            if(!currentUser) return;
+            const cPor = document.getElementById('edp-lista-porteros');
+            const cJug = document.getElementById('edp-lista-jugadores');
+            const myName = currentUser.nombre.trim().toLowerCase();
+            
+            const misPor = porteros.filter(p => p.entrenador && p.entrenador.trim().toLowerCase() === myName);
+            const misJug = jugadores.filter(j => j.entrenador && j.entrenador.trim().toLowerCase() === myName);
+            
+            cPor.innerHTML = misPor.length ? misPor.map(p => evalCardHTML(p, 'porteros')).join('') : "<p class='text-center text-sm text-[var(--text-sec)] mt-4'>No hay porteros asignados.</p>";
+            cJug.innerHTML = misJug.length ? misJug.map(j => evalCardHTML(j, 'jugadores')).join('') : "<p class='text-center text-sm text-[var(--text-sec)] mt-4'>No hay jugadores asignados.</p>";
+            
+            window.filtrarListasEDP();
         }
 
-        window.verHistorialCompleto = function(id) {
-            const p = porteros.find(x => x.id === id);
-            if(!p) return;
-            document.getElementById('history-modal-title').innerText = `HISTORIAL: ${p.nombre}`;
-            const content = document.getElementById('history-modal-content');
-            if(!p.historial || p.historial.length === 0) {
-                content.innerHTML = "<p style='text-align:center; color:var(--text-sec);'>No hay actividad registrada.</p>";
-            } else {
-                content.innerHTML = p.historial.map(h => `
-                    <div class="history-item">
-                        <span class="hist-date" style="width:100px; color:var(--text-sec); font-size:0.75rem;">${h.fecha}</span>
-                        <span class="hist-icon" style="color:${getColor(h.categoria)}; font-size:1.2rem;"><i class="fas ${h.icon}"></i></span>
-                        <span class="hist-action" style="font-size:0.9rem;">${h.accion}</span>
-                        <span class="hist-pts" style="color:${h.puntos > 0 ? 'var(--lvl-1)' : 'var(--atm-red)'}; font-size:1rem;">${h.puntos > 0 ? '+'+h.puntos : h.puntos}</span>
+        function isRacha(p) { return p.historial && p.historial.length >= 3 && p.historial[0].puntos>0 && p.historial[1].puntos>0 && p.historial[2].puntos>0; }
+        function getColor(cat) { const c = {men:'#9b59b6', tec:'#3498db', jue:'#2ecc71', ret:'#f1c40f', fis:'#e67e22', tac:'#e74c3c'}; return c[cat]||'#fff'; }
+
+        function evalCardHTML(p, tipo) {
+            let botonesHTML = '';
+            const posBadge = p.posicion ? p.posicion : (tipo === 'porteros' ? 'POR' : 'JUG');
+
+            if(tipo === 'porteros') {
+                botonesHTML = `
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#9b59b6] mb-2 mt-4 text-center"><i class="fas fa-brain"></i> ACTITUD</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors" onclick="window.sumar(${p.id}, 2, 'men', 'Esfuerzo', 'fa-bolt', 'porteros')"><i class="fas fa-bolt text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Esfuerzo</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors" onclick="window.sumar(${p.id}, 1, 'men', 'Ayuda', 'fa-handshake', 'porteros')"><i class="fas fa-handshake text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Ayuda</span></button>
                     </div>
-                `).join('');
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#3498db] mb-2 text-center"><i class="fas fa-mitten"></i> TÉCNICA</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors" onclick="window.sumar(${p.id}, 1, 'tec', 'Blocaje', 'fa-hand-rock', 'porteros')"><i class="fas fa-hand-rock text-[#3498db] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Blocaje</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors" onclick="window.sumar(${p.id}, 2, 'tec', 'Reflejo', 'fa-bolt', 'porteros')"><i class="fas fa-bolt text-[#3498db] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Reflejo</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors" onclick="window.sumar(${p.id}, 3, 'tec', 'TOP', 'fa-star', 'porteros')"><i class="fas fa-star text-[#3498db] text-xl mb-1"></i><span class="font-black">+3</span><span class="text-[0.6rem] font-bold">TOP</span></button>
+                    </div>
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#2ecc71] mb-2 text-center"><i class="fas fa-running"></i> JUEGO</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#2ecc71] transition-colors" onclick="window.sumar(${p.id}, 2, 'jue', '1vs1', 'fa-shield-alt', 'porteros')"><i class="fas fa-shield-alt text-[#2ecc71] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">1vs1</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#2ecc71] transition-colors" onclick="window.sumar(${p.id}, 2, 'jue', 'Salida', 'fa-rocket', 'porteros')"><i class="fas fa-rocket text-[#2ecc71] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Salida</span></button>
+                    </div>
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#f1c40f] mb-2 text-center"><i class="fas fa-trophy"></i> RETOS</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#f1c40f] transition-colors" onclick="window.sumar(${p.id}, 4, 'ret', 'Reto', 'fa-check-circle', 'porteros')"><i class="fas fa-check-circle text-[#f1c40f] text-xl mb-1"></i><span class="font-black">+4</span><span class="text-[0.6rem] font-bold">Reto</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#f1c40f] transition-colors" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal', 'porteros')"><i class="fas fa-medal text-[#f1c40f] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">MVP</span></button>
+                    </div>
+                `;
+            } else { // JUGADORES
+                botonesHTML = `
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#9b59b6] mb-2 mt-4 text-center"><i class="fas fa-brain"></i> ACTITUD</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors" onclick="window.sumar(${p.id}, 2, 'men', 'Esfuerzo', 'fa-bolt', 'jugadores')"><i class="fas fa-bolt text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Esfuerzo</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors" onclick="window.sumar(${p.id}, 1, 'men', 'Equipo', 'fa-users', 'jugadores')"><i class="fas fa-users text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Equipo</span></button>
+                    </div>
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#3498db] mb-2 text-center"><i class="fas fa-futbol"></i> TÉCNICA</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors" onclick="window.sumar(${p.id}, 1, 'tec', 'Pase', 'fa-exchange-alt', 'jugadores')"><i class="fas fa-exchange-alt text-[#3498db] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Pase</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors" onclick="window.sumar(${p.id}, 2, 'tec', 'Tiro', 'fa-bullseye', 'jugadores')"><i class="fas fa-bullseye text-[#3498db] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Tiro</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors" onclick="window.sumar(${p.id}, 1, 'tec', 'Regate', 'fa-shoe-prints', 'jugadores')"><i class="fas fa-shoe-prints text-[#3498db] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Regate</span></button>
+                    </div>
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#e67e22] mb-2 text-center"><i class="fas fa-dumbbell"></i> FÍSICO</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e67e22] transition-colors" onclick="window.sumar(${p.id}, 2, 'fis', 'Duelo', 'fa-fist-raised', 'jugadores')"><i class="fas fa-fist-raised text-[#e67e22] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Duelo</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e67e22] transition-colors" onclick="window.sumar(${p.id}, 1, 'fis', 'Resistencia', 'fa-heartbeat', 'jugadores')"><i class="fas fa-heartbeat text-[#e67e22] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Resist.</span></button>
+                    </div>
+                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#e74c3c] mb-2 text-center"><i class="fas fa-chess-knight"></i> TÁCTICA</div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-4">
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e74c3c] transition-colors" onclick="window.sumar(${p.id}, 2, 'tac', 'Desmarque', 'fa-running', 'jugadores')"><i class="fas fa-running text-[#e74c3c] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Desmarque</span></button>
+                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e74c3c] transition-colors" onclick="window.sumar(${p.id}, 1, 'tac', 'Cobertura', 'fa-shield-alt', 'jugadores')"><i class="fas fa-shield-alt text-[#e74c3c] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Cobertura</span></button>
+                    </div>
+                `;
             }
+
+            return `
+            <div class="glass-card rounded-2xl p-0 overflow-hidden mb-4 border-l-4 border-atmRed eval-card" data-name="${p.nombre.toLowerCase()}">
+                <div class="flex justify-between items-center p-4 cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.foto || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-full border-2 border-atmRed object-cover">
+                        <div>
+                            <div class="font-black text-lg flex items-center">${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}</div>
+                            <div class="text-xs text-[var(--text-sec)] font-bold">${p.puntos||0} PTS <span class="ml-1 text-[0.6rem] bg-gray-500/20 px-1.5 rounded">${posBadge}</span></div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+                <div class="hidden bg-black/10 p-4 border-t border-white/5">
+                    <div class="flex gap-2 mb-4 bg-[var(--input-bg)] p-1 rounded-full border border-[var(--input-border)]">
+                        <input type="text" id="feedback-${tipo}-${p.id}" placeholder="Mensaje rápido..." class="flex-1 bg-transparent outline-none px-4 text-sm text-[var(--text-main)]">
+                        <button onclick="window.guardarFeedback(${p.id}, '${tipo}')" class="bg-gradient-to-r from-atmRed to-red-900 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    
+                    ${botonesHTML}
+
+                    <!-- Puntaje Libre Corregido Visualmente -->
+                    <div class="bg-yellow-500/10 p-4 rounded-xl border border-yellow-500/30 mb-4">
+                        <div class="text-gold font-black text-xs uppercase text-center mb-3"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
+                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo..." class="w-full input-glass bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
+                        <div class="flex gap-2 mb-3">
+                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (ej: 5)" class="w-1/2 input-glass bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
+                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 input-glass bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
+                                <option value="men">Actitud</option>
+                                <option value="tec">Técnica</option>
+                                <option value="${tipo === 'porteros' ? 'jue' : 'fis'}">${tipo === 'porteros' ? 'Juego' : 'Físico'}</option>
+                                <option value="${tipo === 'porteros' ? 'ret' : 'tac'}">${tipo === 'porteros' ? 'Retos' : 'Táctica'}</option>
+                            </select>
+                        </div>
+                        <button onclick="window.sumarPersonalizado(${p.id}, '${tipo}')" class="w-full bg-gradient-to-r from-[#f1c40f] to-[#e67e22] text-black font-black py-2 rounded-lg text-sm">APLICAR PUNTAJE</button>
+                    </div>
+
+                    <!-- Mini Historial -->
+                    <div class="bg-[var(--bg-card)] rounded-xl p-3 border border-[var(--card-border)]">
+                        <div class="text-xs text-[var(--text-sec)] font-bold mb-2"><i class="fas fa-history"></i> Reciente</div>
+                        <div class="space-y-2 mb-2">
+                            ${p.historial && p.historial.length > 0 
+                                ? p.historial.slice(0, 3).map(h => `
+                                    <div class="flex justify-between items-center text-xs border-b border-[var(--input-border)] pb-1 last:border-0">
+                                        <span class="w-12 text-[var(--text-sec)]">${h.fecha.split(' ')[1] || h.fecha}</span>
+                                        <span class="w-6 text-center" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
+                                        <span class="flex-1 truncate">${h.accion}</span>
+                                        <span class="font-black ${h.puntos>0?'text-lvl1':'text-atmRed'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
+                                    </div>`).join('') 
+                                : '<div class="text-center text-xs text-[var(--text-sec)] py-2">Sin actividad</div>'}
+                        </div>
+                        ${p.historial && p.historial.length > 0 ? `<button onclick="window.verHistorialCompleto(${p.id}, '${tipo}')" class="w-full text-[0.7rem] text-atmRed font-black uppercase bg-[var(--input-bg)] py-1.5 rounded-lg border border-[var(--input-border)]"><i class="fas fa-list"></i> VER HISTORIAL COMPLETO</button>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        window.sumar = function(id, pts, statKey, accionNombre, iconClass, tipo) {
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const p = arr.find(x => x.id === id); if (!p) return;
+            if(pts > 0) playSound('success'); else playSound('fail');
+            
+            let s = p.stats || {};
+            if(tipo === 'porteros') { s = {men:s.men||60, tec:s.tec||60, jue:s.jue||60, ret:s.ret||60}; }
+            else { s = {men:s.men||60, tec:s.tec||60, fis:s.fis||60, tac:s.tac||60}; }
+            
+            let hist = p.historial || [];
+            const fecha = new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}) + ' ' + new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            hist.unshift({ fecha, accion: accionNombre, puntos: pts, categoria: statKey, icon: iconClass });
+            if(hist.length > 50) hist.pop();
+
+            const oldPts = Number(p.puntos || 0); const newPts = oldPts + pts;
+            const badges = [ { name: "Primeros Pasos", limit: 30 }, { name: "Oro", limit: 120 }, { name: "Diamante", limit: 300 }, { name: "Leyenda", limit: 900 } ];
+            let unlocked = ""; for(let b of badges) { if(oldPts < b.limit && newPts >= b.limit) { unlocked = b.name; break; } }
+            
+            update(ref(db, `${tipo}/` + id), { puntos: newPts, stats: { ...s, [statKey]: s[statKey] + pts }, historial: hist }).then(() => { 
+                if (unlocked) { showToast(`¡${p.nombre} desbloqueó: ${unlocked}! 🏆`); if(typeof confetti !== 'undefined') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } 
+                else { showToast(`${pts > 0 ? '+'+pts : pts} ${accionNombre}`); } 
+            });
+        }
+
+        window.sumarPersonalizado = function(id, tipo) {
+            const r = document.getElementById(`c-reason-${tipo}-${id}`).value.trim(); 
+            const pts = parseInt(document.getElementById(`c-pts-${tipo}-${id}`).value); 
+            const cat = document.getElementById(`c-cat-${tipo}-${id}`).value;
+            if(!r) return showToast("Escribe un motivo", true); if(isNaN(pts) || pts === 0) return showToast("Puntos inválidos", true);
+            window.sumar(id, pts, cat, r, pts > 0 ? 'fa-star' : 'fa-exclamation-triangle', tipo);
+            document.getElementById(`c-reason-${tipo}-${id}`).value = ''; document.getElementById(`c-pts-${tipo}-${id}`).value = '';
+        }
+
+        window.guardarFeedback = function(id, tipo) { 
+            const input = document.getElementById(`feedback-${tipo}-${id}`); if(!input || !input.value) return; 
+            update(ref(db, `${tipo}/` + id), { mensajeManual: input.value }).then(() => { showToast("Mensaje Enviado"); input.value = ""; }); 
+        }
+
+        window.verHistorialCompleto = function(id, tipo) {
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const p = arr.find(x => x.id === id); if(!p) return;
+            document.getElementById('history-modal-title').innerText = `HISTORIAL: ${p.nombre}`;
+            const c = document.getElementById('history-modal-content');
+            c.innerHTML = (p.historial && p.historial.length > 0) ? p.historial.map(h => `
+                <div class="flex justify-between items-center text-sm border-b border-[var(--input-border)] py-3">
+                    <span class="w-24 text-[var(--text-sec)] text-xs">${h.fecha}</span>
+                    <span class="w-8 text-center text-lg" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
+                    <span class="flex-1 font-semibold">${h.accion}</span>
+                    <span class="font-black text-lg ${h.puntos>0?'text-lvl1':'text-atmRed'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
+                </div>`).join('') : "<p class='text-center text-gray-500'>Sin actividad.</p>";
             document.getElementById('modal-history').style.display = 'flex';
         };
-
-        window.toggleCard = function(id) { document.getElementById(`card-${id}`).classList.toggle('expanded'); }
-
-        window.sumar = function(id, pts, statKey, accionNombre, iconClass) {
-            const p = porteros.find(x => x.id === id); if (!p) return;
-            if(pts > 0) playSound('success'); else playSound('fail');
-            let s = p.stats || { men:60, tec:60, jue:60, ret:60 }; if(s[statKey] === undefined) s[statKey] = 60;
-            let hist = p.historial || []; const fecha = new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}) + ' ' + new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-            hist.unshift({ fecha, accion: accionNombre, puntos: pts, categoria: statKey, icon: iconClass }); if(hist.length > 50) hist.pop();
-            const oldPts = Number(p.puntos || 0); const newPts = oldPts + pts;
-            const badges = [{ name: "Primeros Pasos", limit: 30 }, { name: "Manos Seguras", limit: 80 }, { name: "Reflejos Felinos", limit: 120 }, { name: "Colocación", limit: 150 }, { name: "Mentalidad Pro", limit: 200 }, { name: "Espíritu Indio", limit: 250 }, { name: "Leyenda", limit: 900 }];
-            let unlocked = ""; for(let b of badges) { if(oldPts < b.limit && newPts >= b.limit) { unlocked = `¡${p.nombre} desbloqueó: ${b.name}! 🏆`; break; } }
-            update(ref(db, 'porteros/' + id), { puntos: newPts, stats: { ...s, [statKey]: s[statKey] + pts }, historial: hist }).then(() => { if (unlocked) { showToast(unlocked); if(typeof confetti !== 'undefined') confetti(); } else { showToast(`${pts > 0 ? '+'+pts : pts} ${accionNombre}`); } });
-        }
-
-        window.sumarPersonalizado = function(id) {
-            const r = document.getElementById(`custom-reason-${id}`).value.trim(); const pts = parseInt(document.getElementById(`custom-pts-${id}`).value); const cat = document.getElementById(`custom-cat-${id}`).value;
-            if(!r) return showToast("Escribe un motivo", true); if(isNaN(pts) || pts === 0) return showToast("Puntos inválidos", true);
-            window.sumar(id, pts, cat, r, pts > 0 ? 'fa-star' : 'fa-exclamation-triangle');
-            document.getElementById(`custom-reason-${id}`).value = ''; document.getElementById(`custom-pts-${id}`).value = '';
-        }
-
-        window.guardarFeedback = function(id) { const input = document.getElementById(`feedback-input-${id}`); if(!input || !input.value) return; update(ref(db, 'porteros/' + id), { mensajeManual: input.value }).then(() => { showToast("Mensaje Enviado"); input.value = ""; }); }
 
         const FONDOS = [
             { id: 'base', name: 'Gris Base', req: 0, class: 'fondo-base', desc: 'Por defecto' },
             { id: 'escudo', name: 'Escudo ATM', req: 250, class: 'fondo-escudo', desc: 'Rojiblanco' },
             { id: 'metropolitano', name: 'Metropolitano', req: 500, class: 'fondo-metropolitano', desc: 'Luces estadio' },
             { id: 'neptuno', name: 'Neptuno', req: 800, class: 'fondo-neptuno', desc: 'Magia azul' },
-            { id: 'oblak', name: 'Guantes Oblak', req: 1000, class: 'fondo-oblak', desc: 'Borde neón' }
+            { id: 'oblak', name: 'Efecto Leyenda', req: 1000, class: 'fondo-oblak', desc: 'Borde neón' }
         ];
 
-        function renderFondos(p) {
+        function renderDashboard(id, tipo) {
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const p = arr.find(x => x.id === id); if(!p) return;
+            
+            let s = p.stats || {};
+            document.getElementById('dash-card-nombre').innerHTML = `${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}`; 
+            document.getElementById('dash-feedback-content').innerText = `"${p.mensajeManual || 'A darlo todo en el campo.'}"`;
+            
+            const imgEl = document.getElementById('card-foto'); if(p.foto && p.foto.length > 50) { imgEl.src = p.foto; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
+            
+            // FASE 3: POSICIONES REALES EN CARTA FIFA
+            document.getElementById('fifa-pos').innerText = p.posicion ? p.posicion : (tipo === 'porteros' ? 'POR' : 'JUG');
+            
+            document.getElementById('label-fis').innerText = tipo === 'porteros' ? 'JUE' : 'FIS';
+            document.getElementById('label-tac').innerText = tipo === 'porteros' ? 'RET' : 'TAC';
+            
+            document.getElementById('fifa-rating').innerText = Math.min(99, 60 + Math.floor((p.puntos||0) / 30)); 
+            document.getElementById('stat-tec').innerText = Math.min(99, s.tec||60).toFixed(0); 
+            document.getElementById('stat-fis').innerText = Math.min(99, tipo === 'porteros' ? (s.jue||60) : (s.fis||60)).toFixed(0); 
+            document.getElementById('stat-men').innerText = Math.min(99, s.men||60).toFixed(0); 
+            document.getElementById('stat-tac').innerText = Math.min(99, tipo === 'porteros' ? (s.ret||60) : (s.tac||60)).toFixed(0);
+            
+            let w=0, lvlName="Inicio", lvlColor="var(--lvl-1)", cardClass="card-bronce"; const pts = p.puntos||0;
+            if(pts<=150) { w=(pts/150)*100; cardClass="card-bronce"; } else if(pts<=350) { lvlName="Plata"; lvlColor="var(--lvl-2)"; w=((pts-150)/200)*100; cardClass="card-plata"; } else if(pts<=650) { lvlName="Oro"; lvlColor="var(--lvl-3)"; w=((pts-350)/300)*100; cardClass="card-oro"; } else if(pts<=900) { lvlName="Élite"; lvlColor="var(--lvl-4)"; w=((pts-650)/250)*100; cardClass="card-diamante"; } else { lvlName="Leyenda"; lvlColor="var(--lvl-5)"; w=100; cardClass="card-leyenda"; }
+            
+            document.getElementById('fifa-card-bg').className = `fifa-card-simple ${cardClass}`;
+            document.getElementById('level-title').innerText = "Nivel: " + lvlName; document.getElementById('level-title').style.color = lvlColor; 
+            document.getElementById('dash-puntos-badge').innerText = pts + " PTS"; document.getElementById('dash-puntos-badge').style.backgroundColor = lvlColor; 
+            document.getElementById('progress-fill').style.width = Math.min(w, 100) + "%"; document.getElementById('progress-fill').style.background = lvlColor;
+            
+            const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Buen Inicio", limit: 80, icon: "thumbs-up" }, { name: "Chispa", limit: 120, icon: "bolt" }, { name: "Constancia", limit: 150, icon: "bullseye" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
+            document.getElementById('insignias-container').innerHTML = badges.map(b => `<div class="flex flex-col items-center w-20 text-center"><div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-transform hover:scale-110 ${pts >= b.limit ? 'bg-yellow-500/20 border-2 border-gold text-gold shadow-[0_0_15px_rgba(255,215,0,0.4)]' : 'bg-black/20 border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)]'}"><i class="fas fa-${b.icon}"></i></div><div class="text-[0.6rem] font-bold mt-2 ${pts >= b.limit ? 'text-gold' : 'text-[var(--text-sec)]'}">${b.name}<br><span class="text-[0.5rem] font-normal opacity-70">${b.limit} pts</span></div></div>`).join('');
+            
+            const recompensas = [ { title: "Ser Capitán", req: 150, icon: "copyright" }, { title: "Elegir Juego", req: 300, icon: "dice" }, { title: "Entrenar Cat. Superior", req: 800, icon: "level-up-alt" } ];
+            document.getElementById('shop-container').innerHTML = recompensas.map(r => `<div class="glass-card flex items-center p-3 rounded-xl gap-4 ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-black/20 text-[var(--text-sec)]'}"><i class="fas fa-${r.icon}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`).join('');
+            
+            renderFondos(p, tipo); renderRadar(p, tipo); renderEvoChart(p);
+        }
+
+        function renderFondos(p, tipo) {
             const container = document.getElementById('fondos-container'); if(!container) return;
-            let fondoActual = p.fondoActivo || 'base'; const puntos = Number(p.puntos || 0);
+            let fondoActual = p.fondoActivo || 'base'; const pts = Number(p.puntos || 0);
             container.innerHTML = FONDOS.map(f => {
-                const unlocked = puntos >= f.req; const active = fondoActual === f.id;
-                return `<div onclick="${unlocked ? `window.seleccionarFondo(${p.id}, '${f.id}')` : ''}" style="border: 2px solid ${active ? '#FFD700' : 'var(--card-border)'}; border-radius: 12px; padding: 10px; text-align: center; cursor: ${unlocked ? 'pointer' : 'not-allowed'}; opacity: ${unlocked ? '1' : '0.5'}; background: var(--bg-card); position: relative; overflow: hidden; transition: 0.3s; box-shadow: ${active ? '0 0 15px rgba(255,215,0,0.2)' : 'none'}"><div class="${f.class}" style="height: 60px; width: 100%; border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1);"></div><div style="font-weight: 800; font-size: 0.8rem; color: ${active ? '#FFD700' : 'var(--text-main)'};">${f.name}</div><div style="font-size: 0.65rem; color: var(--text-sec);">${unlocked ? f.desc : `<i class="fas fa-lock"></i> ${f.req} pts`}</div>${active ? '<i class="fas fa-check-circle" style="position:absolute; top:5px; right:5px; color:#FFD700;"></i>' : ''}</div>`;
+                const unl = pts >= f.req; const act = fondoActual === f.id;
+                return `<div onclick="${unl ? `window.seleccionarFondo(${p.id}, '${f.id}', '${tipo}')` : ''}" class="border-2 rounded-xl p-2 text-center relative transition-all overflow-hidden ${act ? 'border-gold shadow-[0_0_15px_rgba(255,215,0,0.2)] bg-[var(--bg-card)]' : 'border-[var(--card-border)] bg-[var(--bg-card)]'} ${unl ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}"><div class="${f.class} h-12 w-full rounded-lg mb-2 border border-white/10"></div><div class="font-black text-[0.7rem] ${act ? 'text-gold' : ''}">${f.name}</div><div class="text-[0.6rem] text-[var(--text-sec)]">${unl ? f.desc : `<i class="fas fa-lock"></i> ${f.req} pts`}</div>${act ? '<i class="fas fa-check-circle absolute top-2 right-2 text-gold"></i>' : ''}</div>`;
             }).join('');
-            const marco = document.querySelector('.fifa-photo-frame');
+            const marco = document.getElementById('card-fondo-marco');
             if(marco) { FONDOS.forEach(f => marco.classList.remove(f.class)); const fObj = FONDOS.find(f => f.id === fondoActual); if(fObj) marco.classList.add(fObj.class); }
         }
 
-        window.seleccionarFondo = function(id, fondoId) { if(!currentUser || currentUser.id !== id) return; update(ref(db, 'porteros/' + id), { fondoActivo: fondoId }).then(() => { showToast("¡Fondo equipado!"); }); }
+        window.seleccionarFondo = function(id, fondoId, tipo) { if(!currentUser || currentUser.id !== id) return; update(ref(db, `${tipo}/` + id), { fondoActivo: fondoId }).then(() => { showToast("¡Fondo equipado!"); }); }
 
-        function renderDashboard(porteroId) {
-            const p = porteros.find(x => x.id === porteroId); if(!p) return;
-            let s = p.stats || {};
-            document.getElementById('dash-card-nombre').innerHTML = `${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}`; 
-            document.getElementById('dash-feedback-content').innerText = `"${p.mensajeManual || 'Confía en tu talento.'}"`;
-            const imgEl = document.getElementById('card-foto'); if(p.foto && p.foto.length > 50) { imgEl.src = p.foto; imgEl.style.display = 'block'; } else { imgEl.src = ""; imgEl.style.display = 'none'; }
-            document.getElementById('fifa-rating').innerText = Math.min(99, 60 + Math.floor(p.puntos / 30)); document.getElementById('stat-tec').innerText = Math.min(99, s.tec||60).toFixed(0); document.getElementById('stat-fis').innerText = Math.min(99, s.jue||60).toFixed(0); document.getElementById('stat-men').innerText = Math.min(99, s.men||60).toFixed(0); document.getElementById('stat-tac').innerText = Math.min(99, s.ret||60).toFixed(0);
+        function renderRadar(p, tipo) {
+            const ctxEl = document.getElementById('adnChart'); if (!ctxEl) return; if (chartInstance) chartInstance.destroy();
+            const s = p.stats || {};
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
             
-            let w=0, step=1, lvlName="Iniciación", lvlColor="var(--lvl-1)", cardClass="card-bronce";
-            if(p.puntos<=150) { w=(p.puntos/150)*100; cardClass="card-bronce"; } else if(p.puntos<=350) { lvlName="Formación"; lvlColor="var(--lvl-2)"; w=((p.puntos-150)/200)*100; step=2; cardClass="card-plata"; } else if(p.puntos<=650) { lvlName="Consolidación"; lvlColor="var(--lvl-3)"; w=((p.puntos-350)/300)*100; step=3; cardClass="card-oro"; } else if(p.puntos<=900) { lvlName="Rendimiento"; lvlColor="var(--lvl-4)"; w=((p.puntos-650)/250)*100; step=4; cardClass="card-diamante"; } else { lvlName="Referente"; lvlColor="var(--lvl-5)"; w=100; step=5; cardClass="card-leyenda"; }
+            const labels = tipo === 'porteros' ? ['Actitud', 'Técnica', 'Juego', 'Retos'] : ['Actitud', 'Técnica', 'Físico', 'Táctica'];
+            const pData = tipo === 'porteros' ? [s.men||60, s.tec||60, s.jue||60, s.ret||60] : [s.men||60, s.tec||60, s.fis||60, s.tac||60];
             
-            const cardBg = document.getElementById('fifa-card-bg'); if (cardBg) cardBg.className = `fifa-card-simple ${cardClass}`;
-            document.getElementById('level-title').innerText = "Nivel: " + lvlName; document.getElementById('level-title').style.color = lvlColor; document.getElementById('dash-puntos-badge').innerText = p.puntos + " PTS"; document.getElementById('dash-puntos-badge').style.backgroundColor = lvlColor; document.getElementById('progress-fill').style.width = Math.min(w, 100) + "%"; document.getElementById('progress-fill').style.background = lvlColor;
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            let tm=0, tt=0, t3=0, t4=0; let count = arr.filter(x => x.stats).length || 1;
+            arr.forEach(x => { const xs = x.stats||{}; tm+=(xs.men||60); tt+=(xs.tec||60); t3+=(tipo==='porteros'?xs.jue||60:xs.fis||60); t4+=(tipo==='porteros'?xs.ret||60:xs.tac||60); });
+            const avg = [Math.round(tm/count), Math.round(tt/count), Math.round(t3/count), Math.round(t4/count)];
             
-            const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Manos Seguras", limit: 80, icon: "hand-paper" }, { name: "Reflejos Felinos", limit: 120, icon: "bolt" }, { name: "Colocación", limit: 150, icon: "compass" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
-            document.getElementById('insignias-container').innerHTML = badges.map(b => `<div class="insignia-item"><div class="insignia-box ${p.puntos >= b.limit ? 'unlocked' : 'locked'}"><i class="fas fa-${b.icon}"></i></div><div class="insignia-name">${b.name}<br><span style="font-size:0.55rem; color:var(--text-sec); font-weight:normal;">${b.limit} pts</span></div></div>`).join('');
-            
-            const recompensas = [ { title: "Ser Capitán del Partidillo", req: 150, icon: "copyright" }, { title: "Elegir Juego", req: 300, icon: "dice" }, { title: "Entrenar Cat. Superior", req: 800, icon: "level-up-alt" } ];
-            document.getElementById('shop-container').innerHTML = recompensas.map(r => `<div class="shop-item ${p.puntos >= r.req ? 'unlocked' : 'locked'}"><div class="shop-icon"><i class="fas fa-${r.icon}"></i></div><div class="shop-info"><div class="shop-title">${r.title}</div><div class="shop-req">${p.puntos >= r.req ? '<i class="fas fa-check-circle" style="color:#2ecc71;"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`).join('');
-            renderFondos(p); renderRadar(p); renderEvoChart(p);
+            // FASE 3: Corrección visual del Radar (Añadido padding al layout y font size ajustado)
+            chartInstance = new Chart(ctxEl, { 
+                type: 'radar', 
+                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: 30 }, scales: { r: { min: 0, suggestedMax: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#fff' : '#333', font: {size: 11, weight: 'bold'}, padding: 15 }, ticks: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#fff' : '#333', boxWidth: 10, font: {size: 10} } } } } 
+            });
         }
 
         function renderEvoChart(p) {
             const ctxEl = document.getElementById('evoChart'); if (!ctxEl) return; if (evoChartInstance) evoChartInstance.destroy();
-            let pts = Number(p.puntos || 0); let data = [pts]; let labs = ['Actual']; let hist = p.historial || []; let limit = Math.min(hist.length, 10); 
-            for(let i=0; i<limit; i++) { pts -= Number(hist[i].puntos || 0); data.unshift(pts); labs.unshift(hist[i].fecha.split(' ')[1] || hist[i].fecha); }
+            let pts = Number(p.puntos || 0); let data = [pts]; let labs = ['Hoy']; let hist = p.historial || []; let limit = Math.min(hist.length, 10); 
+            for(let i=0; i<limit; i++) { pts -= Number(hist[i].puntos || 0); data.unshift(pts); labs.unshift(''); }
             const isDark = document.body.getAttribute('data-theme') === 'dark';
-            evoChartInstance = new Chart(ctxEl, { type: 'line', data: { labels: labs, datasets: [{ label: 'Puntos', data: data, borderColor: '#FFD700', backgroundColor: isDark ? 'rgba(255, 215, 0, 0.1)' : 'rgba(255, 215, 0, 0.2)', borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#CB3524', pointRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#aab2cd' : '#65676b' } }, x: { grid: { display: false }, ticks: { color: isDark ? '#aab2cd' : '#65676b', font: {size: 9} } } }, plugins: { legend: { display: false } } } });
+            evoChartInstance = new Chart(ctxEl, { type: 'line', data: { labels: labs, datasets: [{ label: 'Puntos', data: data, borderColor: '#FFD700', backgroundColor: isDark ? 'rgba(255,215,0,0.1)' : 'rgba(255,215,0,0.2)', borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#CB3524', pointRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: 10 }, scales: { y: { grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }, ticks: { color: isDark ? '#aab2cd' : '#65676b' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } } });
         }
 
-        function renderRadar(p) {
-            const ctxEl = document.getElementById('adnChart'); if (!ctxEl) return; if (chartInstance) chartInstance.destroy();
-            const s = p.stats || { men:60, tec:60, jue:60, ret:60 }; let tM=0, tT=0, tJ=0, tR=0; let valid = porteros.filter(x => x.stats); let count = valid.length || 1;
-            valid.forEach(x => { tM+=(x.stats.men||60); tT+=(x.stats.tec||60); tJ+=(x.stats.jue||60); tR+=(x.stats.ret||60); });
-            const avg = [Math.round(tM/count), Math.round(tT/count), Math.round(tJ/count), Math.round(tR/count)]; const isDark = document.body.getAttribute('data-theme') === 'dark';
-            chartInstance = new Chart(ctxEl, { 
-                type: 'radar', 
-                data: { 
-                    labels: ['Actitud', 'Técnica', 'Juego', 'Retos'], 
-                    datasets: [ 
-                        { label: 'Mi Nivel', data: [s.men, s.tec, s.jue, s.ret], backgroundColor: 'rgba(203, 53, 36, 0.5)', borderColor: 'rgba(203, 53, 36, 1)', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 4, pointHoverRadius: 6 }, 
-                        { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgba(52, 152, 219, 0.6)', borderWidth: 1, borderDash: [5, 5], pointBackgroundColor: 'rgba(52, 152, 219, 0.6)', pointRadius: 2 } 
-                    ] 
-                }, 
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    layout: { padding: 30 }, // SOLUCIÓN AL CORTE DEL GRÁFICO
-                    scales: { 
-                        r: { 
-                            min: 0, 
-                            suggestedMax: 100, 
-                            grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, 
-                            pointLabels: { color: isDark ? 'white' : '#333', font: {size: 11, weight: 'bold'} }, 
-                            ticks: { display: false } 
-                        } 
-                    }, 
-                    plugins: { 
-                        legend: { display: true, position: 'bottom', labels: { color: isDark ? 'white' : '#333', boxWidth: 12 } } 
-                    } 
-                } 
-            });
+        window.toggleRanking = function(mode) { 
+            window.rankingMode = mode; 
+            document.querySelectorAll('#view-ranking .segment-btn').forEach(b => { b.classList.remove('bg-[var(--segment-active)]', 'text-[var(--text-main)]', 'shadow-md'); b.classList.add('text-[var(--text-sec)]'); });
+            const activeBtn = document.getElementById(mode === 'global' ? 'rank-global' : mode === 'porteros' ? 'rank-por' : 'rank-jug');
+            activeBtn.classList.remove('text-[var(--text-sec)]'); activeBtn.classList.add('bg-[var(--segment-active)]', 'text-[var(--text-main)]', 'shadow-md');
+            
+            const titleLabel = document.getElementById('ranking-title-label');
+            if(mode === 'global') titleLabel.innerText = "TABLA GLOBAL MVP";
+            if(mode === 'porteros') titleLabel.innerText = "GUANTE DE ORO (PORTEROS)";
+            if(mode === 'jugadores') titleLabel.innerText = "BOTA DE ORO (JUGADORES)";
+            
+            renderRankingList(); 
         }
-
-        window.toggleRanking = function(mode) { window.rankingMode = mode; document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active')); if(mode === 'global') document.getElementById('rank-global').classList.add('active'); else if(mode === 'CD Alcalá') document.getElementById('rank-alcala').classList.add('active'); else if(mode === 'Cotorruelo') document.getElementById('rank-cotorruelo').classList.add('active'); renderRankingList(); }
 
         function renderRankingList() {
-            const div = document.getElementById('ranking-list-container'); const smartDiv = document.getElementById('smart-rankings'); let lista = [...porteros];
-            if(window.rankingMode && window.rankingMode !== 'global') { lista = lista.filter(p => p.sede && p.sede.trim() === window.rankingMode); }
-            lista.sort((a,b) => b.puntos - a.puntos); const bestMen = [...lista].sort((a,b) => (b.stats?.men||0) - (a.stats?.men||0))[0]; const bestTec = [...lista].sort((a,b) => (b.stats?.tec||0) - (a.stats?.tec||0))[0];
-            smartDiv.innerHTML = `<div class="modern-card" style="padding:15px; margin:0; display:flex; flex-direction:column; align-items:center; border:1px solid rgba(155, 89, 182, 0.3);"><span style="font-size:1.8rem; margin-bottom:8px;">🧠</span><span style="font-size:0.75rem; color:var(--text-sec); text-transform:uppercase; font-weight:800;">Mejor Actitud</span><span style="font-weight:900; font-size:1rem; color:var(--text-main); margin-top:5px;">${bestMen ? bestMen.nombre : '-'}</span></div><div class="modern-card" style="padding:15px; margin:0; display:flex; flex-direction:column; align-items:center; border:1px solid rgba(52, 152, 219, 0.3);"><span style="font-size:1.8rem; margin-bottom:8px;">🧤</span><span style="font-size:0.75rem; color:var(--text-sec); text-transform:uppercase; font-weight:800;">Mejor Técnica</span><span style="font-weight:900; font-size:1rem; color:var(--text-main); margin-top:5px;">${bestTec ? bestTec.nombre : '-'}</span></div>`;
-            div.innerHTML = lista.map((p, i) => `<div class="ranking-card-style rank-${i+1}" style="${currentUser && p.id === currentUser.id ? 'border-color:var(--atm-red); box-shadow: 0 0 15px rgba(203,53,36,0.5);' : ''}"><div class="rank-pos">${i+1}</div><img src="${p.foto || 'https://via.placeholder.com/50'}" class="mini-foto-list"><div class="rank-info"><div class="rank-name">${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}</div><div class="rank-team"><i class="fas fa-shield-alt"></i> ${p.equipo || 'Sin Equipo'}</div></div><div class="rank-score">${p.puntos} PTS</div></div>`).join('');
+            const div = document.getElementById('ranking-list-container'); const smartDiv = document.getElementById('smart-rankings');
+            let lista = [];
+            if(rankingMode === 'global') { lista = [...porteros, ...jugadores]; }
+            else if(rankingMode === 'porteros') { lista = [...porteros]; }
+            else if(rankingMode === 'jugadores') { lista = [...jugadores]; }
+            
+            lista.sort((a,b) => (b.puntos||0) - (a.puntos||0)); 
+            const bestMen = [...lista].sort((a,b) => (b.stats?.men||0) - (a.stats?.men||0))[0]; 
+            const bestTec = [...lista].sort((a,b) => (b.stats?.tec||0) - (a.stats?.tec||0))[0];
+            
+            smartDiv.innerHTML = `<div class="glass-card p-3 rounded-xl flex flex-col items-center border border-[#9b59b6]/30 text-center"><span class="text-2xl mb-1">🧠</span><span class="text-[0.65rem] text-[var(--text-sec)] font-black uppercase">Mejor Actitud</span><span class="font-black text-sm text-[var(--text-main)] truncate w-full">${bestMen ? bestMen.nombre : '-'}</span></div><div class="glass-card p-3 rounded-xl flex flex-col items-center border border-[#3498db]/30 text-center"><span class="text-2xl mb-1">⚽</span><span class="text-[0.65rem] text-[var(--text-sec)] font-black uppercase">Mejor Técnica</span><span class="font-black text-sm text-[var(--text-main)] truncate w-full">${bestTec ? bestTec.nombre : '-'}</span></div>`;
+            
+            div.innerHTML = lista.map((p, i) => {
+                const tipoReal = porteros.some(x => x.id === p.id) ? 'porteros' : 'jugadores';
+                const posBadge = p.posicion ? p.posicion : (tipoReal === 'porteros' ? 'POR' : 'JUG');
+                
+                return `
+                <div class="glass-card flex items-center p-3 rounded-xl transition-transform ${i===0 ? 'scale-[1.02] border-2 border-gold bg-yellow-500/10 shadow-[0_5px_15px_rgba(255,215,0,0.2)]' : ''} ${currentUser && p.id === currentUser.id ? 'border-l-4 border-atmRed shadow-[0_0_15px_rgba(203,53,36,0.3)]' : ''}">
+                    <div class="font-black text-lg w-8 text-center mr-2 ${i===0 ? 'text-gold text-2xl' : 'text-gray-400'}">${i+1}</div>
+                    <img src="${p.foto || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-full border-2 ${i===0 ? 'border-gold' : 'border-atmRed'} object-cover mr-3 flex-shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-black text-sm truncate flex items-center gap-1">${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}</div>
+                        <div class="text-[0.65rem] text-[var(--text-sec)] uppercase font-bold truncate flex items-center gap-1"><i class="fas fa-shield-alt"></i> ${p.equipo || 'Sin Eq.'} <span class="bg-gray-500/20 px-1 rounded ml-1 text-white/80">${posBadge}</span></div>
+                    </div>
+                    <div class="bg-gradient-to-r from-atmRed to-red-900 text-white px-3 py-1 rounded-full font-black text-xs shadow-md whitespace-nowrap ml-2">${p.puntos||0} PTS</div>
+                </div>`;
+            }).join('');
         }
-        
-        window.exportarExcel = function() {
-            if(porteros.length === 0) return showToast("No hay datos", true);
-            let csv = "Nombre,Equipo,Sede,Ano,Entrenador,Puntos_Totales,Actitud,Tecnica,Juego,Retos\n";
-            porteros.forEach(p => { let s = p.stats || {men:60, tec:60, jue:60, ret:60}; csv += `${p.nombre},${p.equipo || ''},${p.sede || ''},${p.ano || ''},${p.entrenador || ''},${p.puntos || 0},${s.men},${s.tec},${s.jue},${s.ret}\n`; });
-            const blob = new Blob(["\uFEFF"+csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", "Guardianes_Stats.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Excel descargado");
-        };
 
-        // NUEVO SISTEMA DE CÓDIGO QR PARA COMPARTIR
         window.compartirFicha = function() {
             if(!currentUser) return;
-            // Generar enlace o texto para el QR. En este caso codificaremos un resumen visible rápido
-            const baseUrl = window.location.href.split('?')[0]; // URL base de la app
-            const textoQR = encodeURIComponent(`🛡 GUARDIANES ATM 🛡\nPortero: ${currentUser.nombre}\nPuntos: ${currentUser.puntos} PTS\n`);
-            
-            // Usamos una API gratuita y rápida para generar el QR sin librerías pesadas
-            const urlQR = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${textoQR}&color=1C2C5B`;
-            
-            document.getElementById('qr-image').src = urlQR;
+            const t = encodeURIComponent(`🛡 GUARDIANES ATM 🛡\nDeportista: ${currentUser.nombre}\nPuntos: ${currentUser.puntos||0} PTS\n`);
+            document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${t}&color=1C2C5B`;
             document.getElementById('modal-qr').style.display = 'flex';
         };
-
-        // Botón dentro del modal de QR para compartir nativo (WhatsApp)
+        
         window.compartirNativo = function() {
             if(!currentUser) return;
-            const t = `🧤 ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos} puntos en Guardianes Atleti.\n\n🛡 ¡Sigo mejorando para ser un muro infranqueable! ⚽🔴⚪`;
-            if (navigator.share) navigator.share({ title: 'Ficha Guardianes Atleti', text: t }).catch((e) => console.log('Error compartir', e));
-            else showToast("Tu navegador no soporta compartir nativo.", true);
+            const t = `🔴⚪ ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos||0} puntos en la Academia Guardianes ATM.\n\n🛡 ¡Trabajando para ser el mejor!`;
+            if (navigator.share) navigator.share({ title: 'Mi Ficha ATM', text: t }).catch(()=>console.log('Error compartiendo')); else showToast("Tu navegador no soporta compartir directamente.", true);
         };
+        
+        window.exportarExcel = function(tipo) {
+            const arr = tipo === 'porteros' ? porteros : jugadores;
+            if(arr.length === 0) return showToast("No hay datos para exportar", true);
+            let csv = "Nombre,Equipo,Sede,Ano,Posicion,Puntos_Totales,Actitud,Tecnica,Juego_Fisico,Retos_Tact\n";
+            arr.forEach(p => { 
+                let s = p.stats || {}; 
+                const pos = p.posicion || (tipo === 'porteros' ? 'POR' : 'JUG');
+                csv += `${p.nombre},${p.equipo || ''},${p.sede || ''},${p.ano || ''},${pos},${p.puntos || 0},${s.men||60},${s.tec||60},${tipo==='porteros'?s.jue:s.fis||60},${tipo==='porteros'?s.ret:s.tac||60}\n`; 
+            });
+            const blob = new Blob(["\uFEFF"+csv], { type: 'text/csv;charset=utf-8;' }); 
+            const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.setAttribute("href", url); 
+            link.setAttribute("download", `Guardianes_${tipo}_${new Date().toLocaleDateString('es-ES').replace(/\//g,'-')}.csv`); 
+            document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Excel generado");
+        };
+
     </script>
 </body>
 </html>
