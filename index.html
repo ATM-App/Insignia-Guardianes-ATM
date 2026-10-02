@@ -11,7 +11,6 @@
     <link rel="apple-touch-icon" href="GuardinesAtleti.png">
     <meta name="apple-mobile-web-app-title" content="Guardianes ATM">
 
-    <!-- Fuentes y Librerías (Añadimos italic y bold italic a Montserrat) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -51,8 +50,8 @@
             background-attachment: fixed; overflow-x: hidden;
         }
 
+        /* DISEÑO PANTALLA INICIO TIPO "SPLIT SCREEN" */
         .home-container { display: flex; min-height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; z-index: 1000; background: var(--bg-body); }
-        
         .home-left { width: 100%; max-width: 400px; background: #111a36; box-shadow: 10px 0 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; padding: 50px 40px; position: relative; z-index: 10; border-right: 1px solid rgba(255,255,255,0.05); }
         .home-right { flex: 1; background: linear-gradient(135deg, #1C2C5B 0%, #0b1120 100%); display: flex; flex-direction: column; justify-content: center; padding: 80px; position: relative; overflow: hidden; }
         
@@ -69,7 +68,7 @@
 
         .home-footer-text { text-align: center; margin-top: auto; font-size: 0.6rem; color: #64748b; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* Estilo input minimalista (como en la imagen) */
+        /* Estilo input minimalista (como en la imagen proporcionada por el usuario) */
         .input-group-modern { margin-bottom: 30px; position: relative; }
         .input-group-modern label { display: block; font-size: 0.65rem; color: #94a3b8; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
         .input-group-modern input { width: 100%; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); color: #ffffff; font-size: 1.2rem; padding: 8px 0; outline: none; transition: 0.3s; letter-spacing: 2px; border-radius: 0; }
@@ -81,7 +80,6 @@
         .btn-red-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(203,53,36,0.6); }
         .btn-red-glow:active { transform: translateY(1px); }
 
-        /* Textos Gigantes del panel derecho */
         .hero-quote { font-size: 1.6rem; font-weight: 900; font-style: italic; color: var(--atm-red); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
         .hero-main-text { font-size: 6rem; font-weight: 900; font-style: italic; line-height: 1; letter-spacing: -2px; margin-bottom: 20px; text-transform: uppercase; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .hero-main-text span { color: var(--atm-red); }
@@ -103,7 +101,6 @@
         .header-text .highlight { color: var(--atm-red); }
         .btn-logout-clean { background: none; border: none; color: var(--atm-red); font-size: 1.6rem; cursor: pointer; transition: transform 0.2s; }
         
-        /* Notificaciones y Modales */
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; min-width: 250px; animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; font-weight: 600; border: 1px solid var(--input-border); }
         .toast.error { border-left-color: var(--atm-red); }
@@ -113,13 +110,14 @@
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px);}
-        .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; max-width:320px; text-align:center; border: 1px solid rgba(203,53,36,0.3); box-shadow: 0 10px 40px rgba(203,53,36,0.3); backdrop-filter: blur(15px); }
+        .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; max-width:320px; text-align:center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(15px); }
         .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* Controles y Formularios */
         input[type="text"], input[type="number"], select { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); padding: 12px; border-radius: 10px; color: var(--text-main); margin-bottom: 10px; outline:none; transition: 0.3s; }
         input:focus, select:focus { border-color: var(--atm-red); }
+        
         .btn-main { width: 100%; background: linear-gradient(135deg, var(--atm-red), #902012); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor:pointer; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(203,53,36,0.4); }
         .btn-secondary { background: transparent; border: 1px solid var(--text-sec); color: var(--text-sec); padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
         .btn-excel { background: linear-gradient(135deg, #107c41, #185c37); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(16,124,65,0.4); }
@@ -208,7 +206,7 @@
         .fifa-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-weight: 700; font-size: 0.95rem; }
         .fifa-stats-grid span { font-weight: 900; margin-right: 5px; }
 
-        .btn-share-card { background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 800; margin-top: 15px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); transition: transform 0.2s; }
+        .btn-share-card { background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 800; margin-top: 15px; cursor: pointer; display: flex; align-items: center; justify-content:center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); transition: transform 0.2s; width:100%; max-width: 270px;}
         .btn-share-card:active { transform: scale(0.95); }
 
         @keyframes flame { 0%, 100% { transform: scale(1) rotate(-5deg); } 50% { transform: scale(1.2) rotate(5deg); } }
@@ -266,6 +264,31 @@
                 <button class="btn-secondary" onclick="document.getElementById('modal-confirm').style.display='none'">CANCELAR</button>
                 <button class="btn-main" id="btn-confirm-action" style="margin-top:0; background:var(--atm-red);">ELIMINAR</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL QR COMPARTIR FICHA -->
+    <div id="modal-qr" class="modal-overlay" style="display:none;">
+        <div class="modal-box animate-pop">
+            <h3 style="color:var(--text-main); margin-bottom:15px; font-weight:900;"><i class="fas fa-qrcode"></i> TU FICHA EN VIVO</h3>
+            <div style="background:white; padding:15px; border-radius:15px; display:inline-block; margin-bottom:15px; border: 3px solid var(--atm-red); box-shadow: 0 5px 20px rgba(203,53,36,0.3);">
+                <img id="qr-image" src="" alt="QR Ficha" style="width:180px; height:180px; display:block;">
+            </div>
+            <p style="color:var(--text-sec); font-size:0.85rem; margin-bottom:20px;">Escanea este código para ver el resumen de tus estadísticas.</p>
+            <div style="display:flex; gap:10px; flex-direction:column;">
+                <button class="btn-share-card" onclick="window.compartirNativo()" style="margin:0; width:100%;"><i class="fab fa-whatsapp"></i> Enviar por WhatsApp</button>
+                <button class="btn-secondary" onclick="document.getElementById('modal-qr').style.display='none'">CERRAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL HISTORIAL COMPLETO (ENTRENADORES) -->
+    <div id="modal-history" class="modal-overlay" style="display:none;">
+        <div class="modal-box animate-pop" style="max-width:450px; width:95%; max-height:80vh; display:flex; flex-direction:column; padding: 20px;">
+            <h3 style="color:var(--text-main); margin-bottom:5px; font-weight:900; text-transform:uppercase;" id="history-modal-title">HISTORIAL</h3>
+            <p style="color:var(--text-sec); font-size:0.8rem; font-style:italic; margin-bottom:15px;">Registro completo de acciones</p>
+            <div id="history-modal-content" style="flex:1; overflow-y:auto; text-align:left; margin-bottom:15px; padding-right:10px;" class="history-list"></div>
+            <button class="btn-secondary" onclick="document.getElementById('modal-history').style.display='none'">CERRAR PANEL</button>
         </div>
     </div>
 
@@ -433,7 +456,7 @@
                     </div>
                 </div>
                 <button class="btn-share-card" onclick="window.compartirFicha()">
-                    <i class="fab fa-whatsapp"></i> Compartir mi Ficha
+                    <i class="fas fa-qrcode"></i> Compartir mi Ficha
                 </button>
             </div>
 
@@ -488,7 +511,7 @@
 
             <div class="modern-card">
                 <h3 style="margin-bottom:15px; font-weight:900; text-transform:uppercase;">ADN Guardianes <span style="font-size:0.7rem; font-weight:normal; color:var(--text-sec);">(Vs Media Academia)</span></h3>
-                <div style="position: relative; height:300px; width:100%;">
+                <div style="position: relative; height:320px; width:100%;">
                     <canvas id="adnChart"></canvas>
                 </div>
             </div>
@@ -557,6 +580,7 @@
         let targetDeleteId = null;
         let targetDeleteType = null;
 
+        // Sonidos
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -585,7 +609,9 @@
                 });
             }
 
-            signInAnonymously(auth).catch((e) => console.error(e));
+            signInAnonymously(auth).catch((e) => {
+                showToast("Atención: Dominio no autorizado en Firebase", true);
+            });
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
@@ -654,7 +680,7 @@
             const passClean = pass.trim().toLowerCase();
             let success = false; let sessionData = null;
 
-            if(roleType === 'admin' && pass.trim() === 'ATLETI2024') { success = true; sessionData = { role: 'admin', id: 'admin' }; }
+            if(roleType === 'admin' && passClean === 'atleti2024') { success = true; sessionData = { role: 'admin', id: 'admin' }; }
             else if(roleType === 'edp') {
                 const found = edps.find(e => e && e.clave && String(e.clave).trim().toLowerCase() === passClean);
                 if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; }
@@ -668,7 +694,7 @@
                 localStorage.setItem('guardianes_session', JSON.stringify(sessionData));
                 window.navTo(roleType === 'admin' ? 'view-admin' : roleType === 'edp' ? 'view-edp' : 'view-portero');
             } else {
-                showToast("Clave incorrecta o error de red", true);
+                showToast("Clave incorrecta o base de datos no cargada", true);
             }
         }
 
@@ -733,6 +759,7 @@
         }
 
         function isRacha(p) { if(!p.historial || p.historial.length < 3) return false; return p.historial[0].puntos > 0 && p.historial[1].puntos > 0 && p.historial[2].puntos > 0; }
+        function getColor(cat) { if(cat==='men') return 'var(--col-men)'; if(cat==='tec') return 'var(--col-tec)'; if(cat==='jue') return 'var(--col-jue)'; return 'var(--col-ret)'; }
 
         window.procesarImagenSegura = function(event) {
             const file = event.target.files[0]; if (!file) return;
@@ -795,7 +822,7 @@
                     </div>
                     <div class="points-container">
                         <div style="margin-bottom:15px; display:flex; gap:10px; background:var(--input-bg); padding:5px; border-radius:50px; border:1px solid var(--input-border);">
-                            <input type="text" id="feedback-input-${p.id}" placeholder="Mensaje rápido..." style="flex:1; background:transparent; border:none; padding:10px 15px; color:var(--text-main); margin-bottom:0;">
+                            <input type="text" id="feedback-input-${p.id}" placeholder="Mensaje rápido..." style="flex:1; background:transparent; border:none; padding:10px 15px; color:var(--text-main); margin-bottom:0; outline:none;">
                             <button onclick="window.guardarFeedback(${p.id})" style="background:linear-gradient(135deg, var(--atm-red), #902012); color:white; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 10px rgba(203,53,36,0.3);"><i class="fas fa-paper-plane"></i></button>
                         </div>
                         <div class="category-header cat-men"><i class="fas fa-brain"></i> ACTITUD</div><div class="points-grid-modern"><button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Puntual', 'fa-clock')"><i class="fas fa-clock"></i><span>+2</span>Puntual</button><button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 2, 'men', 'Escucha', 'fa-ear-listen')"><i class="fas fa-ear-listen"></i><span>+2</span>Escucha</button><button class="btn-modern-score btn-men" onclick="window.sumar(${p.id}, 3, 'men', 'Reacción', 'fa-bolt')"><i class="fas fa-bolt"></i><span>+3</span>Reacción</button></div>
@@ -806,15 +833,61 @@
                         <div style="background: rgba(255,215,0,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,215,0,0.3); margin-bottom: 20px;">
                             <div class="category-header" style="color: var(--gold); font-size: 0.9rem;"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
                             <div style="display:flex; flex-direction:column; gap:10px;">
-                                <input type="text" id="custom-reason-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" style="margin-bottom:0; background:rgba(0,0,0,0.3); border-color:rgba(255,215,0,0.3);">
-                                <div style="display:flex; gap:10px;"><input type="number" id="custom-pts-${p.id}" placeholder="Pts (Ej: 5 o -5)" style="margin-bottom:0; flex:1; background:rgba(0,0,0,0.3); border-color:rgba(255,215,0,0.3); text-align:center;"><select id="custom-cat-${p.id}" style="margin-bottom:0; flex:1; background:rgba(0,0,0,0.3); border-color:rgba(255,215,0,0.3);"><option value="men">Actitud</option><option value="tec">Técnica</option><option value="jue">Juego</option><option value="ret">Retos</option></select></div>
+                                <input type="text" id="custom-reason-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" style="background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); padding:10px; border-radius:8px; width:100%; outline:none; margin-bottom:0;">
+                                <div style="display:flex; gap:10px;">
+                                    <input type="number" id="custom-pts-${p.id}" placeholder="Pts (Ej: 5 o -5)" style="background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); padding:10px; border-radius:8px; flex:1; text-align:center; outline:none; margin-bottom:0;">
+                                    <select id="custom-cat-${p.id}" style="background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); padding:10px; border-radius:8px; flex:1; outline:none; margin-bottom:0;">
+                                        <option value="men" style="background:var(--bg-body)">Actitud</option>
+                                        <option value="tec" style="background:var(--bg-body)">Técnica</option>
+                                        <option value="jue" style="background:var(--bg-body)">Juego</option>
+                                        <option value="ret" style="background:var(--bg-body)">Retos</option>
+                                    </select>
+                                </div>
                                 <button onclick="window.sumarPersonalizado(${p.id})" style="background:linear-gradient(135deg, #f1c40f, #e67e22); color:black; font-weight:900; border:none; padding:12px; border-radius:10px; cursor:pointer;">APLICAR PUNTAJE</button>
                             </div>
                         </div>
+
+                        <!-- MODIFICACIÓN: HISTORIAL Y BOTÓN VER TODO -->
+                        <div style="background: var(--bg-card); border-radius: 12px; padding: 15px; border: 1px solid var(--card-border);">
+                            <div class="category-header" style="color:var(--text-sec); font-size: 0.8rem;"><i class="fas fa-history"></i> Historial Reciente</div>
+                            <div class="history-list" style="max-height: 120px; border:none; padding:0; background:transparent;">
+                                ${p.historial && p.historial.length > 0 
+                                    ? p.historial.slice(0, 3).map(h => `
+                                        <div class="history-item">
+                                            <span class="hist-date">${h.fecha.split(' ')[1] || h.fecha}</span>
+                                            <span class="hist-icon" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
+                                            <span class="hist-action">${h.accion}</span>
+                                            <span class="hist-pts" style="color:${h.puntos > 0 ? 'var(--lvl-1)' : 'var(--atm-red)'}">${h.puntos > 0 ? '+'+h.puntos : h.puntos}</span>
+                                        </div>`).join('') 
+                                    : '<div style="text-align:center;font-size:0.75rem;color:var(--text-sec); padding:10px;">Sin actividad.</div>'}
+                            </div>
+                            ${p.historial && p.historial.length > 0 ? `<button onclick="window.verHistorialCompleto(${p.id})" style="width:100%; margin-top:10px; padding:10px; border-radius:8px; background:var(--input-bg); border:1px solid var(--input-border); color:var(--atm-red); font-weight:800; cursor:pointer; font-size:0.8rem;"><i class="fas fa-list"></i> VER HISTORIAL COMPLETO</button>` : ''}
+                        </div>
+
                     </div>
                 </div>`).join('');
             if(document.getElementById('search-porteros-edp').value) window.filtrarPorterosEDP();
         }
+
+        window.verHistorialCompleto = function(id) {
+            const p = porteros.find(x => x.id === id);
+            if(!p) return;
+            document.getElementById('history-modal-title').innerText = `HISTORIAL: ${p.nombre}`;
+            const content = document.getElementById('history-modal-content');
+            if(!p.historial || p.historial.length === 0) {
+                content.innerHTML = "<p style='text-align:center; color:var(--text-sec);'>No hay actividad registrada.</p>";
+            } else {
+                content.innerHTML = p.historial.map(h => `
+                    <div class="history-item">
+                        <span class="hist-date" style="width:100px; color:var(--text-sec); font-size:0.75rem;">${h.fecha}</span>
+                        <span class="hist-icon" style="color:${getColor(h.categoria)}; font-size:1.2rem;"><i class="fas ${h.icon}"></i></span>
+                        <span class="hist-action" style="font-size:0.9rem;">${h.accion}</span>
+                        <span class="hist-pts" style="color:${h.puntos > 0 ? 'var(--lvl-1)' : 'var(--atm-red)'}; font-size:1rem;">${h.puntos > 0 ? '+'+h.puntos : h.puntos}</span>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('modal-history').style.display = 'flex';
+        };
 
         window.toggleCard = function(id) { document.getElementById(`card-${id}`).classList.toggle('expanded'); }
 
@@ -823,7 +896,7 @@
             if(pts > 0) playSound('success'); else playSound('fail');
             let s = p.stats || { men:60, tec:60, jue:60, ret:60 }; if(s[statKey] === undefined) s[statKey] = 60;
             let hist = p.historial || []; const fecha = new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}) + ' ' + new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-            hist.unshift({ fecha, accion: accionNombre, puntos: pts, categoria: statKey, icon: iconClass }); if(hist.length > 20) hist.pop();
+            hist.unshift({ fecha, accion: accionNombre, puntos: pts, categoria: statKey, icon: iconClass }); if(hist.length > 50) hist.pop();
             const oldPts = Number(p.puntos || 0); const newPts = oldPts + pts;
             const badges = [{ name: "Primeros Pasos", limit: 30 }, { name: "Manos Seguras", limit: 80 }, { name: "Reflejos Felinos", limit: 120 }, { name: "Colocación", limit: 150 }, { name: "Mentalidad Pro", limit: 200 }, { name: "Espíritu Indio", limit: 250 }, { name: "Leyenda", limit: 900 }];
             let unlocked = ""; for(let b of badges) { if(oldPts < b.limit && newPts >= b.limit) { unlocked = `¡${p.nombre} desbloqueó: ${b.name}! 🏆`; break; } }
@@ -895,7 +968,33 @@
             const s = p.stats || { men:60, tec:60, jue:60, ret:60 }; let tM=0, tT=0, tJ=0, tR=0; let valid = porteros.filter(x => x.stats); let count = valid.length || 1;
             valid.forEach(x => { tM+=(x.stats.men||60); tT+=(x.stats.tec||60); tJ+=(x.stats.jue||60); tR+=(x.stats.ret||60); });
             const avg = [Math.round(tM/count), Math.round(tT/count), Math.round(tJ/count), Math.round(tR/count)]; const isDark = document.body.getAttribute('data-theme') === 'dark';
-            chartInstance = new Chart(ctxEl, { type: 'radar', data: { labels: ['Actitud', 'Técnica', 'Juego', 'Retos'], datasets: [ { label: 'Mi Nivel', data: [s.men, s.tec, s.jue, s.ret], backgroundColor: 'rgba(203, 53, 36, 0.5)', borderColor: 'rgba(203, 53, 36, 1)', borderWidth: 2, pointBackgroundColor: '#fff' }, { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgba(52, 152, 219, 0.6)', borderWidth: 1, borderDash: [5, 5], pointBackgroundColor: 'rgba(52, 152, 219, 0.6)', pointRadius: 2 } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? 'white' : '#333', font: {size: 11, weight: 'bold'} }, ticks: { display: false } } }, plugins: { legend: { display: true, position: 'bottom', labels: { color: isDark ? 'white' : '#333', boxWidth: 12 } } } } });
+            chartInstance = new Chart(ctxEl, { 
+                type: 'radar', 
+                data: { 
+                    labels: ['Actitud', 'Técnica', 'Juego', 'Retos'], 
+                    datasets: [ 
+                        { label: 'Mi Nivel', data: [s.men, s.tec, s.jue, s.ret], backgroundColor: 'rgba(203, 53, 36, 0.5)', borderColor: 'rgba(203, 53, 36, 1)', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 4, pointHoverRadius: 6 }, 
+                        { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgba(52, 152, 219, 0.6)', borderWidth: 1, borderDash: [5, 5], pointBackgroundColor: 'rgba(52, 152, 219, 0.6)', pointRadius: 2 } 
+                    ] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    layout: { padding: 30 }, // SOLUCIÓN AL CORTE DEL GRÁFICO
+                    scales: { 
+                        r: { 
+                            min: 0, 
+                            suggestedMax: 100, 
+                            grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, 
+                            pointLabels: { color: isDark ? 'white' : '#333', font: {size: 11, weight: 'bold'} }, 
+                            ticks: { display: false } 
+                        } 
+                    }, 
+                    plugins: { 
+                        legend: { display: true, position: 'bottom', labels: { color: isDark ? 'white' : '#333', boxWidth: 12 } } 
+                    } 
+                } 
+            });
         }
 
         window.toggleRanking = function(mode) { window.rankingMode = mode; document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active')); if(mode === 'global') document.getElementById('rank-global').classList.add('active'); else if(mode === 'CD Alcalá') document.getElementById('rank-alcala').classList.add('active'); else if(mode === 'Cotorruelo') document.getElementById('rank-cotorruelo').classList.add('active'); renderRankingList(); }
@@ -915,7 +1014,22 @@
             const blob = new Blob(["\uFEFF"+csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", "Guardianes_Stats.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Excel descargado");
         };
 
+        // NUEVO SISTEMA DE CÓDIGO QR PARA COMPARTIR
         window.compartirFicha = function() {
+            if(!currentUser) return;
+            // Generar enlace o texto para el QR. En este caso codificaremos un resumen visible rápido
+            const baseUrl = window.location.href.split('?')[0]; // URL base de la app
+            const textoQR = encodeURIComponent(`🛡 GUARDIANES ATM 🛡\nPortero: ${currentUser.nombre}\nPuntos: ${currentUser.puntos} PTS\n`);
+            
+            // Usamos una API gratuita y rápida para generar el QR sin librerías pesadas
+            const urlQR = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${textoQR}&color=1C2C5B`;
+            
+            document.getElementById('qr-image').src = urlQR;
+            document.getElementById('modal-qr').style.display = 'flex';
+        };
+
+        // Botón dentro del modal de QR para compartir nativo (WhatsApp)
+        window.compartirNativo = function() {
             if(!currentUser) return;
             const t = `🧤 ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos} puntos en Guardianes Atleti.\n\n🛡 ¡Sigo mejorando para ser un muro infranqueable! ⚽🔴⚪`;
             if (navigator.share) navigator.share({ title: 'Ficha Guardianes Atleti', text: t }).catch((e) => console.log('Error compartir', e));
