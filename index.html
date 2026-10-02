@@ -38,7 +38,7 @@
     <style>
         :root { 
             --bg-body: #f0f2f5; --bg-card: rgba(255, 255, 255, 0.85); --text-main: #1c1e21; --text-sec: #65676b;
-            --input-bg: #ffffff; --input-border: #d1d5db; --card-border: rgba(0,0,0,0.1);
+            --input-bg: rgba(255,255,255,0.9); --input-border: #d1d5db; --card-border: rgba(0,0,0,0.1);
             --segment-bg: #e4e6eb; --segment-active: #ffffff;
             --col-men: #9b59b6; --col-tec: #3498db; --col-jue: #2ecc71; --col-ret: #f1c40f; --col-fis: #e67e22; --col-tac: #e74c3c;
         }
@@ -120,7 +120,6 @@
 
     <div id="toast-container"></div>
 
-    <!-- MODALES -->
     <div id="modal-confirm" class="modal-overlay" style="display:none;">
         <div class="modal-box" style="border-color:#CB3524;">
             <i class="fas fa-exclamation-triangle text-atmRed text-4xl mb-4"></i>
@@ -133,7 +132,6 @@
         </div>
     </div>
 
-    <!-- MODAL QR COMPARTIR -->
     <div id="modal-qr" class="modal-overlay" style="display:none;">
         <div class="modal-box">
             <h3 class="text-xl font-black mb-4 text-[var(--text-main)]"><i class="fas fa-qrcode"></i> TU FICHA EN VIVO</h3>
@@ -148,7 +146,6 @@
         </div>
     </div>
 
-    <!-- MODAL HISTORIAL COMPLETO -->
     <div id="modal-history" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md max-h-[80vh] flex flex-col p-6">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase" id="history-modal-title">HISTORIAL</h3>
@@ -166,7 +163,6 @@
                 <p class="text-[0.65rem] text-gray-400 font-extrabold tracking-[0.2em] uppercase mt-1">ACADEMIA DE TECNIFICACIÓN</p>
             </div>
 
-            <!-- Menú de Roles -->
             <div id="home-role-selection" class="flex-1 flex flex-col justify-center animate-[popIn_0.3s_ease]">
                 <p class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-4 text-center">Selecciona tu perfil</p>
                 <div class="space-y-3">
@@ -185,7 +181,6 @@
                 </div>
             </div>
 
-            <!-- Formulario de Contraseña Integrado -->
             <div id="home-login-form" class="flex-1 flex flex-col justify-center hidden animate-[popIn_0.3s_ease]">
                 <p id="login-role-title" class="text-sm text-atmRed font-black tracking-wider uppercase mb-8 flex items-center gap-2"><i class="fas fa-lock"></i> ACCESO</p>
                 
@@ -310,14 +305,12 @@
             <div id="admin-lista-edps" class="space-y-3"></div>
         </section>
 
-        <!-- VISTA EDP (ENTRENADOR) -->
         <section id="view-edp" class="hidden">
             <div class="text-center mb-6 mt-4">
                 <h2 class="font-black text-2xl uppercase">Panel Técnico</h2>
                 <p class="text-sm text-[var(--text-sec)] font-bold">Evaluación en tiempo real</p>
             </div>
 
-            <!-- Toggles y Buscador -->
             <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 mb-5 border border-white/5">
                 <button id="btn-edp-toggle-por" class="flex-1 py-2.5 rounded-lg text-sm font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-2" onclick="window.toggleEvalView('porteros')"><i class="fas fa-mitten"></i> Porteros</button>
                 <button id="btn-edp-toggle-jug" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-2" onclick="window.toggleEvalView('jugadores')"><i class="fas fa-running"></i> Jugadores</button>
@@ -328,12 +321,10 @@
                 <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
             </div>
 
-            <!-- Contenedores de Listas Evaluación -->
             <div id="edp-lista-porteros"></div>
             <div id="edp-lista-jugadores" style="display:none;"></div>
         </section>
 
-        <!-- VISTA DEPORTISTA (FICHA / DASHBOARD) -->
         <section id="view-dashboard" class="hidden">
             <div class="fifa-card-container mb-6 mt-2">
                 <div class="fifa-card-simple card-bronce" id="fifa-card-bg">
@@ -420,7 +411,6 @@
             </div>
         </section>
 
-        <!-- VISTA RANKING -->
         <section id="view-ranking" class="hidden">
             <div class="bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl flex flex-col items-center text-center gap-3 mb-6 shadow-lg">
                 <i class="fas fa-graduation-cap text-4xl text-gold drop-shadow-[0_2px_5px_rgba(255,215,0,0.5)]"></i>
@@ -483,8 +473,8 @@
         let fotoTemp = ""; 
         let chartInstance = null; 
         let evoChartInstance = null;
-        let rankingMode = "global"; // global, porteros, jugadores
-        let evalViewMode = "porteros"; // porteros, jugadores (Para panel EDP)
+        let rankingMode = "global"; 
+        let evalViewMode = "porteros"; 
         let targetDeleteId = null;
         let targetDeleteType = null;
         
@@ -524,7 +514,9 @@
             if (fichaId && tipoFicha) {
                 isReadOnlyMode = true;
                 readOnlyId = fichaId;
-                roleType = tipoFicha;
+                roleType = tipoFicha; // Puede ser 'portero' o 'jugador'
+                
+                // Mostrar solo el dashboard base mientras carga firebase
                 document.getElementById('view-home').style.display = 'none';
                 document.getElementById('main-header').style.display = 'flex';
                 document.getElementById('app-container').style.display = 'block';
@@ -535,7 +527,7 @@
                 if(btnLogout) btnLogout.parentElement.style.display = 'none';
             }
 
-            signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
+            signInAnonymously(auth).catch((e) => { showToast("Atención: Firebase bloqueado", true); });
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
@@ -563,7 +555,11 @@
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-            if(currentUser && (roleType === 'portero' || roleType === 'jugador')) { renderRadar(currentUser, roleType); renderEvoChart(currentUser); }
+            if(currentUser && (roleType === 'portero' || roleType === 'jugador')) { 
+                const tipoPlural = (roleType === 'portero' || roleType === 'porteros') ? 'porteros' : 'jugadores';
+                renderRadar(currentUser, tipoPlural); 
+                renderEvoChart(currentUser); 
+            }
         }
 
         function updateThemeIcon(theme) { 
@@ -579,10 +575,9 @@
             else { input.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
 
-        // FLUJO DE LOGIN
         function checkSession() {
             const session = JSON.parse(localStorage.getItem('guardianes_session'));
-            if (session) {
+            if (session && !isReadOnlyMode) {
                 roleType = session.role;
                 setTimeout(() => {
                     if (roleType === 'admin') { window.navTo('view-admin'); }
@@ -616,16 +611,16 @@
             const passClean = pass.trim().toLowerCase();
             let success = false; let sessionData = null;
 
-            if(roleType === 'admin' && passClean === 'atleti2024') { success = true; sessionData = { role: 'admin', id: 'admin' }; window.navTo('view-admin'); }
+            if(passClean === 'atleti2024') { roleType = 'admin'; success = true; sessionData = { role: 'admin', id: 'admin' }; window.navTo('view-admin'); }
             else if(roleType === 'edp') { const found = edps.find(e => e.clave && String(e.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; window.navTo('view-edp'); } }
             else if(roleType === 'portero') { const found = porteros.find(p => p.clave && String(p.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'portero', id: found.id }; window.navTo('view-dashboard'); } }
             else if(roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugador', id: found.id }; window.navTo('view-dashboard'); } }
 
             if(success) { localStorage.setItem('guardianes_session', JSON.stringify(sessionData)); } 
-            else { showToast("Clave incorrecta o esperando servidor", true); }
+            else { showToast("Clave incorrecta o dominio no autorizado", true); }
         }
 
-        window.logout = function() { localStorage.removeItem('guardianes_session'); location.reload(); }
+        window.logout = function() { localStorage.removeItem('guardianes_session'); location.href = window.location.pathname; }
 
         window.navTo = function(viewId) {
             document.getElementById('view-home').style.display = 'none';
@@ -672,13 +667,23 @@
         }
 
         function refreshCurrentView() {
-            // MODO VISITANTE (Por QR)
+            // MODO VISITANTE (Por QR) - REPARADO GRAMÁTICA PLURAL/SINGULAR
             if (isReadOnlyMode) {
-                const arr = roleType === 'portero' ? porteros : jugadores;
-                const p = arr.find(x => x.id == readOnlyId);
+                const esPortero = (roleType === 'portero' || roleType === 'porteros');
+                const tipoPlural = esPortero ? 'porteros' : 'jugadores';
+                const arr = esPortero ? porteros : jugadores;
+                
+                const p = arr.find(x => String(x.id) === String(readOnlyId));
                 if (p) {
                     currentUser = p;
-                    renderDashboard(p.id, roleType);
+                    // Fuerza visualización del dashboard correctamente
+                    document.getElementById('view-home').style.display = 'none';
+                    document.getElementById('main-header').style.display = 'flex';
+                    document.getElementById('app-container').style.display = 'block';
+                    document.getElementById('view-dashboard').style.display = 'block';
+                    
+                    renderDashboard(p.id, tipoPlural);
+                    
                     // Ocultamos el botón de compartir y de cambiar fondos al visitante
                     const fondosSection = document.getElementById('fondos-container');
                     if(fondosSection) fondosSection.parentElement.style.display = 'none';
@@ -688,7 +693,7 @@
                 return;
             }
 
-            // MODO NORMAL (Recuperar sesión si se había perdido antes de cargar Firebase)
+            // MODO NORMAL (Recuperar sesión)
             const session = JSON.parse(localStorage.getItem('guardianes_session'));
             if (!currentUser && session && session.role !== 'admin') {
                 const arr = session.role === 'portero' ? porteros : (session.role === 'jugador' ? jugadores : edps);
@@ -698,12 +703,14 @@
             if(roleType === 'admin') { renderAdminLists(); cargarSelectEDP(); }
             else if(roleType === 'edp' && currentUser) { renderEvaluacionList(); }
             else if((roleType === 'portero' || roleType === 'jugador') && currentUser) { 
-                const arr = roleType === 'portero' ? porteros : jugadores;
+                const tipoPlural = roleType === 'portero' ? 'porteros' : 'jugadores';
+                const arr = tipoPlural === 'porteros' ? porteros : jugadores;
                 const updatedUser = arr.find(x => x.id == currentUser.id); 
+                
                 if(updatedUser) { 
                     currentUser = updatedUser;
                     if(document.getElementById('view-dashboard').style.display === 'block') {
-                        renderDashboard(currentUser.id, roleType); 
+                        renderDashboard(currentUser.id, tipoPlural); 
                     }
                 } 
             }
@@ -761,7 +768,7 @@
             
             set(ref(db, tipo + '/' + nuevoId), datos)
                 .then(() => { showToast("Deportista guardado"); window.limpiarFormAdmin(); })
-                .catch((e) => { showToast("Error al guardar (Revisa Reglas Firebase)", true); console.error(e); });
+                .catch((e) => { showToast("Error al guardar (Reglas Firebase)", true); });
         }
 
         window.crearEDP = function() {
@@ -770,7 +777,7 @@
             const id = Date.now();
             set(ref(db, 'edps/' + id), { id, nombre: nombre.trim(), clave: clave.trim() })
                 .then(() => { showToast("Entrenador Creado"); document.getElementById('edp-nombre').value = ""; document.getElementById('edp-clave').value = ""; })
-                .catch((e) => showToast("Error al guardar", true));
+                .catch((e) => showToast("Error al guardar en nube", true));
         }
 
         window.limpiarFormAdmin = function() { 
@@ -781,11 +788,12 @@
         }
 
         window.editarDeportista = function(id, tipo) { 
-            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
+            const arr = tipoPlural === 'porteros' ? porteros : jugadores;
             const p = arr.find(x => x.id === id); if(!p) return; 
-            document.getElementById('reg-tipo').value = tipo;
+            document.getElementById('reg-tipo').value = tipoPlural;
             window.actualizarOpcionesPosicion();
-            if(tipo === 'jugadores' && p.posicion) { document.getElementById('reg-posicion').value = p.posicion; }
+            if(tipoPlural === 'jugadores' && p.posicion) { document.getElementById('reg-posicion').value = p.posicion; }
             document.getElementById('reg-id').value = p.id; document.getElementById('reg-nombre').value = p.nombre; 
             document.getElementById('reg-equipo').value = p.equipo; document.getElementById('reg-sede').value = p.sede; 
             document.getElementById('reg-ano').value = p.ano; document.getElementById('reg-entrenador-select').value = p.entrenador; 
@@ -794,7 +802,7 @@
             window.scrollTo({top: 0, behavior: 'smooth'}); 
         }
 
-        window.confirmarBorrar = function(id, tipo) { targetDeleteId = id; targetDeleteType = tipo; document.getElementById('modal-confirm').style.display = 'flex'; }
+        window.confirmarBorrar = function(id, tipo) { targetDeleteId = id; targetDeleteType = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : (tipo === 'edps' ? 'edps' : 'jugadores'); document.getElementById('modal-confirm').style.display = 'flex'; }
         document.getElementById('btn-confirm-action').addEventListener('click', () => { if(targetDeleteId && targetDeleteType) { remove(ref(db, `${targetDeleteType}/${targetDeleteId}`)).then(() => { showToast("Eliminado"); document.getElementById('modal-confirm').style.display = 'none'; }); } });
 
         function renderAdminLists() { 
@@ -959,19 +967,20 @@
                                     </div>`).join('') 
                                 : '<div class="text-center text-xs text-[var(--text-sec)] py-2">Sin actividad</div>'}
                         </div>
-                        ${p.historial && p.historial.length > 0 ? `<button onclick="window.verHistorialCompleto(${p.id}, '${tipo}')" class="w-full text-[0.7rem] text-atmRed font-black uppercase bg-[var(--input-bg)] py-1.5 rounded-lg border border-[var(--input-border)]"><i class="fas fa-list"></i> VER HISTORIAL COMPLETO</button>` : ''}
+                        ${p.historial && p.historial.length > 0 ? `<button onclick="window.verHistorialCompleto(${p.id}, '${tipo}')" class="w-full text-[0.7rem] text-atmRed font-black uppercase bg-[var(--input-bg)] py-1.5 rounded-lg border border-[var(--input-border)] mt-2 hover:bg-atmRed/10 transition-colors"><i class="fas fa-list"></i> VER HISTORIAL COMPLETO</button>` : ''}
                     </div>
                 </div>
             </div>`;
         }
 
         window.sumar = function(id, pts, statKey, accionNombre, iconClass, tipo) {
-            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
+            const arr = tipoPlural === 'porteros' ? porteros : jugadores;
             const p = arr.find(x => x.id === id); if (!p) return;
             if(pts > 0) playSound('success'); else playSound('fail');
             
             let s = p.stats || {};
-            if(tipo === 'porteros') { s = {men:s.men||60, tec:s.tec||60, jue:s.jue||60, ret:s.ret||60}; }
+            if(tipoPlural === 'porteros') { s = {men:s.men||60, tec:s.tec||60, jue:s.jue||60, ret:s.ret||60}; }
             else { s = {men:s.men||60, tec:s.tec||60, fis:s.fis||60, tac:s.tac||60}; }
             
             let hist = p.historial || [];
@@ -983,7 +992,7 @@
             const badges = [ { name: "Primeros Pasos", limit: 30 }, { name: "Oro", limit: 120 }, { name: "Diamante", limit: 300 }, { name: "Leyenda", limit: 900 } ];
             let unlocked = ""; for(let b of badges) { if(oldPts < b.limit && newPts >= b.limit) { unlocked = b.name; break; } }
             
-            update(ref(db, `${tipo}/` + id), { puntos: newPts, stats: { ...s, [statKey]: s[statKey] + pts }, historial: hist }).then(() => { 
+            update(ref(db, `${tipoPlural}/` + id), { puntos: newPts, stats: { ...s, [statKey]: s[statKey] + pts }, historial: hist }).then(() => { 
                 if (unlocked) { showToast(`¡${p.nombre} desbloqueó: ${unlocked}! 🏆`); if(typeof confetti !== 'undefined') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } 
                 else { showToast(`${pts > 0 ? '+'+pts : pts} ${accionNombre}`); } 
             });
@@ -999,12 +1008,14 @@
         }
 
         window.guardarFeedback = function(id, tipo) { 
+            const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
             const input = document.getElementById(`feedback-${tipo}-${id}`); if(!input || !input.value) return; 
-            update(ref(db, `${tipo}/` + id), { mensajeManual: input.value }).then(() => { showToast("Mensaje Enviado"); input.value = ""; }); 
+            update(ref(db, `${tipoPlural}/` + id), { mensajeManual: input.value }).then(() => { showToast("Mensaje Enviado"); input.value = ""; }); 
         }
 
         window.verHistorialCompleto = function(id, tipo) {
-            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
+            const arr = tipoPlural === 'porteros' ? porteros : jugadores;
             const p = arr.find(x => x.id === id); if(!p) return;
             document.getElementById('history-modal-title').innerText = `HISTORIAL: ${p.nombre}`;
             const c = document.getElementById('history-modal-content');
@@ -1027,8 +1038,9 @@
         ];
 
         function renderDashboard(id, tipo) {
-            const arr = tipo === 'porteros' ? porteros : jugadores;
-            const p = arr.find(x => x.id === id); if(!p) return;
+            const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
+            const arr = tipoPlural === 'porteros' ? porteros : jugadores;
+            const p = arr.find(x => String(x.id) === String(id)); if(!p) return;
             
             let s = p.stats || {};
             document.getElementById('dash-card-nombre').innerHTML = `${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}`; 
@@ -1036,17 +1048,16 @@
             
             const imgEl = document.getElementById('card-foto'); if(p.foto && p.foto.length > 50) { imgEl.src = p.foto; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
             
-            // FASE 3: POSICIONES REALES EN CARTA FIFA
-            document.getElementById('fifa-pos').innerText = p.posicion ? p.posicion : (tipo === 'porteros' ? 'POR' : 'JUG');
+            document.getElementById('fifa-pos').innerText = p.posicion ? p.posicion : (tipoPlural === 'porteros' ? 'POR' : 'JUG');
             
-            document.getElementById('label-fis').innerText = tipo === 'porteros' ? 'JUE' : 'FIS';
-            document.getElementById('label-tac').innerText = tipo === 'porteros' ? 'RET' : 'TAC';
+            document.getElementById('label-fis').innerText = tipoPlural === 'porteros' ? 'JUE' : 'FIS';
+            document.getElementById('label-tac').innerText = tipoPlural === 'porteros' ? 'RET' : 'TAC';
             
             document.getElementById('fifa-rating').innerText = Math.min(99, 60 + Math.floor((p.puntos||0) / 30)); 
             document.getElementById('stat-tec').innerText = Math.min(99, s.tec||60).toFixed(0); 
-            document.getElementById('stat-fis').innerText = Math.min(99, tipo === 'porteros' ? (s.jue||60) : (s.fis||60)).toFixed(0); 
+            document.getElementById('stat-fis').innerText = Math.min(99, tipoPlural === 'porteros' ? (s.jue||60) : (s.fis||60)).toFixed(0); 
             document.getElementById('stat-men').innerText = Math.min(99, s.men||60).toFixed(0); 
-            document.getElementById('stat-tac').innerText = Math.min(99, tipo === 'porteros' ? (s.ret||60) : (s.tac||60)).toFixed(0);
+            document.getElementById('stat-tac').innerText = Math.min(99, tipoPlural === 'porteros' ? (s.ret||60) : (s.tac||60)).toFixed(0);
             
             let w=0, lvlName="Inicio", lvlColor="var(--lvl-1)", cardClass="card-bronce"; const pts = p.puntos||0;
             if(pts<=150) { w=(pts/150)*100; cardClass="card-bronce"; } else if(pts<=350) { lvlName="Plata"; lvlColor="var(--lvl-2)"; w=((pts-150)/200)*100; cardClass="card-plata"; } else if(pts<=650) { lvlName="Oro"; lvlColor="var(--lvl-3)"; w=((pts-350)/300)*100; cardClass="card-oro"; } else if(pts<=900) { lvlName="Élite"; lvlColor="var(--lvl-4)"; w=((pts-650)/250)*100; cardClass="card-diamante"; } else { lvlName="Leyenda"; lvlColor="var(--lvl-5)"; w=100; cardClass="card-leyenda"; }
@@ -1062,36 +1073,37 @@
             const recompensas = [ { title: "Ser Capitán", req: 150, icon: "copyright" }, { title: "Elegir Juego", req: 300, icon: "dice" }, { title: "Entrenar Cat. Superior", req: 800, icon: "level-up-alt" } ];
             document.getElementById('shop-container').innerHTML = recompensas.map(r => `<div class="glass-card flex items-center p-3 rounded-xl gap-4 ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-black/20 text-[var(--text-sec)]'}"><i class="fas fa-${r.icon}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`).join('');
             
-            renderFondos(p, tipo); renderRadar(p, tipo); renderEvoChart(p);
+            renderFondos(p, tipoPlural); renderRadar(p, tipoPlural); renderEvoChart(p);
         }
 
         function renderFondos(p, tipo) {
             const container = document.getElementById('fondos-container'); if(!container) return;
+            const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
             let fondoActual = p.fondoActivo || 'base'; const pts = Number(p.puntos || 0);
             container.innerHTML = FONDOS.map(f => {
                 const unl = pts >= f.req; const act = fondoActual === f.id;
-                return `<div onclick="${unl ? `window.seleccionarFondo(${p.id}, '${f.id}', '${tipo}')` : ''}" class="border-2 rounded-xl p-2 text-center relative transition-all overflow-hidden ${act ? 'border-gold shadow-[0_0_15px_rgba(255,215,0,0.2)] bg-[var(--bg-card)]' : 'border-[var(--card-border)] bg-[var(--bg-card)]'} ${unl ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}"><div class="${f.class} h-12 w-full rounded-lg mb-2 border border-white/10"></div><div class="font-black text-[0.7rem] ${act ? 'text-gold' : ''}">${f.name}</div><div class="text-[0.6rem] text-[var(--text-sec)]">${unl ? f.desc : `<i class="fas fa-lock"></i> ${f.req} pts`}</div>${act ? '<i class="fas fa-check-circle absolute top-2 right-2 text-gold"></i>' : ''}</div>`;
+                return `<div onclick="${unl && !isReadOnlyMode ? `window.seleccionarFondo(${p.id}, '${f.id}', '${tipoPlural}')` : ''}" class="border-2 rounded-xl p-2 text-center relative transition-all overflow-hidden ${act ? 'border-gold shadow-[0_0_15px_rgba(255,215,0,0.2)] bg-[var(--bg-card)]' : 'border-[var(--card-border)] bg-[var(--bg-card)]'} ${unl ? (isReadOnlyMode ? 'cursor-default' : 'cursor-pointer') : 'opacity-50 cursor-not-allowed'}"><div class="${f.class} h-12 w-full rounded-lg mb-2 border border-white/10"></div><div class="font-black text-[0.7rem] ${act ? 'text-gold' : ''}">${f.name}</div><div class="text-[0.6rem] text-[var(--text-sec)]">${unl ? f.desc : `<i class="fas fa-lock"></i> ${f.req} pts`}</div>${act ? '<i class="fas fa-check-circle absolute top-2 right-2 text-gold"></i>' : ''}</div>`;
             }).join('');
             const marco = document.getElementById('card-fondo-marco');
             if(marco) { FONDOS.forEach(f => marco.classList.remove(f.class)); const fObj = FONDOS.find(f => f.id === fondoActual); if(fObj) marco.classList.add(fObj.class); }
         }
 
-        window.seleccionarFondo = function(id, fondoId, tipo) { if(!currentUser || currentUser.id !== id) return; update(ref(db, `${tipo}/` + id), { fondoActivo: fondoId }).then(() => { showToast("¡Fondo equipado!"); }); }
+        window.seleccionarFondo = function(id, fondoId, tipo) { if(!currentUser || currentUser.id !== id || isReadOnlyMode) return; update(ref(db, `${tipo}/` + id), { fondoActivo: fondoId }).then(() => { showToast("¡Fondo equipado!"); }); }
 
         function renderRadar(p, tipo) {
             const ctxEl = document.getElementById('adnChart'); if (!ctxEl) return; if (chartInstance) chartInstance.destroy();
             const s = p.stats || {};
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             
-            const labels = tipo === 'porteros' ? ['Actitud', 'Técnica', 'Juego', 'Retos'] : ['Actitud', 'Técnica', 'Físico', 'Táctica'];
-            const pData = tipo === 'porteros' ? [s.men||60, s.tec||60, s.jue||60, s.ret||60] : [s.men||60, s.tec||60, s.fis||60, s.tac||60];
+            const isPor = (tipo === 'portero' || tipo === 'porteros');
+            const labels = isPor ? ['Actitud', 'Técnica', 'Juego', 'Retos'] : ['Actitud', 'Técnica', 'Físico', 'Táctica'];
+            const pData = isPor ? [s.men||60, s.tec||60, s.jue||60, s.ret||60] : [s.men||60, s.tec||60, s.fis||60, s.tac||60];
             
-            const arr = tipo === 'porteros' ? porteros : jugadores;
+            const arr = isPor ? porteros : jugadores;
             let tm=0, tt=0, t3=0, t4=0; let count = arr.filter(x => x.stats).length || 1;
-            arr.forEach(x => { const xs = x.stats||{}; tm+=(xs.men||60); tt+=(xs.tec||60); t3+=(tipo==='porteros'?xs.jue||60:xs.fis||60); t4+=(tipo==='porteros'?xs.ret||60:xs.tac||60); });
+            arr.forEach(x => { const xs = x.stats||{}; tm+=(xs.men||60); tt+=(xs.tec||60); t3+=(isPor?xs.jue||60:xs.fis||60); t4+=(isPor?xs.ret||60:xs.tac||60); });
             const avg = [Math.round(tm/count), Math.round(tt/count), Math.round(t3/count), Math.round(t4/count)];
             
-            // FASE 3: Corrección visual del Radar (Añadido padding al layout y font size ajustado)
             chartInstance = new Chart(ctxEl, { 
                 type: 'radar', 
                 data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
@@ -1153,11 +1165,8 @@
 
         window.compartirFicha = function() {
             if(!currentUser) return;
-            // Obtenemos la URL actual de GitHub y le añadimos el ID del jugador
             const currentUrl = window.location.origin + window.location.pathname;
             const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${roleType}`;
-            
-            // Creamos un código QR que enlaza a esa URL
             document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(fichaUrl)}&color=1C2C5B`;
             document.getElementById('modal-qr').style.display = 'flex';
         };
@@ -1166,7 +1175,6 @@
             if(!currentUser) return;
             const currentUrl = window.location.origin + window.location.pathname;
             const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${roleType}`;
-            
             const t = `🔴⚪ ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos||0} puntos en la Academia Guardianes ATM.\n\n🛡 ¡Mira mi carta oficial aquí!\n${fichaUrl}`;
             if (navigator.share) navigator.share({ title: 'Mi Ficha ATM', text: t }).catch(()=>console.log('Error compartiendo')); else showToast("Tu navegador no soporta compartir directamente.", true);
         };
