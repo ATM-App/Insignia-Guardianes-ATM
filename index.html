@@ -58,12 +58,10 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* Utilidades Glassmorphism */
         .glass-card { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--card-border); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
         .input-glass { background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); }
         .input-glass:focus { border-color: #CB3524; outline: none; box-shadow: 0 0 10px rgba(203,53,36,0.3); }
 
-        /* SPLIT SCREEN LOGIN Premium */
         .split-layout { display: flex; min-height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 1000; background: var(--bg-body); }
         .split-left { width: 100%; max-width: 450px; background: #0b1120; box-shadow: 15px 0 50px rgba(0,0,0,0.7); display: flex; flex-direction: column; padding: 40px 35px; position: relative; z-index: 10; border-right: 1px solid rgba(255,255,255,0.05); }
         .split-right { flex: 1; background: linear-gradient(135deg, #1C2C5B 0%, #080c17 100%); display: flex; flex-direction: column; justify-content: center; padding: 80px; position: relative; overflow: hidden; }
@@ -73,7 +71,6 @@
             .split-left { max-width: 100%; justify-content: center; background: linear-gradient(135deg, #1C2C5B 0%, #0b1120 100%); }
         }
 
-        /* CARTAS FIFA MEJORADAS */
         .fifa-card-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; perspective: 1000px; }
         .fifa-card-simple { width: 270px; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
@@ -86,14 +83,12 @@
         .fifa-card-simple::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 3;}
         @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
 
-        /* FONDOS DESBLOQUEABLES */
         .fondo-base { background: transparent; }
         .fondo-escudo { background: repeating-linear-gradient(45deg, rgba(203,53,36,0.1), rgba(203,53,36,0.1) 15px, transparent 15px, transparent 30px); }
         .fondo-metropolitano { background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 50%), radial-gradient(circle at 50% 100%, rgba(203,53,36,0.7) 0%, transparent 60%); }
         .fondo-neptuno { background: linear-gradient(135deg, rgba(0,48,135,0.7) 0%, rgba(0,180,219,0.5) 50%, rgba(203,53,36,0.4) 100%); }
         .fondo-oblak { border-top: 3px solid rgba(255,255,255,0.9); border-left: 3px solid rgba(255,255,255,0.9); border-right: 3px solid rgba(255,255,255,0.9); box-shadow: inset 0 20px 30px rgba(203,53,36,0.6); background: rgba(0,0,0,0.3); }
 
-        /* MODALES Y TOASTS */
         .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
         .toast.error { border-left-color: #CB3524; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -103,7 +98,6 @@
         .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; max-width:350px; text-align:center; border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(15px); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* NAVEGACIÓN FLOTANTE */
         .floating-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); padding: 12px 25px; border-radius: 40px; display:flex; gap:20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 90;}
         .floating-nav button { background: none; border: none; color: #64748b; font-size: 1rem; cursor:pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
         .floating-nav button.active { color: #CB3524; text-shadow: 0 0 10px rgba(203,53,36,0.5); }
@@ -140,7 +134,7 @@
             </div>
             <p class="text-sm text-[var(--text-sec)] mb-5">Escanea para ver el resumen de tus estadísticas.</p>
             <div class="flex flex-col gap-2">
-                <button class="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform" onclick="window.compartirNativo()"><i class="fab fa-whatsapp text-xl"></i> Enviar por WhatsApp</button>
+                <button id="btn-qr-share" class="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform" onclick="window.compartirNativo()"><i class="fab fa-whatsapp text-xl"></i> Enviar por WhatsApp</button>
                 <button class="input-glass py-3 rounded-xl font-bold hover:bg-white/5" onclick="document.getElementById('modal-qr').style.display='none'">CERRAR</button>
             </div>
         </div>
@@ -223,14 +217,13 @@
             </div>
             <div class="flex gap-4 items-center text-white">
                 <button onclick="window.toggleTheme()" class="text-xl hover:scale-110 transition-transform"><i class="fas fa-sun" id="btn-theme"></i></button>
-                <button onclick="window.logout()" class="text-xl text-atmRed hover:scale-110 transition-transform"><i class="fas fa-power-off"></i></button>
+                <button id="btn-logout" onclick="window.logout()" class="text-xl text-atmRed hover:scale-110 transition-transform"><i class="fas fa-power-off"></i></button>
             </div>
         </div>
     </header>
 
     <main id="app-container" class="max-w-4xl mx-auto w-full px-4 pb-28 hidden">
         
-        <!-- VISTA ADMIN -->
         <section id="view-admin" class="hidden">
             <div class="glass-card rounded-2xl p-5 mb-6 mt-4">
                 <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3">
@@ -348,18 +341,16 @@
                         </div>
                     </div>
                 </div>
-                <button class="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white py-2.5 px-6 rounded-full font-extrabold mt-5 flex items-center gap-2 shadow-[0_5px_15px_rgba(37,211,102,0.4)] hover:scale-105 transition-transform" onclick="window.compartirFicha()">
+                <button id="btn-share-main" class="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white py-2.5 px-6 rounded-full font-extrabold mt-5 flex items-center gap-2 shadow-[0_5px_15px_rgba(37,211,102,0.4)] hover:scale-105 transition-transform" onclick="window.compartirFicha()">
                     <i class="fas fa-qrcode text-lg"></i> Compartir mi Ficha
                 </button>
             </div>
 
-            <!-- Feedback -->
             <div class="bg-atmRed/10 p-5 rounded-2xl border-l-4 border-atmRed border-y border-r border-atmRed/20 shadow-sm mb-6 text-center">
                 <div class="text-atmRed font-black text-xs uppercase mb-2 tracking-widest"><i class="fas fa-comment-dots mr-1"></i> Mensaje del Míster</div>
                 <div id="dash-feedback-content" class="italic font-bold text-lg leading-snug">...</div>
             </div>
 
-            <!-- Barra de Progreso Nivel -->
             <div class="glass-card rounded-2xl p-5 mb-6">
                  <div class="flex justify-between items-center mb-4">
                     <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel 1</h3>
@@ -391,7 +382,7 @@
             </div>
 
             <!-- Vestuario Fondos -->
-            <div class="glass-card rounded-2xl p-5 mb-6">
+            <div id="section-vestuario" class="glass-card rounded-2xl p-5 mb-6">
                 <h3 class="font-black text-lg uppercase tracking-wide mb-1">Vestuario</h3>
                 <p class="text-xs text-[var(--text-sec)] italic mb-4">Personaliza el fondo de tu carta según tus puntos.</p>
                 <div id="fondos-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
@@ -469,7 +460,7 @@
         let jugadores = [];
         let edps = [];
         let currentUser = null; 
-        let roleType = ""; // 'portero', 'jugador', 'edp', 'admin'
+        let roleType = ""; 
         let fotoTemp = ""; 
         let chartInstance = null; 
         let evoChartInstance = null;
@@ -478,11 +469,9 @@
         let targetDeleteId = null;
         let targetDeleteType = null;
         
-        // Variables QR Visita
         let isReadOnlyMode = false;
         let readOnlyId = null;
 
-        // Audios (Sintetizador Web)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -506,28 +495,36 @@
             const passInput = document.getElementById('home-pass');
             if(passInput) { passInput.addEventListener("keydown", function(event) { if (event.key === "Enter") { event.preventDefault(); window.confirmarLogin(); } }); }
 
-            // Lógica para detectar si venimos escaneando un Código QR
             const urlParams = new URLSearchParams(window.location.search);
             const fichaId = urlParams.get('ficha');
-            const tipoFicha = urlParams.get('tipo');
+            let tipoFicha = urlParams.get('tipo');
 
             if (fichaId && tipoFicha) {
                 isReadOnlyMode = true;
                 readOnlyId = fichaId;
-                roleType = tipoFicha; // Puede ser 'portero' o 'jugador'
+                if (tipoFicha === 'portero') tipoFicha = 'porteros';
+                if (tipoFicha === 'jugador') tipoFicha = 'jugadores';
+                roleType = tipoFicha; 
                 
-                // Mostrar solo el dashboard base mientras carga firebase
                 document.getElementById('view-home').style.display = 'none';
                 document.getElementById('main-header').style.display = 'flex';
                 document.getElementById('app-container').style.display = 'block';
                 document.getElementById('view-dashboard').style.display = 'block';
                 
-                // Ocultar botón de apagar para los visitantes
-                const btnLogout = document.querySelector('.fa-power-off');
-                if(btnLogout) btnLogout.parentElement.style.display = 'none';
+                const btnLogout = document.getElementById('btn-logout');
+                if(btnLogout) btnLogout.style.display = 'none';
+                
+                const btnShare = document.getElementById('btn-share-main');
+                if(btnShare) btnShare.style.display = 'none';
+                
+                const navBottom = document.getElementById('nav-bottom');
+                if(navBottom) navBottom.style.display = 'none';
+                
+                const sectionVestuario = document.getElementById('section-vestuario');
+                if(sectionVestuario) sectionVestuario.style.display = 'none';
             }
 
-            signInAnonymously(auth).catch((e) => { showToast("Atención: Firebase bloqueado", true); });
+            signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
@@ -555,7 +552,7 @@
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-            if(currentUser && (roleType === 'portero' || roleType === 'jugador')) { 
+            if(currentUser && (roleType === 'portero' || roleType === 'jugador' || roleType === 'porteros' || roleType === 'jugadores')) { 
                 const tipoPlural = (roleType === 'portero' || roleType === 'porteros') ? 'porteros' : 'jugadores';
                 renderRadar(currentUser, tipoPlural); 
                 renderEvoChart(currentUser); 
@@ -611,12 +608,18 @@
             const passClean = pass.trim().toLowerCase();
             let success = false; let sessionData = null;
 
-            if(passClean === 'atleti2024') { roleType = 'admin'; success = true; sessionData = { role: 'admin', id: 'admin' }; window.navTo('view-admin'); }
-            else if(roleType === 'edp') { const found = edps.find(e => e.clave && String(e.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; window.navTo('view-edp'); } }
-            else if(roleType === 'portero') { const found = porteros.find(p => p.clave && String(p.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'portero', id: found.id }; window.navTo('view-dashboard'); } }
-            else if(roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugador', id: found.id }; window.navTo('view-dashboard'); } }
+            if(passClean === 'atleti2024') { roleType = 'admin'; success = true; sessionData = { role: 'admin', id: 'admin' }; }
+            else if(roleType === 'edp') { const found = edps.find(e => e.clave && String(e.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; } }
+            else if(roleType === 'portero') { const found = porteros.find(p => p.clave && String(p.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'portero', id: found.id }; } }
+            else if(roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugador', id: found.id }; } }
 
-            if(success) { localStorage.setItem('guardianes_session', JSON.stringify(sessionData)); } 
+            if(success) { 
+                localStorage.setItem('guardianes_session', JSON.stringify(sessionData));
+                document.getElementById('view-home').style.display = 'none';
+                if(roleType === 'admin') window.navTo('view-admin');
+                else if(roleType === 'edp') window.navTo('view-edp');
+                else window.navTo('view-dashboard');
+            } 
             else { showToast("Clave incorrecta o dominio no autorizado", true); }
         }
 
@@ -667,33 +670,17 @@
         }
 
         function refreshCurrentView() {
-            // MODO VISITANTE (Por QR) - REPARADO GRAMÁTICA PLURAL/SINGULAR
             if (isReadOnlyMode) {
-                const esPortero = (roleType === 'portero' || roleType === 'porteros');
-                const tipoPlural = esPortero ? 'porteros' : 'jugadores';
-                const arr = esPortero ? porteros : jugadores;
-                
+                const tipoPlural = (roleType === 'portero' || roleType === 'porteros') ? 'porteros' : 'jugadores';
+                const arr = tipoPlural === 'porteros' ? porteros : jugadores;
                 const p = arr.find(x => String(x.id) === String(readOnlyId));
                 if (p) {
                     currentUser = p;
-                    // Fuerza visualización del dashboard correctamente
-                    document.getElementById('view-home').style.display = 'none';
-                    document.getElementById('main-header').style.display = 'flex';
-                    document.getElementById('app-container').style.display = 'block';
-                    document.getElementById('view-dashboard').style.display = 'block';
-                    
                     renderDashboard(p.id, tipoPlural);
-                    
-                    // Ocultamos el botón de compartir y de cambiar fondos al visitante
-                    const fondosSection = document.getElementById('fondos-container');
-                    if(fondosSection) fondosSection.parentElement.style.display = 'none';
-                    const shareBtn = document.querySelector('button[onclick="window.compartirFicha()"]');
-                    if(shareBtn) shareBtn.style.display = 'none';
                 }
                 return;
             }
 
-            // MODO NORMAL (Recuperar sesión)
             const session = JSON.parse(localStorage.getItem('guardianes_session'));
             if (!currentUser && session && session.role !== 'admin') {
                 const arr = session.role === 'portero' ? porteros : (session.role === 'jugador' ? jugadores : edps);
@@ -768,7 +755,7 @@
             
             set(ref(db, tipo + '/' + nuevoId), datos)
                 .then(() => { showToast("Deportista guardado"); window.limpiarFormAdmin(); })
-                .catch((e) => { showToast("Error al guardar (Reglas Firebase)", true); });
+                .catch((e) => { showToast("Error al guardar (Comprueba reglas de Firebase)", true); });
         }
 
         window.crearEDP = function() {
@@ -891,7 +878,7 @@
                         <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#f1c40f] transition-colors" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal', 'porteros')"><i class="fas fa-medal text-[#f1c40f] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">MVP</span></button>
                     </div>
                 `;
-            } else { // JUGADORES
+            } else { 
                 botonesHTML = `
                     <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#9b59b6] mb-2 mt-4 text-center"><i class="fas fa-brain"></i> ACTITUD</div>
                     <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
@@ -937,23 +924,21 @@
                     
                     ${botonesHTML}
 
-                    <!-- Puntaje Libre Corregido Visualmente -->
                     <div class="bg-yellow-500/10 p-4 rounded-xl border border-yellow-500/30 mb-4">
                         <div class="text-gold font-black text-xs uppercase text-center mb-3"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
-                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo..." class="w-full input-glass bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
+                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo..." class="w-full input-glass p-2 rounded-lg text-sm mb-2 outline-none">
                         <div class="flex gap-2 mb-3">
-                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (ej: 5)" class="w-1/2 input-glass bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
-                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 input-glass bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
+                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (ej: 5)" class="w-1/2 input-glass p-2 rounded-lg text-sm outline-none text-center">
+                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 input-glass p-2 rounded-lg text-sm outline-none">
                                 <option value="men">Actitud</option>
                                 <option value="tec">Técnica</option>
                                 <option value="${tipo === 'porteros' ? 'jue' : 'fis'}">${tipo === 'porteros' ? 'Juego' : 'Físico'}</option>
                                 <option value="${tipo === 'porteros' ? 'ret' : 'tac'}">${tipo === 'porteros' ? 'Retos' : 'Táctica'}</option>
                             </select>
                         </div>
-                        <button onclick="window.sumarPersonalizado(${p.id}, '${tipo}')" class="w-full bg-gradient-to-r from-[#f1c40f] to-[#e67e22] text-black font-black py-2 rounded-lg text-sm">APLICAR PUNTAJE</button>
+                        <button onclick="window.sumarPersonalizado(${p.id}, '${tipo}')" class="w-full bg-gradient-to-r from-[#f1c40f] to-[#e67e22] text-black font-black py-2 rounded-lg text-sm hover:scale-[1.02] transition-transform">APLICAR PUNTAJE</button>
                     </div>
 
-                    <!-- Mini Historial -->
                     <div class="bg-[var(--bg-card)] rounded-xl p-3 border border-[var(--card-border)]">
                         <div class="text-xs text-[var(--text-sec)] font-bold mb-2"><i class="fas fa-history"></i> Reciente</div>
                         <div class="space-y-2 mb-2">
@@ -1106,7 +1091,7 @@
             
             chartInstance = new Chart(ctxEl, { 
                 type: 'radar', 
-                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
+                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: 30 }, scales: { r: { min: 0, suggestedMax: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#fff' : '#333', font: {size: 11, weight: 'bold'}, padding: 15 }, ticks: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#fff' : '#333', boxWidth: 10, font: {size: 10} } } } } 
             });
         }
@@ -1120,7 +1105,7 @@
         }
 
         window.toggleRanking = function(mode) { 
-            window.rankingMode = mode; 
+            rankingMode = mode; 
             document.querySelectorAll('#view-ranking .segment-btn').forEach(b => { b.classList.remove('bg-[var(--segment-active)]', 'text-[var(--text-main)]', 'shadow-md'); b.classList.add('text-[var(--text-sec)]'); });
             const activeBtn = document.getElementById(mode === 'global' ? 'rank-global' : mode === 'porteros' ? 'rank-por' : 'rank-jug');
             activeBtn.classList.remove('text-[var(--text-sec)]'); activeBtn.classList.add('bg-[var(--segment-active)]', 'text-[var(--text-main)]', 'shadow-md');
@@ -1136,6 +1121,7 @@
         function renderRankingList() {
             const div = document.getElementById('ranking-list-container'); const smartDiv = document.getElementById('smart-rankings');
             let lista = [];
+            
             if(rankingMode === 'global') { lista = [...porteros, ...jugadores]; }
             else if(rankingMode === 'porteros') { lista = [...porteros]; }
             else if(rankingMode === 'jugadores') { lista = [...jugadores]; }
@@ -1146,21 +1132,25 @@
             
             smartDiv.innerHTML = `<div class="glass-card p-3 rounded-xl flex flex-col items-center border border-[#9b59b6]/30 text-center"><span class="text-2xl mb-1">🧠</span><span class="text-[0.65rem] text-[var(--text-sec)] font-black uppercase">Mejor Actitud</span><span class="font-black text-sm text-[var(--text-main)] truncate w-full">${bestMen ? bestMen.nombre : '-'}</span></div><div class="glass-card p-3 rounded-xl flex flex-col items-center border border-[#3498db]/30 text-center"><span class="text-2xl mb-1">⚽</span><span class="text-[0.65rem] text-[var(--text-sec)] font-black uppercase">Mejor Técnica</span><span class="font-black text-sm text-[var(--text-main)] truncate w-full">${bestTec ? bestTec.nombre : '-'}</span></div>`;
             
-            div.innerHTML = lista.map((p, i) => {
-                const tipoReal = porteros.some(x => x.id === p.id) ? 'porteros' : 'jugadores';
-                const posBadge = p.posicion ? p.posicion : (tipoReal === 'porteros' ? 'POR' : 'JUG');
-                
-                return `
-                <div class="glass-card flex items-center p-3 rounded-xl transition-transform ${i===0 ? 'scale-[1.02] border-2 border-gold bg-yellow-500/10 shadow-[0_5px_15px_rgba(255,215,0,0.2)]' : ''} ${currentUser && p.id === currentUser.id ? 'border-l-4 border-atmRed shadow-[0_0_15px_rgba(203,53,36,0.3)]' : ''}">
-                    <div class="font-black text-lg w-8 text-center mr-2 ${i===0 ? 'text-gold text-2xl' : 'text-gray-400'}">${i+1}</div>
-                    <img src="${p.foto || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-full border-2 ${i===0 ? 'border-gold' : 'border-atmRed'} object-cover mr-3 flex-shrink-0">
-                    <div class="flex-1 min-w-0">
-                        <div class="font-black text-sm truncate flex items-center gap-1">${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}</div>
-                        <div class="text-[0.65rem] text-[var(--text-sec)] uppercase font-bold truncate flex items-center gap-1"><i class="fas fa-shield-alt"></i> ${p.equipo || 'Sin Eq.'} <span class="bg-gray-500/20 px-1 rounded ml-1 text-white/80">${posBadge}</span></div>
-                    </div>
-                    <div class="bg-gradient-to-r from-atmRed to-red-900 text-white px-3 py-1 rounded-full font-black text-xs shadow-md whitespace-nowrap ml-2">${p.puntos||0} PTS</div>
-                </div>`;
-            }).join('');
+            if(lista.length === 0) {
+                div.innerHTML = `<div class="glass-card p-5 rounded-xl text-center text-[var(--text-sec)] font-bold">Aún no hay registros en esta categoría.</div>`;
+            } else {
+                div.innerHTML = lista.map((p, i) => {
+                    const tipoReal = porteros.some(x => x.id === p.id) ? 'porteros' : 'jugadores';
+                    const posBadge = p.posicion ? p.posicion : (tipoReal === 'porteros' ? 'POR' : 'JUG');
+                    
+                    return `
+                    <div class="glass-card flex items-center p-3 rounded-xl transition-transform ${i===0 ? 'scale-[1.02] border-2 border-gold bg-yellow-500/10 shadow-[0_5px_15px_rgba(255,215,0,0.2)]' : ''} ${currentUser && p.id === currentUser.id ? 'border-l-4 border-atmRed shadow-[0_0_15px_rgba(203,53,36,0.3)]' : ''}">
+                        <div class="font-black text-lg w-8 text-center mr-2 ${i===0 ? 'text-gold text-2xl' : 'text-gray-400'}">${i+1}</div>
+                        <img src="${p.foto || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-full border-2 ${i===0 ? 'border-gold' : 'border-atmRed'} object-cover mr-3 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <div class="font-black text-sm truncate flex items-center gap-1">${p.nombre} ${isRacha(p) ? '<i class="fas fa-fire on-fire"></i>' : ''}</div>
+                            <div class="text-[0.65rem] text-[var(--text-sec)] uppercase font-bold truncate flex items-center gap-1"><i class="fas fa-shield-alt"></i> ${p.equipo || 'Sin Eq.'} <span class="bg-gray-500/20 px-1 rounded ml-1 text-white/80">${posBadge}</span></div>
+                        </div>
+                        <div class="bg-gradient-to-r from-atmRed to-red-900 text-white px-3 py-1 rounded-full font-black text-xs shadow-md whitespace-nowrap ml-2">${p.puntos||0} PTS</div>
+                    </div>`;
+                }).join('');
+            }
         }
 
         window.compartirFicha = function() {
