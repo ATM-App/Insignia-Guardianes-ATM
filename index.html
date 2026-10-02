@@ -108,6 +108,9 @@
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+        .icon-glow { filter: drop-shadow(0 0 8px currentColor); }
+        .icon-inactive { color: #9ca3af; filter: grayscale(100%); }
     </style>
 </head>
 <body data-theme="dark" class="antialiased selection:bg-atmRed selection:text-white">
@@ -117,11 +120,51 @@
     <div id="modal-confirm" class="modal-overlay" style="display:none;">
         <div class="modal-box" style="border-color:#CB3524;">
             <i class="fas fa-exclamation-triangle text-atmRed text-4xl mb-4"></i>
-            <h3 class="text-xl font-black mb-2 text-white">¿Estás seguro?</h3>
-            <p class="text-sm text-gray-400 mb-5">Esta acción no se puede deshacer.</p>
+            <h3 class="text-xl font-black mb-2 text-[var(--text-main)]">¿Estás seguro?</h3>
+            <p class="text-sm text-[var(--text-sec)] mb-5">Esta acción no se puede deshacer.</p>
             <div class="flex gap-2">
                 <button class="flex-1 input-glass py-3 rounded-xl font-bold" onclick="document.getElementById('modal-confirm').style.display='none'">CANCELAR</button>
                 <button class="flex-1 bg-atmRed text-white py-3 rounded-xl font-bold shadow-lg shadow-atmRed/30" id="btn-confirm-action">ELIMINAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Recompensas Config (EDP) -->
+    <div id="modal-recompensas-config" class="modal-overlay" style="display:none;">
+        <div class="modal-box w-full max-w-md p-6">
+            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gift text-gold mr-2"></i> Configurar Recompensas</h3>
+            <p class="text-xs text-[var(--text-sec)] italic mb-5">Define qué privilegios pueden desbloquear los jugadores de tu equipo con sus puntos.</p>
+            
+            <div class="space-y-4 text-left">
+                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)]">
+                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa 1 (Nivel Bajo)</label>
+                    <input type="text" id="rec1-title" placeholder="Ej: Ser Capitán" class="w-full bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-coins text-gold"></i>
+                        <input type="number" id="rec1-pts" placeholder="Puntos (Ej: 150)" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
+                    </div>
+                </div>
+                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)]">
+                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa 2 (Nivel Medio)</label>
+                    <input type="text" id="rec2-title" placeholder="Ej: Elegir Juego" class="w-full bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-coins text-gold"></i>
+                        <input type="number" id="rec2-pts" placeholder="Puntos (Ej: 300)" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
+                    </div>
+                </div>
+                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)]">
+                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa 3 (Nivel Alto)</label>
+                    <input type="text" id="rec3-title" placeholder="Ej: Entrenar Cat. Superior" class="w-full bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-coins text-gold"></i>
+                        <input type="number" id="rec3-pts" placeholder="Puntos (Ej: 800)" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-5">
+                <button class="flex-1 input-glass py-3 rounded-xl font-bold" onclick="document.getElementById('modal-recompensas-config').style.display='none'">CANCELAR</button>
+                <button class="flex-1 bg-gradient-to-r from-gold to-yellow-600 text-black py-3 rounded-xl font-black shadow-lg" onclick="window.guardarRecompensasEDP()">GUARDAR</button>
             </div>
         </div>
     </div>
@@ -281,7 +324,6 @@
                 <button class="w-full bg-gradient-to-r from-[#3498db] to-blue-700 text-white py-3 rounded-xl font-black shadow-lg hover:scale-[1.02] transition-transform" onclick="window.crearEDP()">CREAR ENTRENADOR</button>
             </div>
 
-            <!-- Listas Admin -->
             <div class="flex justify-between items-center mb-4 border-b-2 border-atmRed/20 pb-2">
                 <div class="text-atmRed font-black uppercase tracking-widest">PORTEROS</div>
                 <button onclick="window.exportarExcel('porteros')" class="bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-green-600 transition-colors"><i class="fas fa-file-excel"></i> Exportar</button>
@@ -302,6 +344,7 @@
             <div class="text-center mb-6 mt-4">
                 <h2 class="font-black text-2xl uppercase">Panel Técnico</h2>
                 <p class="text-sm text-[var(--text-sec)] font-bold">Evaluación en tiempo real</p>
+                <button onclick="window.abrirConfigRecompensas()" class="mt-3 bg-[var(--input-bg)] border border-gold text-gold px-4 py-2 rounded-full text-xs font-black hover:bg-gold/10 transition-colors shadow-sm"><i class="fas fa-gift mr-1"></i> GESTIONAR RECOMPENSAS DE MI EQUIPO</button>
             </div>
 
             <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 mb-5 border border-white/5">
@@ -328,8 +371,9 @@
                         </div>
                         <img src="logo.png" class="w-12 drop-shadow-md" onerror="this.style.display='none'">
                     </div>
-                    <div class="h-44 w-full flex justify-center items-end relative z-0 transition-all duration-500 rounded-t-xl -mt-24 pt-24 fondo-base" id="card-fondo-marco">
-                        <img id="card-foto" class="max-h-full max-w-[95%] object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.6)]" src="" onerror="this.style.display='none'">
+                    <!-- CHANGED: h-44 to h-56 to make image much bigger -->
+                    <div class="h-56 w-full flex justify-center items-end relative z-0 transition-all duration-500 rounded-t-xl -mt-24 pt-24 fondo-base" id="card-fondo-marco">
+                        <img id="card-foto" class="max-h-full max-w-[90%] object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.6)]" src="" onerror="this.style.display='none'">
                     </div>
                     <div class="p-4 text-center z-10 relative bg-gradient-to-t from-black/90 to-black/40 border-t border-white/20" id="card-bottom-bar">
                         <div class="font-black text-2xl uppercase mb-3 tracking-wide flex items-center justify-center gap-2 text-white" id="dash-card-nombre">NOMBRE</div>
@@ -361,11 +405,11 @@
                 </div>
                 <div class="flex justify-between text-center relative">
                     <div class="absolute top-[14px] left-[10%] right-[10%] h-[2px] bg-[var(--input-border)] z-0"></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#d4a373] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-shoe-prints"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Inicio</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-medal"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Plata</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#f59e0b] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-trophy"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Oro</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#06b6d4] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-gem"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Élite</div></div>
-                    <div class="flex flex-col items-center z-10"><div class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#8b5cf6] shadow-sm mb-1 transition-transform hover:scale-110"><i class="fas fa-crown"></i></div><div class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase">Leyenda</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-1" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-shoe-prints"></i></div><div id="lvl-text-1" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Inicio</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-2" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-medal"></i></div><div id="lvl-text-2" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Plata</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-3" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-trophy"></i></div><div id="lvl-text-3" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Oro</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-4" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-gem"></i></div><div id="lvl-text-4" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Élite</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-5" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-crown"></i></div><div id="lvl-text-5" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Leyenda</div></div>
                 </div>
             </div>
 
@@ -373,7 +417,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="glass-card rounded-2xl p-5">
                     <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Academia)</span></h3>
-                    <div class="relative h-64 w-full p-2"><canvas id="adnChart"></canvas></div>
+                    <div class="relative h-64 w-full"><canvas id="adnChart"></canvas></div>
                 </div>
                 <div class="glass-card rounded-2xl p-5">
                     <h3 class="font-black text-sm uppercase tracking-widest mb-4">EVOLUCIÓN PUNTOS</h3>
@@ -381,14 +425,12 @@
                 </div>
             </div>
 
-            <!-- Vestuario Fondos -->
             <div id="section-vestuario" class="glass-card rounded-2xl p-5 mb-6">
                 <h3 class="font-black text-lg uppercase tracking-wide mb-1">Vestuario</h3>
                 <p class="text-xs text-[var(--text-sec)] italic mb-4">Personaliza el fondo de tu carta según tus puntos.</p>
                 <div id="fondos-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
             </div>
 
-            <!-- Insignias y Tienda -->
             <div class="glass-card rounded-2xl p-5 mb-6">
                 <h3 class="font-black text-lg uppercase tracking-wide mb-1">Muro de Trofeos</h3>
                 <p class="text-xs text-[var(--text-sec)] italic mb-5">Colecciona las insignias que definen tu legado.</p>
@@ -424,7 +466,6 @@
         </section>
     </main>
 
-    <!-- MENU FLOTANTE INFERIOR -->
     <nav class="floating-nav" id="nav-bottom" style="display:none;">
         <button onclick="window.navApp('dashboard')" class="active" id="nav-btn-home">
             <i class="fas fa-user text-2xl" id="nav-home-icon"></i> 
@@ -503,11 +544,8 @@
             if (fichaId && tipoFicha) {
                 isReadOnlyMode = true;
                 readOnlyId = fichaId;
-                if (tipoFicha === 'portero' || tipoFicha === 'porteros') {
-                    tipoFicha = 'porteros';
-                } else if (tipoFicha === 'jugador' || tipoFicha === 'jugadores') {
-                    tipoFicha = 'jugadores';
-                }
+                if (tipoFicha === 'portero' || tipoFicha === 'porteros') { tipoFicha = 'porteros'; } 
+                else if (tipoFicha === 'jugador' || tipoFicha === 'jugadores') { tipoFicha = 'jugadores'; }
                 readOnlyTipoPlural = tipoFicha;
                 roleType = tipoFicha; 
                 
@@ -516,17 +554,10 @@
                 document.getElementById('app-container').style.display = 'block';
                 document.getElementById('view-dashboard').style.display = 'block';
                 
-                const btnLogout = document.getElementById('btn-logout');
-                if(btnLogout) btnLogout.style.display = 'none';
-                
-                const btnShare = document.getElementById('btn-share-main');
-                if(btnShare) btnShare.style.display = 'none';
-                
-                const navBottom = document.getElementById('nav-bottom');
-                if(navBottom) navBottom.style.display = 'none';
-                
-                const sectionVestuario = document.getElementById('section-vestuario');
-                if(sectionVestuario) sectionVestuario.style.opacity = '0.5';
+                const btnLogout = document.getElementById('btn-logout'); if(btnLogout) btnLogout.style.display = 'none';
+                const btnShare = document.getElementById('btn-share-main'); if(btnShare) btnShare.style.display = 'none';
+                const navBottom = document.getElementById('nav-bottom'); if(navBottom) navBottom.style.display = 'none';
+                const sectionVestuario = document.getElementById('section-vestuario'); if(sectionVestuario) sectionVestuario.style.opacity = '0.5';
             }
 
             signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
@@ -622,13 +653,14 @@
             else if(roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugador', id: found.id }; } }
 
             if(success) { 
-                localStorage.setItem('guardianes_session', JSON.stringify(sessionData));
                 document.getElementById('view-home').style.display = 'none';
+                localStorage.setItem('guardianes_session', JSON.stringify(sessionData));
                 if(roleType === 'admin') window.navTo('view-admin');
                 else if(roleType === 'edp') window.navTo('view-edp');
                 else window.navTo('view-dashboard');
-            } 
-            else { showToast("Clave incorrecta o dominio no autorizado", true); }
+            } else { 
+                showToast("Clave incorrecta", true); 
+            }
         }
 
         window.logout = function() { localStorage.removeItem('guardianes_session'); location.href = window.location.pathname; }
@@ -680,9 +712,9 @@
         function refreshCurrentView() {
             if (isReadOnlyMode) {
                 const arr = readOnlyTipoPlural === 'porteros' ? porteros : jugadores;
-                const p = arr.find(x => String(x.id) === String(readOnlyId));
-                if (p) {
-                    renderDashboard(p.id, readOnlyTipoPlural);
+                if(arr.length > 0) {
+                    const p = arr.find(x => String(x.id) === String(readOnlyId));
+                    if (p) { renderDashboard(p.id, readOnlyTipoPlural); }
                 }
                 return;
             }
@@ -724,7 +756,7 @@
                 const img = new Image(); img.src = e.target.result;
                 img.onload = function() {
                     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-                    const maxSize = 250; let width = img.width; let height = img.height;
+                    const maxSize = 300; let width = img.width; let height = img.height;
                     if (width > height) { if (width > maxSize) { height *= maxSize / width; width = maxSize; } } else { if (height > maxSize) { width *= maxSize / height; height = maxSize; } }
                     canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height);
                     fotoTemp = canvas.toDataURL('image/jpeg', 0.6); document.getElementById('fotoPreview').src = fotoTemp;
@@ -768,7 +800,7 @@
             const nombre = document.getElementById('edp-nombre').value; const clave = document.getElementById('edp-clave').value;
             if(!nombre || !clave) return showToast("Faltan datos", true);
             const id = Date.now();
-            set(ref(db, 'edps/' + id), { id, nombre: nombre.trim(), clave: clave.trim() })
+            set(ref(db, 'edps/' + id), { id, nombre: nombre.trim(), clave: clave.trim(), recompensas: [] })
                 .then(() => { showToast("Entrenador Creado"); document.getElementById('edp-nombre').value = ""; document.getElementById('edp-clave').value = ""; })
                 .catch((e) => showToast("Error al guardar en nube", true));
         }
@@ -823,6 +855,36 @@
         }
 
         function cargarSelectEDP() { const s = document.getElementById('reg-entrenador-select'); if(s) s.innerHTML = '<option value="">Asignar EDP...</option>' + edps.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join(''); }
+
+        window.abrirConfigRecompensas = function() {
+            if(!currentUser || roleType !== 'edp') return;
+            const r = currentUser.recompensas || [
+                {title: "Ser Capitán", req: 150},
+                {title: "Elegir Juego", req: 300},
+                {title: "Entrenar Cat. Superior", req: 800}
+            ];
+            document.getElementById('rec1-title').value = r[0]?.title || ""; document.getElementById('rec1-pts').value = r[0]?.req || "";
+            document.getElementById('rec2-title').value = r[1]?.title || ""; document.getElementById('rec2-pts').value = r[1]?.req || "";
+            document.getElementById('rec3-title').value = r[2]?.title || ""; document.getElementById('rec3-pts').value = r[2]?.req || "";
+            document.getElementById('modal-recompensas-config').style.display = 'flex';
+        }
+
+        window.guardarRecompensasEDP = function() {
+            if(!currentUser || roleType !== 'edp') return;
+            const r1t = document.getElementById('rec1-title').value.trim(); const r1p = parseInt(document.getElementById('rec1-pts').value);
+            const r2t = document.getElementById('rec2-title').value.trim(); const r2p = parseInt(document.getElementById('rec2-pts').value);
+            const r3t = document.getElementById('rec3-title').value.trim(); const r3p = parseInt(document.getElementById('rec3-pts').value);
+
+            if(!r1t || isNaN(r1p) || !r2t || isNaN(r2p) || !r3t || isNaN(r3p)) {
+                return showToast("Completa todos los campos y puntos", true);
+            }
+
+            const recompensas = [ {title: r1t, req: r1p}, {title: r2t, req: r2p}, {title: r3t, req: r3p} ];
+            update(ref(db, `edps/${currentUser.id}`), { recompensas }).then(() => {
+                showToast("Recompensas de Equipo Guardadas");
+                document.getElementById('modal-recompensas-config').style.display = 'none';
+            });
+        }
 
         window.toggleEvalView = function(tipo) {
             evalViewMode = tipo;
@@ -930,12 +992,12 @@
                     
                     ${botonesHTML}
 
-                    <div class="bg-yellow-500/10 p-4 rounded-xl border border-yellow-500/30 mb-4">
+                    <div class="bg-[var(--input-bg)] p-4 rounded-xl border border-[var(--input-border)] mb-4">
                         <div class="text-gold font-black text-xs uppercase text-center mb-3"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
-                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" class="w-full bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
+                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" class="w-full bg-[var(--bg-body)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
                         <div class="flex gap-2 mb-3">
-                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: 5 o -5)" class="w-1/2 bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
-                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
+                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: 5 o -5)" class="w-1/2 bg-[var(--bg-body)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
+                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 bg-[var(--bg-body)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
                                 <option value="men">Actitud</option>
                                 <option value="tec">Técnica</option>
                                 <option value="${tipo === 'porteros' ? 'jue' : 'fis'}">${tipo === 'porteros' ? 'Juego' : 'Físico'}</option>
@@ -1054,15 +1116,56 @@
             if(pts<=150) { w=(pts/150)*100; cardClass="card-bronce"; } else if(pts<=350) { lvlName="Plata"; lvlColor="var(--lvl-2)"; w=((pts-150)/200)*100; cardClass="card-plata"; } else if(pts<=650) { lvlName="Oro"; lvlColor="var(--lvl-3)"; w=((pts-350)/300)*100; cardClass="card-oro"; } else if(pts<=900) { lvlName="Élite"; lvlColor="var(--lvl-4)"; w=((pts-650)/250)*100; cardClass="card-diamante"; } else { lvlName="Leyenda"; lvlColor="var(--lvl-5)"; w=100; cardClass="card-leyenda"; }
             
             document.getElementById('fifa-card-bg').className = `fifa-card-simple ${cardClass}`;
-            document.getElementById('level-title').innerText = "Nivel: " + lvlName; document.getElementById('level-title').style.color = lvlColor; 
-            document.getElementById('dash-puntos-badge').innerText = pts + " PTS"; document.getElementById('dash-puntos-badge').style.backgroundColor = lvlColor; 
+            document.getElementById('level-title').innerText = "Nivel: " + lvlName; 
+            document.getElementById('dash-puntos-badge').innerText = pts + " PTS"; 
+            
+            if(pts >= 150) { document.getElementById('dash-puntos-badge').style.backgroundColor = 'transparent'; document.getElementById('dash-puntos-badge').style.color = lvlColor; document.getElementById('dash-puntos-badge').style.boxShadow = `0 0 15px ${lvlColor}40`; }
+            else { document.getElementById('dash-puntos-badge').style.backgroundColor = lvlColor; document.getElementById('dash-puntos-badge').style.color = 'black'; }
+
             document.getElementById('progress-fill').style.width = Math.min(w, 100) + "%"; document.getElementById('progress-fill').style.background = lvlColor;
             
+            // Dynamic Icons Logic
+            const iconTiers = [
+                {id: 1, limit: 0, color: 'var(--lvl-1)'},
+                {id: 2, limit: 151, color: 'var(--lvl-2)'},
+                {id: 3, limit: 351, color: 'var(--lvl-3)'},
+                {id: 4, limit: 651, color: 'var(--lvl-4)'},
+                {id: 5, limit: 901, color: 'var(--lvl-5)'}
+            ];
+
+            iconTiers.forEach(tier => {
+                const iconContainer = document.getElementById(`lvl-icon-${tier.id}`);
+                const textContainer = document.getElementById(`lvl-text-${tier.id}`);
+                
+                if(pts >= tier.limit) {
+                    iconContainer.classList.remove('icon-inactive', 'border-[var(--input-border)]');
+                    iconContainer.style.color = tier.color;
+                    iconContainer.style.borderColor = tier.color;
+                    iconContainer.classList.add('icon-glow');
+                    textContainer.style.color = tier.color;
+                } else {
+                    iconContainer.classList.add('icon-inactive', 'border-[var(--input-border)]');
+                    iconContainer.style.color = '';
+                    iconContainer.style.borderColor = '';
+                    iconContainer.classList.remove('icon-glow');
+                    textContainer.style.color = 'var(--text-sec)';
+                }
+            });
+
             const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Buen Inicio", limit: 80, icon: "thumbs-up" }, { name: "Chispa", limit: 120, icon: "bolt" }, { name: "Constancia", limit: 150, icon: "bullseye" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
             document.getElementById('insignias-container').innerHTML = badges.map(b => `<div class="flex flex-col items-center w-20 text-center"><div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-transform hover:scale-110 ${pts >= b.limit ? 'bg-yellow-500/20 border-2 border-gold text-gold shadow-[0_0_15px_rgba(255,215,0,0.4)]' : 'bg-black/20 border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)]'}"><i class="fas fa-${b.icon}"></i></div><div class="text-[0.6rem] font-bold mt-2 ${pts >= b.limit ? 'text-gold' : 'text-[var(--text-sec)]'}">${b.name}<br><span class="text-[0.5rem] font-normal opacity-70">${b.limit} pts</span></div></div>`).join('');
             
-            const recompensas = [ { title: "Ser Capitán", req: 150, icon: "copyright" }, { title: "Elegir Juego", req: 300, icon: "dice" }, { title: "Entrenar Cat. Superior", req: 800, icon: "level-up-alt" } ];
-            document.getElementById('shop-container').innerHTML = recompensas.map(r => `<div class="glass-card flex items-center p-3 rounded-xl gap-4 ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-black/20 text-[var(--text-sec)]'}"><i class="fas fa-${r.icon}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`).join('');
+            // Dynamic Rewards Logic
+            let recompensas = [ { title: "Ser Capitán", req: 150 }, { title: "Elegir Juego", req: 300 }, { title: "Entrenar Cat. Superior", req: 800 } ];
+            if(p.entrenador) {
+                const coach = edps.find(e => e.nombre.toLowerCase() === p.entrenador.toLowerCase());
+                if(coach && coach.recompensas && coach.recompensas.length > 0) {
+                    recompensas = coach.recompensas;
+                }
+            }
+
+            const rIcons = ["copyright", "dice", "level-up-alt"];
+            document.getElementById('shop-container').innerHTML = recompensas.map((r, i) => `<div class="glass-card flex items-center p-3 rounded-xl gap-4 ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-black/20 text-[var(--text-sec)]'}"><i class="fas fa-${rIcons[i]||'star'}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`).join('');
             
             renderFondos(p, tipoPlural); renderRadar(p, tipoPlural); renderEvoChart(p);
         }
@@ -1162,7 +1265,8 @@
         window.compartirFicha = function() {
             if(!currentUser) return;
             const currentUrl = window.location.origin + window.location.pathname;
-            const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${roleType}`;
+            const tipoCorrecto = (roleType === 'porteros' || roleType === 'portero') ? 'porteros' : 'jugadores';
+            const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${tipoCorrecto}`;
             document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(fichaUrl)}&color=1C2C5B`;
             document.getElementById('modal-qr').style.display = 'flex';
         };
@@ -1170,7 +1274,8 @@
         window.compartirNativo = function() {
             if(!currentUser) return;
             const currentUrl = window.location.origin + window.location.pathname;
-            const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${roleType}`;
+            const tipoCorrecto = (roleType === 'porteros' || roleType === 'portero') ? 'porteros' : 'jugadores';
+            const fichaUrl = `${currentUrl}?ficha=${currentUser.id}&tipo=${tipoCorrecto}`;
             const t = `🔴⚪ ¡Hola! Soy ${currentUser.nombre} y tengo ${currentUser.puntos||0} puntos en la Academia Guardianes ATM.\n\n🛡 ¡Mira mi carta oficial aquí!\n${fichaUrl}`;
             if (navigator.share) navigator.share({ title: 'Mi Ficha ATM', text: t }).catch(()=>console.log('Error compartiendo')); else showToast("Tu navegador no soporta compartir directamente.", true);
         };
