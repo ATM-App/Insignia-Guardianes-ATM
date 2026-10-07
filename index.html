@@ -135,34 +135,15 @@
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gift text-gold mr-2"></i> Configurar Recompensas</h3>
             <p class="text-xs text-[var(--text-sec)] italic mb-5">Define qué privilegios pueden desbloquear los jugadores de tu equipo con sus puntos.</p>
             
-            <div class="space-y-4 text-left">
-                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)]">
-                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa 1 (Nivel Bajo)</label>
-                    <input type="text" id="rec1-title" placeholder="Ej: Ser Capitán" class="w-full bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-coins text-gold"></i>
-                        <input type="number" id="rec1-pts" placeholder="Puntos (Ej: 150)" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
-                    </div>
-                </div>
-                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)]">
-                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa 2 (Nivel Medio)</label>
-                    <input type="text" id="rec2-title" placeholder="Ej: Elegir Juego" class="w-full bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-coins text-gold"></i>
-                        <input type="number" id="rec2-pts" placeholder="Puntos (Ej: 300)" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
-                    </div>
-                </div>
-                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)]">
-                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa 3 (Nivel Alto)</label>
-                    <input type="text" id="rec3-title" placeholder="Ej: Entrenar Cat. Superior" class="w-full bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-coins text-gold"></i>
-                        <input type="number" id="rec3-pts" placeholder="Puntos (Ej: 800)" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
-                    </div>
-                </div>
+            <div id="dynamic-rewards-container" class="space-y-3 text-left max-h-[40vh] overflow-y-auto custom-scrollbar pr-2 mb-4">
+                <!-- Se rellena con JS -->
             </div>
+            
+            <button class="w-full bg-[var(--input-bg)] border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)] font-bold py-2 rounded-xl mb-5 hover:border-gold hover:text-gold transition-colors" onclick="window.addRecompensaConfig()">
+                <i class="fas fa-plus"></i> Añadir Recompensa
+            </button>
 
-            <div class="flex gap-2 mt-5">
+            <div class="flex gap-2">
                 <button class="flex-1 input-glass py-3 rounded-xl font-bold" onclick="document.getElementById('modal-recompensas-config').style.display='none'">CANCELAR</button>
                 <button class="flex-1 bg-gradient-to-r from-gold to-yellow-600 text-black py-3 rounded-xl font-black shadow-lg" onclick="window.guardarRecompensasEDP()">GUARDAR</button>
             </div>
@@ -371,7 +352,6 @@
                         </div>
                         <img src="logo.png" class="w-12 drop-shadow-md" onerror="this.style.display='none'">
                     </div>
-                    <!-- CHANGED: h-44 to h-56 to make image much bigger -->
                     <div class="h-56 w-full flex justify-center items-end relative z-0 transition-all duration-500 rounded-t-xl -mt-24 pt-24 fondo-base" id="card-fondo-marco">
                         <img id="card-foto" class="max-h-full max-w-[90%] object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.6)]" src="" onerror="this.style.display='none'">
                     </div>
@@ -397,7 +377,7 @@
 
             <div class="glass-card rounded-2xl p-5 mb-6">
                  <div class="flex justify-between items-center mb-4">
-                    <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel 1</h3>
+                    <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel: Inicio</h3>
                     <span id="dash-puntos-badge" class="bg-lvl1 text-black px-4 py-1.5 rounded-full font-black text-sm shadow-[0_0_15px_rgba(46,204,113,0.4)]">0 PTS</span>
                 </div>
                 <div class="bg-black/30 h-4 rounded-full overflow-hidden mb-5 border border-[var(--input-border)] shadow-inner">
@@ -509,6 +489,7 @@
         let evalViewMode = "porteros"; 
         let targetDeleteId = null;
         let targetDeleteType = null;
+        let tempRewards = []; // Almacena recompensas dinámicas en edición
         
         let isReadOnlyMode = false;
         let readOnlyId = null;
@@ -863,31 +844,70 @@
                 {title: "Elegir Juego", req: 300},
                 {title: "Entrenar Cat. Superior", req: 800}
             ];
-            document.getElementById('rec1-title').value = r[0]?.title || ""; document.getElementById('rec1-pts').value = r[0]?.req || "";
-            document.getElementById('rec2-title').value = r[1]?.title || ""; document.getElementById('rec2-pts').value = r[1]?.req || "";
-            document.getElementById('rec3-title').value = r[2]?.title || ""; document.getElementById('rec3-pts').value = r[2]?.req || "";
+            // Copia profunda para no alterar Firebase hasta guardar
+            tempRewards = JSON.parse(JSON.stringify(r)); 
+            window.renderRecompensasConfig();
             document.getElementById('modal-recompensas-config').style.display = 'flex';
+        }
+
+        window.renderRecompensasConfig = function() {
+            const container = document.getElementById('dynamic-rewards-container');
+            if (tempRewards.length === 0) {
+                container.innerHTML = '<p class="text-center text-xs text-[var(--text-sec)] italic my-4">Aún no hay recompensas configuradas.</p>';
+                return;
+            }
+            container.innerHTML = tempRewards.map((rec, i) => `
+                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)] relative">
+                    <button class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors" onclick="window.removeRecompensaConfig(${i})"><i class="fas fa-times"></i></button>
+                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa ${i+1}</label>
+                    <input type="text" id="rec-title-${i}" value="${rec.title}" placeholder="Ej: Ser Capitán" class="w-[85%] bg-transparent outline-none font-bold text-[var(--text-main)] mb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-coins text-gold"></i>
+                        <input type="number" id="rec-pts-${i}" value="${rec.req}" placeholder="Puntos" class="w-24 bg-[var(--bg-body)] border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.addRecompensaConfig = function() {
+            window.syncTempRewards();
+            tempRewards.push({title: "", req: ""});
+            window.renderRecompensasConfig();
+            const container = document.getElementById('dynamic-rewards-container');
+            setTimeout(() => container.scrollTop = container.scrollHeight, 50);
+        }
+
+        window.removeRecompensaConfig = function(index) {
+            window.syncTempRewards();
+            tempRewards.splice(index, 1);
+            window.renderRecompensasConfig();
+        }
+
+        window.syncTempRewards = function() {
+            tempRewards.forEach((rec, i) => {
+                const titleInput = document.getElementById(`rec-title-${i}`);
+                const ptsInput = document.getElementById(`rec-pts-${i}`);
+                if (titleInput) rec.title = titleInput.value;
+                if (ptsInput) rec.req = parseInt(ptsInput.value) || 0;
+            });
         }
 
         window.guardarRecompensasEDP = function() {
             if(!currentUser || roleType !== 'edp') return;
-            const r1t = document.getElementById('rec1-title').value.trim(); const r1p = parseInt(document.getElementById('rec1-pts').value);
-            const r2t = document.getElementById('rec2-title').value.trim(); const r2p = parseInt(document.getElementById('rec2-pts').value);
-            const r3t = document.getElementById('rec3-title').value.trim(); const r3p = parseInt(document.getElementById('rec3-pts').value);
-
-            // CHANGED: Removed the strict check that blocked saving if everything wasn't filled perfectly.
-            // Now, it saves whatever is there, allowing the coach to edit points or titles independently.
-            const recompensas = [ 
-                {title: r1t || "Recompensa 1", req: isNaN(r1p) ? 150 : r1p}, 
-                {title: r2t || "Recompensa 2", req: isNaN(r2p) ? 300 : r2p}, 
-                {title: r3t || "Recompensa 3", req: isNaN(r3p) ? 800 : r3p} 
-            ];
+            window.syncTempRewards();
             
-            // Firebase UPDATE: We only update the 'recompensas' field in the EDP's profile
-            update(ref(db, `edps/${currentUser.id}`), { recompensas }).then(() => {
+            const validRewards = tempRewards
+                .filter(r => r.title.trim() !== "" && r.req > 0)
+                .map(r => ({ title: r.title.trim(), req: parseInt(r.req) }));
+
+            // Ordena automáticamente por puntos
+            validRewards.sort((a,b) => a.req - b.req);
+
+            update(ref(db, `edps/${currentUser.id}`), { recompensas: validRewards }).then(() => {
                 showToast("Recompensas de Equipo Guardadas");
                 document.getElementById('modal-recompensas-config').style.display = 'none';
-            });
+                currentUser.recompensas = validRewards; 
+            }).catch(e => showToast("Error al guardar", true));
         }
 
         window.toggleEvalView = function(tipo) {
@@ -1159,17 +1179,24 @@
             const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Buen Inicio", limit: 80, icon: "thumbs-up" }, { name: "Chispa", limit: 120, icon: "bolt" }, { name: "Constancia", limit: 150, icon: "bullseye" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
             document.getElementById('insignias-container').innerHTML = badges.map(b => `<div class="flex flex-col items-center w-20 text-center"><div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-transform hover:scale-110 ${pts >= b.limit ? 'bg-yellow-500/20 border-2 border-gold text-gold shadow-[0_0_15px_rgba(255,215,0,0.4)]' : 'bg-black/20 border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)]'}"><i class="fas fa-${b.icon}"></i></div><div class="text-[0.6rem] font-bold mt-2 ${pts >= b.limit ? 'text-gold' : 'text-[var(--text-sec)]'}">${b.name}<br><span class="text-[0.5rem] font-normal opacity-70">${b.limit} pts</span></div></div>`).join('');
             
-            // Dynamic Rewards Logic
+            // Dynamic Rewards System matching Custom EDP lists
             let recompensas = [ { title: "Ser Capitán", req: 150 }, { title: "Elegir Juego", req: 300 }, { title: "Entrenar Cat. Superior", req: 800 } ];
             if(p.entrenador) {
                 const coach = edps.find(e => e.nombre.toLowerCase() === p.entrenador.toLowerCase());
-                if(coach && coach.recompensas && coach.recompensas.length > 0) {
-                    recompensas = coach.recompensas;
+                if(coach && coach.recompensas !== undefined) {
+                    recompensas = coach.recompensas || [];
                 }
             }
 
-            const rIcons = ["copyright", "dice", "level-up-alt"];
-            document.getElementById('shop-container').innerHTML = recompensas.map((r, i) => `<div class="glass-card flex items-center p-3 rounded-xl gap-4 ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-black/20 text-[var(--text-sec)]'}"><i class="fas fa-${rIcons[i]||'star'}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`).join('');
+            const rIcons = ["copyright", "dice", "level-up-alt", "star", "bolt", "fire", "gem", "crown"];
+            if(recompensas.length === 0) {
+                document.getElementById('shop-container').innerHTML = '<p class="text-xs text-[var(--text-sec)] italic">El entrenador no ha configurado recompensas aún.</p>';
+            } else {
+                document.getElementById('shop-container').innerHTML = recompensas.map((r, i) => {
+                    const icon = rIcons[i % rIcons.length];
+                    return `<div class="glass-card flex items-center p-3 rounded-xl gap-4 ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-black/20 text-[var(--text-sec)]'}"><i class="fas fa-${icon}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`;
+                }).join('');
+            }
             
             renderFondos(p, tipoPlural); renderRadar(p, tipoPlural); renderEvoChart(p);
         }
