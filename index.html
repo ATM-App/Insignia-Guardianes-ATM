@@ -75,26 +75,26 @@
         
         .fifa-card-simple { width: 270px; border-radius: 15px; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; }
         
-        /* Capa 0: Material de la carta */
+        /* Capas de la Tarjeta */
         .card-bronce { background: linear-gradient(135deg, #a67c52 0%, #8b5a2b 50%, #5c3a21 100%); border: 2px solid #d4a373; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .card-plata { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #9e9e9e 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .card-oro { background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .card-diamante { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #005275 100%); border: 2px solid #00FFFF; box-shadow: 0 15px 35px rgba(0, 255, 255, 0.3); }
         .card-leyenda { background: linear-gradient(135deg, #111 0%, #2b003b 50%, #000 100%); border: 2px solid #FFD700; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4); }
         
-        /* Efecto de brillo superficial */
         .shine-effect { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 50; }
         @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
 
-        /* Capa 1: Imágenes de Fondo Fusionadas (Sin afectar a la cara del portero) */
+        /* Capa 0: Fondo Real con Blend Mode */
         .fondo-base { background-image: none; opacity: 1; }
-        .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 80%; background-position: center top; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
-        .fondo-metropolitano { background-image: url('metropolitano.jpg'); background-size: cover; background-position: center 20%; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
-        .fondo-neptuno { background-image: url('neptuno.jpg'); background-size: cover; background-position: center center; background-repeat: no-repeat; opacity: 0.85; mix-blend-mode: luminosity; }
-        .fondo-oblak { background-image: url('leyendas.jpg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
+        .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 80%; background-position: center top; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
+        /* CORRECCIÓN: metropolitano.jpeg */
+        .fondo-metropolitano { background-image: url('metropolitano.jpeg'); background-size: cover; background-position: center 10%; background-repeat: no-repeat; opacity: 0.95; mix-blend-mode: luminosity; }
+        .fondo-neptuno { background-image: url('neptuno.jpg'); background-size: 140%; background-position: center 20%; background-repeat: no-repeat; opacity: 0.95; mix-blend-mode: luminosity; }
+        .fondo-oblak { background-image: url('leyendas.jpg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
 
-        /* Capa 2: Degradado ultrasuave para evitar el corte negro horizontal */
-        .fade-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%, rgba(10,10,10,0.8) 60%, rgba(5,5,5,1) 80%, rgba(0,0,0,1) 100%); z-index: 10; pointer-events: none; }
+        /* Capa 1: Fade Suave a Negro (Sin rayas rectas) */
+        .fade-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 30%, rgba(5,5,5,0.8) 55%, rgba(10,10,10,1) 80%, rgba(0,0,0,1) 100%); z-index: 10; pointer-events: none; }
 
         .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
         .toast.error { border-left-color: #CB3524; }
@@ -119,11 +119,9 @@
         .icon-glow { filter: drop-shadow(0 0 15px currentColor); transform: scale(1.15); }
         .icon-inactive { color: #9ca3af; filter: grayscale(100%); }
         
-        /* Efecto de Iluminación en Recompensas */
         .recompensa-unlocked { border-color: #FFD700 !important; background-color: rgba(255, 215, 0, 0.05) !important; }
         .recompensa-unlocked .icon-box { background-color: rgba(255, 215, 0, 0.2) !important; color: #FFD700 !important; border: none !important; }
         
-        /* Miniaturas de vestuario nítidas */
         .vestuario-mini { background-position: center center; background-size: cover; background-repeat: no-repeat; opacity: 1 !important; mix-blend-mode: normal !important; }
     </style>
 </head>
@@ -143,6 +141,7 @@
         </div>
     </div>
 
+    <!-- Modal Recompensas Configurables -->
     <div id="modal-recompensas-config" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md p-6 max-h-[90vh] flex flex-col">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gift text-gold mr-2"></i> Mis Recompensas</h3>
@@ -163,10 +162,11 @@
         </div>
     </div>
 
+    <!-- Modal Botones Evaluables -->
     <div id="modal-botones-config" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-lg p-6 max-h-[90vh] flex flex-col">
-            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gamepad text-[#3498db] mr-2"></i> Motor de Evaluación</h3>
-            <p class="text-xs text-[var(--text-sec)] italic mb-4">Crea botones personalizados para evaluar a tus deportistas según tu propio modelo de juego.</p>
+            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gamepad text-[#3498db] mr-2"></i> Creador de Botones</h3>
+            <p class="text-xs text-[var(--text-sec)] italic mb-4">Añade o edita botones para tu panel de evaluación.</p>
 
             <div class="bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--card-border)] mb-4 flex gap-2">
                 <select id="new-btn-target" class="bg-[var(--input-bg)] border border-[var(--input-border)] text-xs p-2 rounded text-[var(--text-main)] w-1/3 outline-none">
@@ -176,17 +176,16 @@
                 <select id="new-btn-tab" class="bg-[var(--input-bg)] border border-[var(--input-border)] text-xs p-2 rounded text-[var(--text-main)] w-2/3 outline-none font-bold">
                     <option value="act" class="text-[#9b59b6]">🧠 Actitud y Psicología</option>
                     <option value="tec" class="text-[#3498db]">⚽ Técnica y Ejecución</option>
-                    <option value="jue" class="text-[#2ecc71]">🟢 Juego y Decisiones</option>
+                    <option value="jue" class="text-[#2ecc71]">🟢 Juego / Físico</option>
+                    <option value="tac" class="text-[#e67e22]">♟️ Táctica</option>
                     <option value="ret" class="text-[#f1c40f]">🏆 Retos y Logros</option>
-                    <option value="fis" class="text-[#e67e22]">💪 Físico (Solo Jug.)</option>
-                    <option value="tac" class="text-[#e74c3c]">♟️ Táctica (Solo Jug.)</option>
                     <option value="err" class="text-red-500">🔴 Errores / Penalizaciones</option>
                 </select>
             </div>
             
             <div class="flex gap-2 mb-4 relative">
-                <input type="text" id="new-btn-label" placeholder="Nombre Acción (Ej: Pase Vertical)" class="flex-1 bg-[var(--input-bg)] border-2 border-[var(--input-border)] p-3 rounded-xl text-sm font-bold text-[var(--text-main)] focus:border-[#3498db] outline-none">
-                <input type="number" id="new-btn-pts" placeholder="Pts (Ej: 3 o -2)" class="w-24 bg-[var(--input-bg)] border-2 border-[var(--input-border)] p-3 rounded-xl text-sm font-black text-center text-[var(--text-main)] focus:border-[#3498db] outline-none">
+                <input type="text" id="new-btn-label" placeholder="Nombre (Ej: Rompelíneas)" class="flex-1 bg-[var(--input-bg)] border-2 border-[var(--input-border)] p-3 rounded-xl text-sm font-bold text-[var(--text-main)] focus:border-[#3498db] outline-none">
+                <input type="number" id="new-btn-pts" placeholder="Pts (Ej: 3)" class="w-24 bg-[var(--input-bg)] border-2 border-[var(--input-border)] p-3 rounded-xl text-sm font-black text-center text-[var(--text-main)] focus:border-[#3498db] outline-none">
                 <button onclick="window.addBotonEvalConfig()" class="bg-gradient-to-r from-[#3498db] to-blue-600 text-white w-12 rounded-xl font-black hover:scale-105 transition-transform shadow-md flex items-center justify-center"><i class="fas fa-plus"></i></button>
             </div>
 
@@ -202,6 +201,7 @@
         </div>
     </div>
 
+    <!-- Modal Código QR -->
     <div id="modal-qr" class="modal-overlay" style="display:none;">
         <div class="modal-box max-w-sm">
             <h3 class="text-xl font-black mb-4 text-[var(--text-main)]"><i class="fas fa-qrcode"></i> TU FICHA EN VIVO</h3>
@@ -216,6 +216,7 @@
         </div>
     </div>
 
+    <!-- Modal Historial Completo -->
     <div id="modal-history" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md max-h-[80vh] flex flex-col p-6">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase" id="history-modal-title">HISTORIAL</h3>
@@ -225,6 +226,7 @@
         </div>
     </div>
 
+    <!-- PANTALLA INICIO SPLIT -->
     <section id="view-home" class="split-layout">
         <div class="split-left">
             <div class="text-center mb-10 mt-6">
@@ -285,6 +287,7 @@
         </div>
     </section>
 
+    <!-- HEADER INTERNO -->
     <header id="main-header" class="hidden sticky top-0 z-50 bg-gradient-to-b from-[#1C2C5B] to-transparent pb-6 pt-4 px-5 backdrop-blur-sm">
         <div class="flex justify-between items-center max-w-4xl mx-auto w-full">
             <div class="flex items-center gap-3">
@@ -300,6 +303,7 @@
 
     <main id="app-container" class="max-w-4xl mx-auto w-full px-4 pb-28 hidden">
         
+        <!-- VISTA ADMIN -->
         <section id="view-admin" class="hidden">
             <div class="glass-card rounded-2xl p-5 mb-6 mt-4">
                 <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3">
@@ -373,6 +377,7 @@
             <div id="admin-lista-edps" class="space-y-3"></div>
         </section>
 
+        <!-- VISTA ENTRENADOR -->
         <section id="view-edp" class="hidden">
             <div class="text-center mb-6 mt-4">
                 <h2 class="font-black text-2xl uppercase">Panel Técnico</h2>
@@ -397,8 +402,9 @@
             <div id="edp-lista-jugadores" style="display:none;"></div>
         </section>
 
+        <!-- VISTA DEPORTISTA (FICHA) -->
         <section id="view-dashboard" class="hidden">
-            <!-- Carta FIFA -->
+            <!-- Carta FIFA Ultimate Team Style -->
             <div class="fifa-card-container mb-6 mt-2">
                 <div class="fifa-card-simple card-bronce" id="fifa-card-bg">
                     
@@ -446,7 +452,7 @@
                 <div id="dash-feedback-content" class="italic font-bold text-lg leading-snug">...</div>
             </div>
 
-            <!-- Progreso Puntos -->
+            <!-- Progreso Puntos con Iconos Luminosos -->
             <div class="glass-card rounded-2xl p-5 mb-6">
                  <div class="flex justify-between items-center mb-4">
                     <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel: Inicio</h3>
@@ -477,6 +483,7 @@
                 </div>
             </div>
 
+            <!-- Desglose Analítico -->
             <div id="advanced-stats-container" class="glass-card rounded-2xl p-5 mb-6">
                 <h3 class="font-black text-lg uppercase tracking-wide mb-1">📈 Desglose Analítico</h3>
                 <p class="text-xs text-[var(--text-sec)] italic mb-4">Métricas de rendimiento detalladas generadas por el Cuerpo Técnico.</p>
@@ -504,6 +511,7 @@
             </div>
         </section>
 
+        <!-- VISTA RANKING -->
         <section id="view-ranking" class="hidden">
             <div class="bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl flex flex-col items-center text-center gap-3 mb-6 shadow-lg">
                 <i class="fas fa-graduation-cap text-4xl text-gold drop-shadow-[0_2px_5px_rgba(255,215,0,0.5)]"></i>
@@ -558,68 +566,100 @@
         const auth = getAuth(app);
 
         // Variables de Estado
-        let porteros = [];
-        let jugadores = [];
-        let edps = [];
-        let currentUser = null; 
-        let roleType = ""; 
-        let fotoTemp = ""; 
-        let chartInstance = null; 
-        let evoChartInstance = null;
-        let rankingMode = "global"; 
-        let evalViewMode = "porteros"; 
-        let targetDeleteId = null;
-        let targetDeleteType = null;
-        let tempRewards = []; 
-        let tempBotones = []; // Almacena botones durante la edición
-        
-        let isReadOnlyMode = false;
-        let readOnlyId = null;
-        let readOnlyTipoPlural = null;
+        let porteros = []; let jugadores = []; let edps = [];
+        let currentUser = null; let roleType = ""; let fotoTemp = ""; 
+        let chartInstance = null; let evoChartInstance = null;
+        let rankingMode = "global"; let evalViewMode = "porteros"; 
+        let targetDeleteId = null; let targetDeleteType = null;
+        let tempRewards = []; let tempBotones = []; 
+        let isReadOnlyMode = false; let readOnlyId = null; let readOnlyTipoPlural = null;
 
+        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores
         const DEFAULT_EVAL_BUTTONS = [
-            // PORTEROS
+            // --- PORTEROS ---
             { id: 'p_a1', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
             { id: 'p_a2', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Atención', icon: 'fa-brain' },
             { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Carácter', icon: 'fa-fire' },
             { id: 'p_a4', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Reacción', icon: 'fa-undo' },
-            
             { id: 'p_t1', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Blocaje', icon: 'fa-hand-rock' },
             { id: 'p_t2', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Reflejos', icon: 'fa-bolt' },
             { id: 'p_t3', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Aéreo', icon: 'fa-plane' },
             { id: 'p_t4', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pies', icon: 'fa-shoe-prints' },
             { id: 'p_t5', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-forward' },
-            
             { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '1vs1', icon: 'fa-shield-alt' },
             { id: 'p_j2', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Decisión', icon: 'fa-lightbulb' },
             { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Posición', icon: 'fa-crosshairs' },
             { id: 'p_j4', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Salida', icon: 'fa-rocket' },
-            
             { id: 'p_r1', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Muro', icon: 'fa-brick' },
             { id: 'p_r2', target: 'porteros', tab: 'ret', cat: 'ret', pts: 6, label: 'MVP', icon: 'fa-crown' },
             { id: 'p_r3', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Clave', icon: 'fa-star' },
-            
             { id: 'p_e1', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
             { id: 'p_e2', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Mal Salida', icon: 'fa-exclamation-triangle' },
             { id: 'p_e3', target: 'porteros', tab: 'err', cat: 'tec', pts: -2, label: 'Mal Pase', icon: 'fa-times-circle' },
             { id: 'p_e4', target: 'porteros', tab: 'err', cat: 'tec', pts: -4, label: 'Gol Evitable', icon: 'fa-skull' },
 
-            // JUGADORES
+            // --- JUGADORES DE CAMPO (Mega-Ampliación Scouting) ---
+            // 🟣 ACTITUD (tab: act, cat: men)
             { id: 'j_a1', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
-            { id: 'j_a2', target: 'jugadores', tab: 'act', cat: 'men', pts: 1, label: 'Equipo', icon: 'fa-users' },
-            
-            { id: 'j_t1', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase', icon: 'fa-exchange-alt' },
-            { id: 'j_t2', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Tiro', icon: 'fa-bullseye' },
-            { id: 'j_t3', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Regate', icon: 'fa-shoe-prints' },
-            
-            { id: 'j_f1', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Duelo', icon: 'fa-fist-raised' },
-            { id: 'j_f2', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 1, label: 'Resist.', icon: 'fa-heartbeat' },
-            
-            { id: 'j_c1', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Desmarque', icon: 'fa-running' },
-            { id: 'j_c2', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 1, label: 'Cobertura', icon: 'fa-shield-alt' },
-            
+            { id: 'j_a2', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
+            { id: 'j_a3', target: 'jugadores', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda Comp.', icon: 'fa-hands-helping' },
+            { id: 'j_a4', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Comunicación', icon: 'fa-comments' },
+            { id: 'j_a5', target: 'jugadores', tab: 'act', cat: 'men', pts: 3, label: 'Liderazgo', icon: 'fa-crown' },
+            { id: 'j_a6', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Concentración', icon: 'fa-brain' },
+            { id: 'j_a7', target: 'jugadores', tab: 'act', cat: 'men', pts: 3, label: 'Reac. Error', icon: 'fa-undo' },
+            { id: 'j_a8', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Competitividad', icon: 'fa-khanda' },
+            { id: 'j_a9', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Comp. Defensivo', icon: 'fa-shield-alt' },
+            { id: 'j_a10', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Iniciativa', icon: 'fa-rocket' },
+            // 🔵 TÉCNICA (tab: tec, cat: tec)
+            { id: 'j_t1', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Buen Control', icon: 'fa-shoe-prints' },
+            { id: 'j_t2', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Control Orient.', icon: 'fa-compass' },
+            { id: 'j_t3', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase Correcto', icon: 'fa-check' },
+            { id: 'j_t4', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Pase Vertical', icon: 'fa-arrow-up' },
+            { id: 'j_t5', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-bolt' },
+            { id: 'j_t6', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Cambio Orient.', icon: 'fa-exchange-alt' },
+            { id: 'j_t7', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 4, label: 'Asistencia', icon: 'fa-star' },
+            { id: 'j_t8', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Regate', icon: 'fa-magic' },
+            { id: 'j_t9', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 3, label: '1v1 Ofensivo', icon: 'fa-running' },
+            { id: 'j_t10', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Protección', icon: 'fa-shield-alt' },
+            { id: 'j_t11', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Centro Preciso', icon: 'fa-crosshairs' },
+            { id: 'j_t12', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Tiro a Puerta', icon: 'fa-bullseye' },
+            { id: 'j_t13', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 5, label: 'GOL', icon: 'fa-futbol' },
+            // 🟢 JUEGO / FÍSICO (tab: fis, cat: fis)
+            { id: 'j_f1', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Decisión Buena', icon: 'fa-lightbulb' },
+            { id: 'j_f2', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Decisión Presión', icon: 'fa-brain' },
+            { id: 'j_f3', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 4, label: 'Decisión Ocasión', icon: 'fa-star' },
+            { id: 'j_f4', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Desmarque', icon: 'fa-running' },
+            { id: 'j_f5', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Desm. Ruptura', icon: 'fa-bolt' },
+            { id: 'j_f6', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Genera Espacio', icon: 'fa-expand' },
+            { id: 'j_f7', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Llegada Área', icon: 'fa-map-marker-alt' },
+            { id: 'j_f8', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: '1v1 Def. Ganado', icon: 'fa-shield-alt' },
+            { id: 'j_f9', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Duelo Aéreo', icon: 'fa-plane' },
+            { id: 'j_f10', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Recuperación', icon: 'fa-undo' },
+            { id: 'j_f11', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Rec. Alta', icon: 'fa-arrow-alt-circle-up' },
+            { id: 'j_f12', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Interceptación', icon: 'fa-hand-paper' },
+            // 🟠 TÁCTICA (tab: tac, cat: tac)
+            { id: 'j_c1', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 1, label: 'Cumple Posición', icon: 'fa-chess-pawn' },
+            { id: 'j_c2', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ocupación Esp.', icon: 'fa-vector-square' },
+            { id: 'j_c3', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Orientación', icon: 'fa-compass' },
+            { id: 'j_c4', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Basculación', icon: 'fa-arrows-alt-h' },
+            { id: 'j_c5', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Cobertura', icon: 'fa-shield-alt' },
+            { id: 'j_c6', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Vigilancia', icon: 'fa-eye' },
+            { id: 'j_c7', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Presión Correcta', icon: 'fa-compress-arrows-alt' },
+            { id: 'j_c8', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Activa Presión', icon: 'fa-bullhorn' },
+            { id: 'j_c9', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Rompe Presión', icon: 'fa-unlock-alt' },
+            // 🔴 ERRORES (tab: err, cat: men/tec/tac)
             { id: 'j_e1', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
-            { id: 'j_e2', target: 'jugadores', tab: 'err', cat: 'tec', pts: -2, label: 'Mal Pase', icon: 'fa-times-circle' }
+            { id: 'j_e2', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Falta Intensidad', icon: 'fa-battery-empty' },
+            { id: 'j_e3', target: 'jugadores', tab: 'err', cat: 'men', pts: -1, label: 'Protesta', icon: 'fa-exclamation' },
+            { id: 'j_e4', target: 'jugadores', tab: 'err', cat: 'men', pts: -3, label: 'Mala Actitud', icon: 'fa-thumbs-down' },
+            { id: 'j_e5', target: 'jugadores', tab: 'err', cat: 'tec', pts: -1, label: 'Mal Control', icon: 'fa-times-circle' },
+            { id: 'j_e6', target: 'jugadores', tab: 'err', cat: 'tec', pts: -1, label: 'Pase Errado', icon: 'fa-times' },
+            { id: 'j_e7', target: 'jugadores', tab: 'err', cat: 'tec', pts: -2, label: 'Pérdida Peligrosa', icon: 'fa-exclamation-triangle' },
+            { id: 'j_e8', target: 'jugadores', tab: 'err', cat: 'tec', pts: -3, label: 'Pérdida -> Ocasión', icon: 'fa-skull' },
+            { id: 'j_e9', target: 'jugadores', tab: 'err', cat: 'tec', pts: -5, label: 'Error -> GOL', icon: 'fa-skull-crossbones' },
+            { id: 'j_e10', target: 'jugadores', tab: 'err', cat: 'tac', pts: -1, label: 'Mala Ocupación', icon: 'fa-map-signs' },
+            { id: 'j_e11', target: 'jugadores', tab: 'err', cat: 'tac', pts: -2, label: 'No Cobertura', icon: 'fa-user-slash' },
+            { id: 'j_e12', target: 'jugadores', tab: 'err', cat: 'tac', pts: -2, label: 'Rompe Estruct.', icon: 'fa-unlink' }
         ];
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1012,21 +1052,19 @@
 
             if(!label || isNaN(pts)) return showToast("Faltan datos en el botón", true);
 
-            // Mapeo automático de categorías estadísticas
+            // Mapeo automático
             let cat = 'men';
             if(tab === 'tec') cat = 'tec';
-            if(tab === 'jue') cat = 'jue';
+            if(tab === 'jue' && target === 'porteros') cat = 'jue';
+            if(tab === 'jue' && target === 'jugadores') cat = 'fis';
             if(tab === 'ret') cat = 'ret';
-            if(tab === 'fis') cat = 'fis';
             if(tab === 'tac') cat = 'tac';
-            if(tab === 'err') { cat = 'men'; } // Por defecto los errores restan en men (actitud) si no se complica.
+            if(tab === 'err') cat = 'men';
 
-            // Mapeo automático de iconos chulos
             let icon = 'fa-bolt';
             if(tab === 'tec') icon = target === 'porteros' ? 'fa-hand-rock' : 'fa-futbol';
             if(tab === 'jue') icon = 'fa-brain';
             if(tab === 'ret') icon = 'fa-star';
-            if(tab === 'fis') icon = 'fa-dumbbell';
             if(tab === 'tac') icon = 'fa-chess-knight';
             if(tab === 'err') icon = 'fa-times-circle';
 
@@ -1051,7 +1089,7 @@
                 showToast("Panel de Botones Guardado");
                 document.getElementById('modal-botones-config').style.display = 'none';
                 currentUser.botonesEval = tempBotones;
-                renderEvaluacionList(); // Refrescar el panel del entrenador
+                renderEvaluacionList();
             }).catch(e => showToast("Error al guardar", true));
         }
 
@@ -1149,16 +1187,12 @@
             });
 
             const target = document.getElementById(targetId);
-            if(target) {
-                target.classList.remove('hidden');
-                target.classList.add('flex');
-            }
+            if(target) { target.classList.remove('hidden'); target.classList.add('flex'); }
 
             let colorClass = "text-[#9b59b6] bg-[#9b59b6]/20 border-[#9b59b6]/50"; 
             if(targetId.includes('tec')) colorClass = "text-[#3498db] bg-[#3498db]/20 border-[#3498db]/50";
-            if(targetId.includes('jue')) colorClass = "text-[#2ecc71] bg-[#2ecc71]/20 border-[#2ecc71]/50";
-            if(targetId.includes('fis')) colorClass = "text-[#e67e22] bg-[#e67e22]/20 border-[#e67e22]/50";
-            if(targetId.includes('tac')) colorClass = "text-[#e74c3c] bg-[#e74c3c]/20 border-[#e74c3c]/50";
+            if(targetId.includes('jue') || targetId.includes('fis')) colorClass = "text-[#2ecc71] bg-[#2ecc71]/20 border-[#2ecc71]/50";
+            if(targetId.includes('tac')) colorClass = "text-[#e67e22] bg-[#e67e22]/20 border-[#e67e22]/50";
             if(targetId.includes('ret')) colorClass = "text-[#f1c40f] bg-[#f1c40f]/20 border-[#f1c40f]/50";
             if(targetId.includes('err')) colorClass = "text-red-500 bg-red-500/20 border-red-500/50";
 
@@ -1186,7 +1220,7 @@
         }
 
         function isRacha(p) { return p.historial && p.historial.length >= 3 && p.historial[0].puntos>0 && p.historial[1].puntos>0 && p.historial[2].puntos>0; }
-        function getColor(cat) { const c = {men:'#9b59b6', tec:'#3498db', jue:'#2ecc71', ret:'#f1c40f', fis:'#e67e22', tac:'#e74c3c'}; return c[cat]||'#fff'; }
+        function getColor(cat) { const c = {men:'#9b59b6', tec:'#3498db', jue:'#2ecc71', ret:'#f1c40f', fis:'#2ecc71', tac:'#e67e22'}; return c[cat]||'#fff'; }
 
         function getBtnHTML(botones, target, tab, pId, tipo) {
             const list = botones.filter(b => b.target === target && b.tab === tab);
@@ -1195,9 +1229,8 @@
             return list.map(b => {
                 const isErr = b.tab === 'err';
                 let colorHex = '#fff';
-                if(b.tab==='act') colorHex='#9b59b6'; if(b.tab==='tec') colorHex='#3498db'; if(b.tab==='jue') colorHex='#2ecc71';
-                if(b.tab==='ret') colorHex='#f1c40f'; if(b.tab==='fis') colorHex='#e67e22'; if(b.tab==='tac') colorHex='#e74c3c';
-                if(b.tab==='err') colorHex='#ef4444';
+                if(b.tab==='act') colorHex='#9b59b6'; if(b.tab==='tec') colorHex='#3498db'; if(b.tab==='jue' || b.tab==='fis') colorHex='#2ecc71';
+                if(b.tab==='ret') colorHex='#f1c40f'; if(b.tab==='tac') colorHex='#e67e22'; if(b.tab==='err') colorHex='#ef4444';
 
                 const bgClass = isErr ? 'bg-red-900/10 border-red-500/30' : 'bg-[var(--input-bg)] border-[var(--input-border)]';
                 const hoverStyle = `onmouseover="this.style.borderColor='${colorHex}'; ${isErr ? "this.style.backgroundColor='rgba(239, 68, 68, 0.1)';" : ""}" onmouseout="this.style.borderColor=''; ${isErr ? "this.style.backgroundColor='';" : ""}"`;
@@ -1205,7 +1238,7 @@
                 return `<button class="${bgClass} text-[var(--text-main)] w-[30%] py-2 rounded-xl flex flex-col items-center transition-colors shadow-sm border" ${hoverStyle} onclick="window.sumar(${pId}, ${b.pts}, '${b.cat}', '${b.label}', '${b.icon}', '${tipo}')">
                     <i class="fas ${b.icon} text-lg mb-1" style="color:${colorHex}"></i>
                     <span class="font-black" style="color:${isErr ? colorHex : 'inherit'}">${b.pts > 0 ? '+'+b.pts : b.pts}</span>
-                    <span class="text-[0.55rem] font-bold text-center leading-tight mt-1">${b.label}</span>
+                    <span class="text-[0.55rem] font-bold text-center leading-tight mt-1 px-1">${b.label}</span>
                 </button>`;
             }).join('');
         }
@@ -1213,7 +1246,6 @@
         function evalCardHTML(p, tipo) {
             let botonesHTML = '';
             const posBadge = p.posicion ? p.posicion : (tipo === 'porteros' ? 'POR' : 'JUG');
-            
             const misBotones = currentUser.botonesEval || DEFAULT_EVAL_BUTTONS;
 
             if(tipo === 'porteros') {
@@ -1225,7 +1257,6 @@
                         <button onclick="window.switchEvalTab(this, 'tab-ret-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🏆 RETOS</button>
                         <button onclick="window.switchEvalTab(this, 'tab-err-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🔴 ERR</button>
                     </div>
-
                     <div id="tab-act-${p.id}" class="eval-tab-content flex flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'act', p.id, tipo)}</div>
                     <div id="tab-tec-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'tec', p.id, tipo)}</div>
                     <div id="tab-jue-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'jue', p.id, tipo)}</div>
@@ -1237,11 +1268,10 @@
                     <div class="flex overflow-x-auto gap-2 pb-2 mt-4 custom-scrollbar border-b border-white/5 mb-4 px-1">
                         <button onclick="window.switchEvalTab(this, 'tab-act-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[#9b59b6]/20 text-[#9b59b6] border border-[#9b59b6]/50 whitespace-nowrap transition-all opacity-100">🧠 ACT</button>
                         <button onclick="window.switchEvalTab(this, 'tab-tec-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">⚽ TEC</button>
-                        <button onclick="window.switchEvalTab(this, 'tab-fis-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">💪 FIS</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-fis-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🟢 JUE / FIS</button>
                         <button onclick="window.switchEvalTab(this, 'tab-tac-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">♟️ TAC</button>
                         <button onclick="window.switchEvalTab(this, 'tab-err-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🔴 ERR</button>
                     </div>
-
                     <div id="tab-act-${p.id}" class="eval-tab-content flex flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'act', p.id, tipo)}</div>
                     <div id="tab-tec-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'tec', p.id, tipo)}</div>
                     <div id="tab-fis-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'fis', p.id, tipo)}</div>
@@ -1272,13 +1302,13 @@
 
                     <div class="bg-[var(--input-bg)] p-4 rounded-xl border border-[var(--input-border)] mb-4 shadow-sm">
                         <div class="text-gold font-black text-xs uppercase text-center mb-3"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
-                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" class="w-full bg-transparent text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
+                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Llegar tarde)" class="w-full bg-transparent text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
                         <div class="flex gap-2 mb-3">
-                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: 5 o -5)" class="w-1/2 bg-transparent text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
+                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: -5)" class="w-1/2 bg-transparent text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
                             <select id="c-cat-${tipo}-${p.id}" class="w-1/2 bg-transparent text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
                                 <option value="men" class="text-black">Actitud</option>
                                 <option value="tec" class="text-black">Técnica</option>
-                                <option value="${tipo === 'porteros' ? 'jue' : 'fis'}" class="text-black">${tipo === 'porteros' ? 'Juego' : 'Físico'}</option>
+                                <option value="${tipo === 'porteros' ? 'jue' : 'fis'}" class="text-black">${tipo === 'porteros' ? 'Juego' : 'Juego/Físico'}</option>
                                 <option value="${tipo === 'porteros' ? 'ret' : 'tac'}" class="text-black">${tipo === 'porteros' ? 'Retos' : 'Táctica'}</option>
                             </select>
                         </div>
@@ -1363,7 +1393,7 @@
         const FONDOS = [
             { id: 'base', name: 'Gris Base', req: 0, class: 'fondo-base', img: '', desc: 'Por defecto' },
             { id: 'escudo', name: 'Escudo ATM', req: 250, class: 'fondo-escudo', img: 'escudo_ATM.png', desc: 'Rojiblanco' },
-            { id: 'metropolitano', name: 'Metropolitano', req: 500, class: 'fondo-metropolitano', img: 'metropolitano.jpg', desc: 'Luces estadio' },
+            { id: 'metropolitano', name: 'Metropolitano', req: 500, class: 'fondo-metropolitano', img: 'metropolitano.jpeg', desc: 'Luces estadio' },
             { id: 'neptuno', name: 'Neptuno', req: 800, class: 'fondo-neptuno', img: 'neptuno.jpg', desc: 'Magia azul' },
             { id: 'oblak', name: 'Leyendas', req: 1000, class: 'fondo-oblak', img: 'leyendas.jpg', desc: 'Puro Coraje' }
         ];
@@ -1381,7 +1411,7 @@
             
             document.getElementById('fifa-pos').innerText = p.posicion ? p.posicion : (tipoPlural === 'porteros' ? 'POR' : 'JUG');
             
-            document.getElementById('label-fis').innerText = tipoPlural === 'porteros' ? 'JUE' : 'FIS';
+            document.getElementById('label-fis').innerText = tipoPlural === 'porteros' ? 'JUE' : 'JUE';
             document.getElementById('label-tac').innerText = tipoPlural === 'porteros' ? 'RET' : 'TAC';
             
             document.getElementById('fifa-rating').innerText = Math.min(99, 60 + Math.floor((p.puntos||0) / 30)); 
@@ -1413,23 +1443,17 @@
             iconTiers.forEach(tier => {
                 const iconContainer = document.getElementById(`lvl-icon-${tier.id}`);
                 const textContainer = document.getElementById(`lvl-text-${tier.id}`);
-                
                 if(pts >= tier.limit) {
                     iconContainer.classList.remove('icon-inactive', 'border-[var(--input-border)]');
-                    iconContainer.style.color = tier.color;
-                    iconContainer.style.borderColor = tier.color;
-                    iconContainer.classList.add('icon-glow');
+                    iconContainer.style.color = tier.color; iconContainer.style.borderColor = tier.color; iconContainer.classList.add('icon-glow');
                     textContainer.style.color = tier.color;
                 } else {
                     iconContainer.classList.add('icon-inactive', 'border-[var(--input-border)]');
-                    iconContainer.style.color = '';
-                    iconContainer.style.borderColor = '';
-                    iconContainer.classList.remove('icon-glow');
+                    iconContainer.style.color = ''; iconContainer.style.borderColor = ''; iconContainer.classList.remove('icon-glow');
                     textContainer.style.color = 'var(--text-sec)';
                 }
             });
 
-            // FASE 3: Desglose Analítico (Scouting Report)
             const breakdownEl = document.getElementById('stats-breakdown-list');
             if (breakdownEl) {
                 const isPor = tipoPlural === 'porteros';
@@ -1443,12 +1467,12 @@
                         <span class="font-black text-[#3498db] text-lg">${s.tec || 60} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
                     </div>
                     <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-3 rounded-xl flex items-center justify-between shadow-sm">
-                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-shield-alt text-[#2ecc71]' : 'fa-dumbbell text-[#e67e22]'} w-4"></i> ${isPor ? 'Juego' : 'Físico'}</span>
-                        <span class="font-black ${isPor ? 'text-[#2ecc71]' : 'text-[#e67e22]'} text-lg">${isPor ? (s.jue||60) : (s.fis||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
+                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-shield-alt text-[#2ecc71]' : 'fa-running text-[#2ecc71]'} w-4"></i> ${isPor ? 'Juego' : 'Juego/Físico'}</span>
+                        <span class="font-black text-[#2ecc71] text-lg">${isPor ? (s.jue||60) : (s.fis||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
                     </div>
                     <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-3 rounded-xl flex items-center justify-between shadow-sm">
-                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-star text-[#f1c40f]' : 'fa-chess-knight text-[#e74c3c]'} w-4"></i> ${isPor ? 'Retos' : 'Táctica'}</span>
-                        <span class="font-black ${isPor ? 'text-[#f1c40f]' : 'text-[#e74c3c]'} text-lg">${isPor ? (s.ret||60) : (s.tac||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
+                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-star text-[#f1c40f]' : 'fa-chess-knight text-[#e67e22]'} w-4"></i> ${isPor ? 'Retos' : 'Táctica'}</span>
+                        <span class="font-black ${isPor ? 'text-[#f1c40f]' : 'text-[#e67e22]'} text-lg">${isPor ? (s.ret||60) : (s.tac||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
                     </div>
                 `;
             }
@@ -1459,9 +1483,7 @@
             let recompensas = [ { title: "Ser Capitán", req: 150 }, { title: "Elegir Juego", req: 300 }, { title: "Entrenar Cat. Superior", req: 800 } ];
             if(p.entrenador) {
                 const coach = edps.find(e => e.nombre.toLowerCase() === p.entrenador.toLowerCase());
-                if(coach && coach.recompensas !== undefined) {
-                    recompensas = coach.recompensas || [];
-                }
+                if(coach && coach.recompensas !== undefined) recompensas = coach.recompensas || [];
             }
 
             const rIcons = ["copyright", "dice", "level-up-alt", "star", "bolt", "fire", "gem", "crown"];
