@@ -1773,12 +1773,31 @@
 
         function renderRankingList() {
             const div = document.getElementById('ranking-list-container'); const smartDiv = document.getElementById('smart-rankings');
-            let lista = [];
+            let listaBase = [];
             
-            if(rankingMode === 'global') { lista = [...porteros, ...jugadores]; }
-            else if(rankingMode === 'porteros') { lista = [...porteros]; }
-            else if(rankingMode === 'jugadores') { lista = [...jugadores]; }
+            if(rankingMode === 'global') { listaBase = [...porteros, ...jugadores]; }
+            else if(rankingMode === 'porteros') { listaBase = [...porteros]; }
+            else if(rankingMode === 'jugadores') { listaBase = [...jugadores]; }
             
+            let targetEntrenador = null;
+            if (isReadOnlyMode) {
+                const arr = readOnlyTipoPlural === 'porteros' ? porteros : jugadores;
+                const p = arr.find(x => String(x.id) === String(readOnlyId));
+                if (p) targetEntrenador = p.entrenador;
+            } else if (currentUser) {
+                if (roleType === 'edp') {
+                    targetEntrenador = currentUser.nombre;
+                } else if (roleType !== 'admin') {
+                    targetEntrenador = currentUser.entrenador;
+                }
+            }
+
+            let lista = listaBase;
+            if (targetEntrenador && roleType !== 'admin') {
+                const prof = targetEntrenador.trim().toLowerCase();
+                lista = listaBase.filter(x => x.entrenador && x.entrenador.trim().toLowerCase() === prof);
+            }
+
             lista.sort((a,b) => (b.puntos||0) - (a.puntos||0)); 
             const bestMen = [...lista].sort((a,b) => (b.stats?.men||0) - (a.stats?.men||0))[0]; 
             const bestTec = [...lista].sort((a,b) => (b.stats?.tec||0) - (a.stats?.tec||0))[0];
@@ -1786,7 +1805,7 @@
             smartDiv.innerHTML = `<div class="glass-card p-3 rounded-xl flex flex-col items-center border border-[#9b59b6]/30 text-center"><span class="text-2xl mb-1">🧠</span><span class="text-[0.65rem] text-[var(--text-sec)] font-black uppercase">Mejor Actitud</span><span class="font-black text-sm text-[var(--text-main)] truncate w-full">${bestMen ? bestMen.nombre : '-'}</span></div><div class="glass-card p-3 rounded-xl flex flex-col items-center border border-[#3498db]/30 text-center"><span class="text-2xl mb-1">⚽</span><span class="text-[0.65rem] text-[var(--text-sec)] font-black uppercase">Mejor Técnica</span><span class="font-black text-sm text-[var(--text-main)] truncate w-full">${bestTec ? bestTec.nombre : '-'}</span></div>`;
             
             if(lista.length === 0) {
-                div.innerHTML = `<div class="glass-card p-5 rounded-xl text-center text-[var(--text-sec)] font-bold">Aún no hay registros en esta categoría.</div>`;
+                div.innerHTML = `<div class="glass-card p-5 rounded-xl text-center text-[var(--text-sec)] font-bold">Aún no hay registros en tu equipo para esta categoría.</div>`;
             } else {
                 div.innerHTML = lista.map((p, i) => {
                     const tipoReal = porteros.some(x => x.id === p.id) ? 'porteros' : 'jugadores';
