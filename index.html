@@ -72,10 +72,9 @@
         }
 
         .fifa-card-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; perspective: 1000px; }
-        
         .fifa-card-simple { width: 270px; border-radius: 15px; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; }
         
-        /* Capas de la Tarjeta */
+        /* Materiales de la Tarjeta */
         .card-bronce { background: linear-gradient(135deg, #a67c52 0%, #8b5a2b 50%, #5c3a21 100%); border: 2px solid #d4a373; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .card-plata { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #9e9e9e 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         .card-oro { background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
@@ -85,16 +84,19 @@
         .shine-effect { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 50; }
         @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
 
-        /* Capa 0: Fondo Real con Blend Mode */
+        /* Capa 0: Fondo Real con Blend Mode Aislado */
         .fondo-base { background-image: none; opacity: 1; }
-        .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 80%; background-position: center top; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
-        /* CORRECCIÓN: metropolitano.jpeg */
-        .fondo-metropolitano { background-image: url('metropolitano.jpeg'); background-size: cover; background-position: center 10%; background-repeat: no-repeat; opacity: 0.95; mix-blend-mode: luminosity; }
-        .fondo-neptuno { background-image: url('neptuno.jpg'); background-size: 140%; background-position: center 20%; background-repeat: no-repeat; opacity: 0.95; mix-blend-mode: luminosity; }
-        .fondo-oblak { background-image: url('leyendas.jpg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
+        .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 80%; background-position: center top; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
+        .fondo-metropolitano { background-image: url('metropolitano.jpeg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
+        .fondo-neptuno { background-image: url('neptuno.jpg'); background-size: cover; background-position: center center; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
+        .fondo-oblak { background-image: url('leyendas.jpg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
 
-        /* Capa 1: Fade Suave a Negro (Sin rayas rectas) */
-        .fade-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 30%, rgba(5,5,5,0.8) 55%, rgba(10,10,10,1) 80%, rgba(0,0,0,1) 100%); z-index: 10; pointer-events: none; }
+        /* Capa 1: Fade Suave a Negro para estadísticas */
+        .fade-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 30%, rgba(5,5,5,0.7) 50%, rgba(10,10,10,1) 75%, rgba(0,0,0,1) 100%); z-index: 10; pointer-events: none; }
+
+        /* Capa 2: Foto del jugador sobresaliendo */
+        .player-photo-layer { position: relative; z-index: 20; display: flex; justify-content: center; align-items: flex-end; height: 14rem; width: 100%; margin-top: -2.5rem; padding-top: 0.5rem; pointer-events: none; }
+        .player-photo-layer img { max-height: 100%; max-width: 95%; object-fit: contain; object-position: bottom; filter: drop-shadow(0 15px 15px rgba(0,0,0,0.8)); pointer-events: auto; }
 
         .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
         .toast.error { border-left-color: #CB3524; }
@@ -122,6 +124,7 @@
         .recompensa-unlocked { border-color: #FFD700 !important; background-color: rgba(255, 215, 0, 0.05) !important; }
         .recompensa-unlocked .icon-box { background-color: rgba(255, 215, 0, 0.2) !important; color: #FFD700 !important; border: none !important; }
         
+        /* Miniaturas de Vestuario nítidas */
         .vestuario-mini { background-position: center center; background-size: cover; background-repeat: no-repeat; opacity: 1 !important; mix-blend-mode: normal !important; }
     </style>
 </head>
@@ -129,6 +132,7 @@
 
     <div id="toast-container"></div>
 
+    <!-- Modal Confirmación -->
     <div id="modal-confirm" class="modal-overlay" style="display:none;">
         <div class="modal-box max-w-sm" style="border-color:#CB3524;">
             <i class="fas fa-exclamation-triangle text-atmRed text-4xl mb-4"></i>
@@ -141,7 +145,7 @@
         </div>
     </div>
 
-    <!-- Modal Recompensas Configurables -->
+    <!-- Modal Recompensas Configurables (EDP) -->
     <div id="modal-recompensas-config" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md p-6 max-h-[90vh] flex flex-col">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gift text-gold mr-2"></i> Mis Recompensas</h3>
@@ -162,7 +166,7 @@
         </div>
     </div>
 
-    <!-- Modal Botones Evaluables -->
+    <!-- Modal Botones Evaluables (EDP) -->
     <div id="modal-botones-config" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-lg p-6 max-h-[90vh] flex flex-col">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gamepad text-[#3498db] mr-2"></i> Creador de Botones</h3>
@@ -226,7 +230,6 @@
         </div>
     </div>
 
-    <!-- PANTALLA INICIO SPLIT -->
     <section id="view-home" class="split-layout">
         <div class="split-left">
             <div class="text-center mb-10 mt-6">
@@ -303,7 +306,6 @@
 
     <main id="app-container" class="max-w-4xl mx-auto w-full px-4 pb-28 hidden">
         
-        <!-- VISTA ADMIN -->
         <section id="view-admin" class="hidden">
             <div class="glass-card rounded-2xl p-5 mb-6 mt-4">
                 <div class="flex justify-between items-center mb-5 border-b border-white/10 pb-3">
@@ -377,7 +379,6 @@
             <div id="admin-lista-edps" class="space-y-3"></div>
         </section>
 
-        <!-- VISTA ENTRENADOR -->
         <section id="view-edp" class="hidden">
             <div class="text-center mb-6 mt-4">
                 <h2 class="font-black text-2xl uppercase">Panel Técnico</h2>
@@ -402,7 +403,6 @@
             <div id="edp-lista-jugadores" style="display:none;"></div>
         </section>
 
-        <!-- VISTA DEPORTISTA (FICHA) -->
         <section id="view-dashboard" class="hidden">
             <!-- Carta FIFA Ultimate Team Style -->
             <div class="fifa-card-container mb-6 mt-2">
@@ -416,8 +416,13 @@
                     <div id="card-bg-layer" class="absolute inset-0 z-0 fondo-base transition-all duration-500 rounded-[15px]"></div>
                     <div class="fade-mask rounded-[15px]"></div>
 
-                    <!-- CARD CONTENT (Capa Superior Aislada) -->
-                    <div class="relative z-20 flex flex-col h-full w-full">
+                    <!-- PLAYER PHOTO LAYER (Aislada de los fondos) -->
+                    <div class="player-photo-layer">
+                        <img id="card-foto" src="" onerror="this.style.display='none'">
+                    </div>
+
+                    <!-- CARD FOREGROUND (Estadísticas por encima de todo) -->
+                    <div class="absolute inset-0 z-30 flex flex-col pointer-events-none">
                         <div class="flex p-4 items-start w-full">
                             <div class="flex-1">
                                 <div class="text-[3.2rem] font-black leading-none drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)] text-white" id="fifa-rating">60</div>
@@ -426,11 +431,7 @@
                             <img src="logo.png" class="w-12 drop-shadow-md" onerror="this.style.display='none'">
                         </div>
                         
-                        <div class="h-56 w-full flex justify-center items-end -mt-10 pt-2 pointer-events-none">
-                            <img id="card-foto" class="max-h-full max-w-[95%] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] object-bottom pointer-events-auto" src="" onerror="this.style.display='none'">
-                        </div>
-                        
-                        <div class="p-4 text-center pb-6 z-20" id="card-bottom-bar">
+                        <div class="mt-auto p-4 text-center pb-6" id="card-bottom-bar">
                             <div class="font-black text-2xl uppercase mb-3 tracking-wide flex items-center justify-center gap-2 text-white drop-shadow-lg" id="dash-card-nombre">NOMBRE</div>
                             <div class="grid grid-cols-2 gap-2 font-bold text-sm text-white/90">
                                 <div class="flex justify-between px-2"><span class="font-black text-white" id="stat-tec">60</span> TEC</div>
@@ -511,7 +512,6 @@
             </div>
         </section>
 
-        <!-- VISTA RANKING -->
         <section id="view-ranking" class="hidden">
             <div class="bg-yellow-500/10 border border-yellow-500/30 p-6 rounded-2xl flex flex-col items-center text-center gap-3 mb-6 shadow-lg">
                 <i class="fas fa-graduation-cap text-4xl text-gold drop-shadow-[0_2px_5px_rgba(255,215,0,0.5)]"></i>
@@ -577,28 +577,104 @@
         // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores
         const DEFAULT_EVAL_BUTTONS = [
             // --- PORTEROS ---
+            // ACTITUD
             { id: 'p_a1', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
-            { id: 'p_a2', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Atención', icon: 'fa-brain' },
-            { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Carácter', icon: 'fa-fire' },
-            { id: 'p_a4', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Reacción', icon: 'fa-undo' },
-            { id: 'p_t1', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Blocaje', icon: 'fa-hand-rock' },
-            { id: 'p_t2', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Reflejos', icon: 'fa-bolt' },
-            { id: 'p_t3', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Aéreo', icon: 'fa-plane' },
-            { id: 'p_t4', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pies', icon: 'fa-shoe-prints' },
-            { id: 'p_t5', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-forward' },
-            { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '1vs1', icon: 'fa-shield-alt' },
-            { id: 'p_j2', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Decisión', icon: 'fa-lightbulb' },
-            { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Posición', icon: 'fa-crosshairs' },
-            { id: 'p_j4', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Salida', icon: 'fa-rocket' },
-            { id: 'p_r1', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Muro', icon: 'fa-brick' },
-            { id: 'p_r2', target: 'porteros', tab: 'ret', cat: 'ret', pts: 6, label: 'MVP', icon: 'fa-crown' },
-            { id: 'p_r3', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Clave', icon: 'fa-star' },
+            { id: 'p_a2', target: 'porteros', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda Comp.', icon: 'fa-hands-helping' },
+            { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Concentración', icon: 'fa-brain' },
+            { id: 'p_a4', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
+            { id: 'p_a5', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Liderazgo', icon: 'fa-crown' },
+            { id: 'p_a6', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Comunicación', icon: 'fa-comments' },
+            { id: 'p_a7', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Personalidad', icon: 'fa-star' },
+            { id: 'p_a8', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Reac. Error', icon: 'fa-undo' },
+            { id: 'p_a9', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Mant. Concent.', icon: 'fa-stopwatch' },
+            { id: 'p_a10', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Valentía', icon: 'fa-shield-virus' },
+            // TÉCNICA - Paradas
+            { id: 'p_t1', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Bloqueo', icon: 'fa-hand-rock' },
+            { id: 'p_t2', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Reflejo', icon: 'fa-bolt' },
+            { id: 'p_t3', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Parada TOP', icon: 'fa-star' },
+            { id: 'p_t4', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Estirada Dif.', icon: 'fa-arrows-alt-h' },
+            { id: 'p_t5', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Mano Cambiada', icon: 'fa-hand-paper' },
+            { id: 'p_t6', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Doble Interv.', icon: 'fa-clone' },
+            { id: 'p_t7', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Parada 1v1', icon: 'fa-user-shield' },
+            { id: 'p_t8', target: 'porteros', tab: 'tec', cat: 'tec', pts: 5, label: 'Para Penalti', icon: 'fa-ban' },
+            { id: 'p_t9', target: 'porteros', tab: 'tec', cat: 'tec', pts: 5, label: 'Parada Decisiva', icon: 'fa-exclamation' },
+            // TÉCNICA - Pies
+            { id: 'p_t10', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Control Orient.', icon: 'fa-shoe-prints' },
+            { id: 'p_t11', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase Corto', icon: 'fa-check' },
+            { id: 'p_t12', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pase Presión', icon: 'fa-compress-arrows-alt' },
+            { id: 'p_t13', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Cambio Orient.', icon: 'fa-exchange-alt' },
+            { id: 'p_t14', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pase Vertical', icon: 'fa-arrow-up' },
+            { id: 'p_t15', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-forward' },
+            { id: 'p_t16', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Asistencia', icon: 'fa-hands-helping' },
+            // TÉCNICA - Aéreo
+            { id: 'p_t17', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Blocaje Aéreo', icon: 'fa-plane' },
+            { id: 'p_t18', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Salida Aérea', icon: 'fa-space-shuttle' },
+            { id: 'p_t19', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Despeje Aéreo', icon: 'fa-hand-sparkles' },
+            { id: 'p_t20', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Aéreo Tráfico', icon: 'fa-users' },
+            { id: 'p_t21', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Aéreo Decisivo', icon: 'fa-fighter-jet' },
+            { id: 'p_t22', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Dominio Área', icon: 'fa-vector-square' },
+            // TÉCNICA - Específica
+            { id: 'p_t23', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pierna Mala', icon: 'fa-shoe-prints' },
+            { id: 'p_t24', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Control Presión', icon: 'fa-compress' },
+            { id: 'p_t25', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Despeje Difícil', icon: 'fa-bomb' },
+            { id: 'p_t26', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Acción Consec.', icon: 'fa-link' },
+            // JUEGO - Decisiones
+            { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Buena Decisión', icon: 'fa-lightbulb' },
+            { id: 'p_j2', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Dec. Presión', icon: 'fa-brain' },
+            { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Evita Ocasión', icon: 'fa-shield-alt' },
+            { id: 'p_j4', target: 'porteros', tab: 'jue', cat: 'jue', pts: 5, label: 'Dec. Decisiva', icon: 'fa-crown' },
+            // JUEGO - Posición
+            { id: 'p_j5', target: 'porteros', tab: 'jue', cat: 'jue', pts: 1, label: 'Buena Posición', icon: 'fa-crosshairs' },
+            { id: 'p_j6', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Corr. Posición', icon: 'fa-map-marker-alt' },
+            { id: 'p_j7', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Pos. Evita Tiro', icon: 'fa-street-view' },
+            { id: 'p_j8', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Pos. Decisiva', icon: 'fa-chess-king' },
+            // JUEGO - Situaciones
+            { id: 'p_j9', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '1vs1', icon: 'fa-user-ninja' },
+            { id: 'p_j10', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: '1vs2', icon: 'fa-users' },
+            { id: 'p_j11', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Salida', icon: 'fa-door-open' },
+            { id: 'p_j12', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Salida Fuera Área', icon: 'fa-running' },
+            { id: 'p_j13', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Cobertura', icon: 'fa-umbrella' },
+            { id: 'p_j14', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Def. Profundidad', icon: 'fa-angle-double-down' },
+            { id: 'p_j15', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Segunda Jugada', icon: 'fa-redo' },
+            { id: 'p_j16', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Rechace Control', icon: 'fa-magnet' },
+            { id: 'p_j17', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Inicia Contra', icon: 'fa-fighter-jet' },
+            // JUEGO - Específicas
+            { id: 'p_j18', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Centro Lateral', icon: 'fa-arrows-alt-h' },
+            { id: 'p_j19', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Balón Espalda', icon: 'fa-level-down-alt' },
+            { id: 'p_j20', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Pase Atrás', icon: 'fa-backward' },
+            { id: 'p_j21', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Tiro Lejano', icon: 'fa-rocket' },
+            { id: 'p_j22', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Tiro Cercano', icon: 'fa-bullseye' },
+            { id: 'p_j23', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Mano a Mano', icon: 'fa-handshake' },
+            { id: 'p_j24', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Acción Tráfico', icon: 'fa-car-crash' },
+            // RETOS
+            { id: 'p_r1', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Parada Partido', icon: 'fa-star' },
+            { id: 'p_r2', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Muro', icon: 'fa-brick' },
+            { id: 'p_r3', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Dueño Área', icon: 'fa-home' },
+            { id: 'p_r4', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Reflejos TOP', icon: 'fa-bolt' },
+            { id: 'p_r5', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Port. Completo', icon: 'fa-battery-full' },
+            { id: 'p_r6', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Pase Decisivo', icon: 'fa-magic' },
+            { id: 'p_r7', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Momento Clave', icon: 'fa-key' },
+            { id: 'p_r8', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Puerta a Cero', icon: 'fa-shield-alt' },
+            { id: 'p_r9', target: 'porteros', tab: 'ret', cat: 'ret', pts: 6, label: 'MVP Portero', icon: 'fa-crown' },
+            // ERRORES
+            // Errores - Actitud
             { id: 'p_e1', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
-            { id: 'p_e2', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Mal Salida', icon: 'fa-exclamation-triangle' },
-            { id: 'p_e3', target: 'porteros', tab: 'err', cat: 'tec', pts: -2, label: 'Mal Pase', icon: 'fa-times-circle' },
-            { id: 'p_e4', target: 'porteros', tab: 'err', cat: 'tec', pts: -4, label: 'Gol Evitable', icon: 'fa-skull' },
+            { id: 'p_e2', target: 'porteros', tab: 'err', cat: 'men', pts: -1, label: 'Protesta', icon: 'fa-comment-slash' },
+            { id: 'p_e3', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Falta Concent.', icon: 'fa-brain' },
+            { id: 'p_e4', target: 'porteros', tab: 'err', cat: 'men', pts: -3, label: 'Repite Error', icon: 'fa-redo-alt' },
+            // Errores - Leves (Tec/Jue)
+            { id: 'p_e5', target: 'porteros', tab: 'err', cat: 'tec', pts: -1, label: 'Mala Entrega', icon: 'fa-paper-plane' },
+            { id: 'p_e6', target: 'porteros', tab: 'err', cat: 'tec', pts: -1, label: 'Mal Control', icon: 'fa-shoe-prints' },
+            { id: 'p_e7', target: 'porteros', tab: 'err', cat: 'tec', pts: -1, label: 'Mala Orient.', icon: 'fa-compass' },
+            { id: 'p_e8', target: 'porteros', tab: 'err', cat: 'jue', pts: -2, label: 'Mala Decisión', icon: 'fa-times-circle' },
+            // Errores - Graves (Jue/Tec)
+            { id: 'p_e9', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Error Salida', icon: 'fa-door-closed' },
+            { id: 'p_e10', target: 'porteros', tab: 'err', cat: 'tec', pts: -3, label: 'Error -> Ocasión', icon: 'fa-exclamation-triangle' },
+            { id: 'p_e11', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Mal 1vs1', icon: 'fa-user-times' },
+            { id: 'p_e12', target: 'porteros', tab: 'err', cat: 'tec', pts: -5, label: 'Error -> Gol', icon: 'fa-skull-crossbones' },
+            { id: 'p_e13', target: 'porteros', tab: 'err', cat: 'men', pts: -5, label: 'Expulsión', icon: 'fa-square' },
 
-            // --- JUGADORES DE CAMPO (Mega-Ampliación Scouting) ---
+            // --- JUGADORES DE CAMPO ---
             // 🟣 ACTITUD (tab: act, cat: men)
             { id: 'j_a1', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
             { id: 'j_a2', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
@@ -1052,7 +1128,6 @@
 
             if(!label || isNaN(pts)) return showToast("Faltan datos en el botón", true);
 
-            // Mapeo automático
             let cat = 'men';
             if(tab === 'tec') cat = 'tec';
             if(tab === 'jue' && target === 'porteros') cat = 'jue';
