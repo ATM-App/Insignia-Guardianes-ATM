@@ -73,23 +73,28 @@
 
         .fifa-card-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; perspective: 1000px; }
         
-        .fifa-card-simple { width: 270px; border-radius: 15px; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .fifa-card-simple { width: 270px; border-radius: 15px; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; }
         
-        .card-bronce { background: linear-gradient(135deg, #a67c52 0%, #8b5a2b 50%, #5c3a21 100%); border: 2px solid #d4a373; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.2); }
-        .card-plata { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #9e9e9e 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.5); }
-        .card-oro { background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.4); }
-        .card-diamante { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #005275 100%); border: 2px solid #00FFFF; box-shadow: 0 15px 35px rgba(0, 255, 255, 0.3), inset 0 0 25px rgba(0,255,255,0.5); }
-        .card-leyenda { background: linear-gradient(135deg, #111 0%, #2b003b 50%, #000 100%); border: 2px solid #FFD700; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4), inset 0 0 30px rgba(138, 43, 226, 0.6); }
+        /* Capa 0: Material de la carta */
+        .card-bronce { background: linear-gradient(135deg, #a67c52 0%, #8b5a2b 50%, #5c3a21 100%); border: 2px solid #d4a373; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .card-plata { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #9e9e9e 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .card-oro { background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%); border: 2px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .card-diamante { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #005275 100%); border: 2px solid #00FFFF; box-shadow: 0 15px 35px rgba(0, 255, 255, 0.3); }
+        .card-leyenda { background: linear-gradient(135deg, #111 0%, #2b003b 50%, #000 100%); border: 2px solid #FFD700; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4); }
         
-        .shine-effect { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 30; }
+        /* Efecto de brillo superficial */
+        .shine-effect { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 50; }
         @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
 
-        /* Fondos de carta integrados (Capa Z-0). Aumentamos la opacidad para que se vean bien */
+        /* Capa 1: Imágenes de Fondo Fusionadas (Sin afectar a la cara del portero) */
         .fondo-base { background-image: none; opacity: 1; }
-        .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 85%; background-position: center 10%; background-repeat: no-repeat; opacity: 0.55; mix-blend-mode: luminosity; }
-        .fondo-metropolitano { background-image: url('metropolitano.jpeg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.6; mix-blend-mode: luminosity; }
-        .fondo-neptuno { background-image: url('neptuno.jpg'); background-size: cover; background-position: center 20%; background-repeat: no-repeat; opacity: 0.6; mix-blend-mode: luminosity; }
-        .fondo-oblak { background-image: url('leyendas.jpg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.6; mix-blend-mode: luminosity; }
+        .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 80%; background-position: center top; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
+        .fondo-metropolitano { background-image: url('metropolitano.jpg'); background-size: cover; background-position: center 20%; background-repeat: no-repeat; opacity: 0.9; mix-blend-mode: luminosity; }
+        .fondo-neptuno { background-image: url('neptuno.jpg'); background-size: cover; background-position: center center; background-repeat: no-repeat; opacity: 0.85; mix-blend-mode: luminosity; }
+        .fondo-oblak { background-image: url('leyendas.jpg'); background-size: cover; background-position: center top; background-repeat: no-repeat; opacity: 0.8; mix-blend-mode: luminosity; }
+
+        /* Capa 2: Degradado ultrasuave para evitar el corte negro horizontal */
+        .fade-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%, rgba(10,10,10,0.8) 60%, rgba(5,5,5,1) 80%, rgba(0,0,0,1) 100%); z-index: 10; pointer-events: none; }
 
         .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
         .toast.error { border-left-color: #CB3524; }
@@ -97,7 +102,7 @@
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:999; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px);}
-        .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; max-width:350px; text-align:center; border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(15px); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-box { background:var(--bg-card); padding:30px; border-radius:20px; width:90%; text-align:center; border: 1px solid var(--card-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3); backdrop-filter: blur(15px); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .floating-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); padding: 12px 25px; border-radius: 40px; display:flex; gap:20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 90;}
@@ -107,12 +112,19 @@
         .on-fire { color: #e74c3c; filter: drop-shadow(0 0 8px #f1c40f); animation: flame 1s infinite alternate; font-size: 1.1em; margin-left:5px; }
         @keyframes flame { 0%, 100% { transform: scale(1) rotate(-5deg); } 50% { transform: scale(1.2) rotate(5deg); } }
         
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
         .icon-glow { filter: drop-shadow(0 0 15px currentColor); transform: scale(1.15); }
         .icon-inactive { color: #9ca3af; filter: grayscale(100%); }
+        
+        /* Efecto de Iluminación en Recompensas */
+        .recompensa-unlocked { border-color: #FFD700 !important; background-color: rgba(255, 215, 0, 0.05) !important; }
+        .recompensa-unlocked .icon-box { background-color: rgba(255, 215, 0, 0.2) !important; color: #FFD700 !important; border: none !important; }
+        
+        /* Miniaturas de vestuario nítidas */
+        .vestuario-mini { background-position: center center; background-size: cover; background-repeat: no-repeat; opacity: 1 !important; mix-blend-mode: normal !important; }
     </style>
 </head>
 <body data-theme="dark" class="antialiased selection:bg-atmRed selection:text-white">
@@ -120,7 +132,7 @@
     <div id="toast-container"></div>
 
     <div id="modal-confirm" class="modal-overlay" style="display:none;">
-        <div class="modal-box" style="border-color:#CB3524;">
+        <div class="modal-box max-w-sm" style="border-color:#CB3524;">
             <i class="fas fa-exclamation-triangle text-atmRed text-4xl mb-4"></i>
             <h3 class="text-xl font-black mb-2 text-[var(--text-main)]">¿Estás seguro?</h3>
             <p class="text-sm text-[var(--text-sec)] mb-5">Esta acción no se puede deshacer.</p>
@@ -131,35 +143,72 @@
         </div>
     </div>
 
-    <!-- Modal Recompensas Config (EDP) -->
     <div id="modal-recompensas-config" class="modal-overlay" style="display:none;">
-        <div class="modal-box w-full max-w-md p-6">
-            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gift text-gold mr-2"></i> Configurar Recompensas</h3>
-            <p class="text-xs text-[var(--text-sec)] italic mb-5">Añade, edita o elimina recompensas para tu equipo. Se ordenarán por puntos automáticamente.</p>
+        <div class="modal-box w-full max-w-md p-6 max-h-[90vh] flex flex-col">
+            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gift text-gold mr-2"></i> Mis Recompensas</h3>
+            <p class="text-xs text-[var(--text-sec)] italic mb-5">Añade, edita o elimina recompensas para tu equipo. Se ordenarán automáticamente por puntos.</p>
             
-            <div id="dynamic-rewards-container" class="space-y-3 text-left max-h-[40vh] overflow-y-auto custom-scrollbar pr-2 mb-4">
+            <div id="dynamic-rewards-container" class="flex-1 text-left overflow-y-auto custom-scrollbar pr-2 mb-4 space-y-3">
                 <!-- Rellenado con JS -->
             </div>
             
-            <button class="w-full bg-[var(--input-bg)] border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)] font-bold py-2 rounded-xl mb-5 hover:border-gold hover:text-gold transition-colors" onclick="window.addRecompensaConfig()">
-                <i class="fas fa-plus"></i> Añadir Recompensa
+            <button class="w-full bg-[var(--input-bg)] border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)] font-bold py-3 rounded-xl mb-5 hover:border-gold hover:text-gold transition-colors" onclick="window.addRecompensaConfig()">
+                <i class="fas fa-plus"></i> Añadir Nueva Recompensa
             </button>
 
-            <div class="flex gap-2">
+            <div class="flex gap-2 mt-auto">
                 <button class="flex-1 input-glass py-3 rounded-xl font-bold" onclick="document.getElementById('modal-recompensas-config').style.display='none'">CANCELAR</button>
-                <button class="flex-1 bg-gradient-to-r from-gold to-yellow-600 text-black py-3 rounded-xl font-black shadow-lg" onclick="window.guardarRecompensasEDP()">GUARDAR</button>
+                <button class="flex-1 bg-gradient-to-r from-gold to-yellow-600 text-black py-3 rounded-xl font-black shadow-lg" onclick="window.guardarRecompensasEDP()">GUARDAR TODO</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Compartir Ficha (QR Gen real) -->
+    <div id="modal-botones-config" class="modal-overlay" style="display:none;">
+        <div class="modal-box w-full max-w-lg p-6 max-h-[90vh] flex flex-col">
+            <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-gamepad text-[#3498db] mr-2"></i> Motor de Evaluación</h3>
+            <p class="text-xs text-[var(--text-sec)] italic mb-4">Crea botones personalizados para evaluar a tus deportistas según tu propio modelo de juego.</p>
+
+            <div class="bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--card-border)] mb-4 flex gap-2">
+                <select id="new-btn-target" class="bg-[var(--input-bg)] border border-[var(--input-border)] text-xs p-2 rounded text-[var(--text-main)] w-1/3 outline-none">
+                    <option value="porteros">PORTEROS</option>
+                    <option value="jugadores">JUGADORES</option>
+                </select>
+                <select id="new-btn-tab" class="bg-[var(--input-bg)] border border-[var(--input-border)] text-xs p-2 rounded text-[var(--text-main)] w-2/3 outline-none font-bold">
+                    <option value="act" class="text-[#9b59b6]">🧠 Actitud y Psicología</option>
+                    <option value="tec" class="text-[#3498db]">⚽ Técnica y Ejecución</option>
+                    <option value="jue" class="text-[#2ecc71]">🟢 Juego y Decisiones</option>
+                    <option value="ret" class="text-[#f1c40f]">🏆 Retos y Logros</option>
+                    <option value="fis" class="text-[#e67e22]">💪 Físico (Solo Jug.)</option>
+                    <option value="tac" class="text-[#e74c3c]">♟️ Táctica (Solo Jug.)</option>
+                    <option value="err" class="text-red-500">🔴 Errores / Penalizaciones</option>
+                </select>
+            </div>
+            
+            <div class="flex gap-2 mb-4 relative">
+                <input type="text" id="new-btn-label" placeholder="Nombre Acción (Ej: Pase Vertical)" class="flex-1 bg-[var(--input-bg)] border-2 border-[var(--input-border)] p-3 rounded-xl text-sm font-bold text-[var(--text-main)] focus:border-[#3498db] outline-none">
+                <input type="number" id="new-btn-pts" placeholder="Pts (Ej: 3 o -2)" class="w-24 bg-[var(--input-bg)] border-2 border-[var(--input-border)] p-3 rounded-xl text-sm font-black text-center text-[var(--text-main)] focus:border-[#3498db] outline-none">
+                <button onclick="window.addBotonEvalConfig()" class="bg-gradient-to-r from-[#3498db] to-blue-600 text-white w-12 rounded-xl font-black hover:scale-105 transition-transform shadow-md flex items-center justify-center"><i class="fas fa-plus"></i></button>
+            </div>
+
+            <div class="text-left text-xs font-black uppercase text-[var(--text-sec)] mb-2 tracking-widest border-b border-[var(--card-border)] pb-1">TUS BOTONES ACTUALES</div>
+            <div id="dynamic-eval-btns-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-2 mb-4 text-left">
+                <!-- Rellenado con JS -->
+            </div>
+
+            <div class="flex gap-2 mt-auto">
+                <button class="flex-1 input-glass py-3 rounded-xl font-bold" onclick="document.getElementById('modal-botones-config').style.display='none'">CERRAR</button>
+                <button class="flex-[2] bg-gradient-to-r from-[#3498db] to-blue-600 text-white py-3 rounded-xl font-black shadow-lg hover:scale-[1.02] transition-transform" onclick="window.guardarBotonesEval()">GUARDAR MI PANEL</button>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-qr" class="modal-overlay" style="display:none;">
-        <div class="modal-box">
+        <div class="modal-box max-w-sm">
             <h3 class="text-xl font-black mb-4 text-[var(--text-main)]"><i class="fas fa-qrcode"></i> TU FICHA EN VIVO</h3>
             <div class="bg-white p-4 rounded-2xl inline-block mb-4 border-4 border-atmRed shadow-xl shadow-atmRed/30">
                 <img id="qr-image" src="" alt="QR" class="w-48 h-48 block">
             </div>
-            <p class="text-sm text-[var(--text-sec)] mb-5">Cualquier compañero puede escanear tu código para ver tu carta y puntuación.</p>
+            <p class="text-sm text-[var(--text-sec)] mb-5">Escanea este código para entrar al Modo Visitante (Solo Lectura).</p>
             <div class="flex flex-col gap-2">
                 <button id="btn-qr-share" class="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform" onclick="window.compartirNativo()"><i class="fab fa-whatsapp text-xl"></i> Enviar enlace</button>
                 <button class="input-glass py-3 rounded-xl font-bold hover:bg-white/5" onclick="document.getElementById('modal-qr').style.display='none'">CERRAR</button>
@@ -167,7 +216,6 @@
         </div>
     </div>
 
-    <!-- Modal Historial Completo -->
     <div id="modal-history" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md max-h-[80vh] flex flex-col p-6">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase" id="history-modal-title">HISTORIAL</h3>
@@ -188,10 +236,10 @@
             <div id="home-role-selection" class="flex-1 flex flex-col justify-center animate-[popIn_0.3s_ease]">
                 <p class="text-xs text-gray-400 font-bold tracking-widest uppercase mb-4 text-center">Selecciona tu perfil</p>
                 <div class="space-y-3">
-                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('portero')">
+                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('porteros')">
                         <i class="fas fa-mitten text-xl text-atmRed w-6 text-center group-hover:scale-110 transition-transform"></i> PORTERO
                     </button>
-                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('jugador')">
+                    <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('jugadores')">
                         <i class="fas fa-running text-xl text-atmRed w-6 text-center group-hover:scale-110 transition-transform"></i> JUGADOR DE CAMPO
                     </button>
                     <button class="w-full bg-white/5 border border-white/10 text-white p-4 rounded-xl font-extrabold text-sm text-left flex items-center gap-4 hover:bg-atmRed/10 hover:border-atmRed transition-all duration-300 group" onclick="window.prepararLogin('edp')">
@@ -329,7 +377,10 @@
             <div class="text-center mb-6 mt-4">
                 <h2 class="font-black text-2xl uppercase">Panel Técnico</h2>
                 <p class="text-sm text-[var(--text-sec)] font-bold">Evaluación en tiempo real</p>
-                <button onclick="window.abrirConfigRecompensas()" class="mt-3 bg-[var(--input-bg)] border border-gold text-gold px-4 py-2 rounded-full text-xs font-black hover:bg-gold/10 transition-colors shadow-sm"><i class="fas fa-gift mr-1"></i> GESTIONAR RECOMPENSAS</button>
+                <div class="flex gap-2 mt-4 justify-center">
+                    <button onclick="window.abrirConfigRecompensas()" class="bg-[var(--input-bg)] border border-gold text-gold px-4 py-2 rounded-full text-xs font-black hover:bg-gold/10 transition-colors shadow-sm"><i class="fas fa-gift mr-1"></i> RECOMPENSAS</button>
+                    <button onclick="window.abrirConfigBotones()" class="bg-[var(--input-bg)] border border-[#3498db] text-[#3498db] px-4 py-2 rounded-full text-xs font-black hover:bg-blue-500/10 transition-colors shadow-sm"><i class="fas fa-gamepad mr-1"></i> BOTONES</button>
+                </div>
             </div>
 
             <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 mb-5 border border-white/5">
@@ -347,24 +398,20 @@
         </section>
 
         <section id="view-dashboard" class="hidden">
+            <!-- Carta FIFA -->
             <div class="fifa-card-container mb-6 mt-2">
-                <!-- ESTRUCTURA DE CAPAS DE LA CARTA FIFA CORREGIDA -->
-                <div class="fifa-card-simple card-bronce overflow-hidden" id="fifa-card-bg">
+                <div class="fifa-card-simple card-bronce" id="fifa-card-bg">
                     
-                    <!-- EFECTO BRILLO SOBRE TODO -->
-                    <div class="absolute inset-0 z-30 pointer-events-none rounded-[15px] overflow-hidden">
+                    <div class="absolute inset-0 z-50 pointer-events-none rounded-[15px] overflow-hidden">
                         <div class="shine-effect"></div>
                     </div>
 
-                    <!-- CAPA 0: FONDO DE IMAGEN (Estadios, Escudos - Capa Trasera Aislada) -->
+                    <!-- BACKGROUND LAYERS -->
                     <div id="card-bg-layer" class="absolute inset-0 z-0 fondo-base transition-all duration-500 rounded-[15px]"></div>
-                    
-                    <!-- CAPA 1: DEGRADADO NEGRO (Se funde suavemente sobre el estadio) -->
-                    <div class="absolute inset-x-0 bottom-0 h-[65%] z-10 bg-gradient-to-t from-[#111] via-[#111]/90 to-transparent rounded-b-[15px]"></div>
+                    <div class="fade-mask rounded-[15px]"></div>
 
-                    <!-- CAPA 2: CONTENIDO REAL DE LA TARJETA (Foto y Stats por delante de todo) -->
+                    <!-- CARD CONTENT (Capa Superior Aislada) -->
                     <div class="relative z-20 flex flex-col h-full w-full">
-                        <!-- HEADER (Puntuación y Escudo) -->
                         <div class="flex p-4 items-start w-full">
                             <div class="flex-1">
                                 <div class="text-[3.2rem] font-black leading-none drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)] text-white" id="fifa-rating">60</div>
@@ -373,13 +420,11 @@
                             <img src="logo.png" class="w-12 drop-shadow-md" onerror="this.style.display='none'">
                         </div>
                         
-                        <!-- FOTO DEL DEPORTISTA (Isolada, nunca tapada por el estadio) -->
-                        <div class="h-56 w-full flex justify-center items-end -mt-16 pt-6">
-                            <img id="card-foto" class="max-h-full max-w-[95%] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] object-bottom" src="" onerror="this.style.display='none'">
+                        <div class="h-56 w-full flex justify-center items-end -mt-10 pt-2 pointer-events-none">
+                            <img id="card-foto" class="max-h-full max-w-[95%] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] object-bottom pointer-events-auto" src="" onerror="this.style.display='none'">
                         </div>
                         
-                        <!-- ESTADÍSTICAS (Sobre fondo negro) -->
-                        <div class="p-4 text-center pb-6 border-t border-white/10" id="card-bottom-bar">
+                        <div class="p-4 text-center pb-6 z-20" id="card-bottom-bar">
                             <div class="font-black text-2xl uppercase mb-3 tracking-wide flex items-center justify-center gap-2 text-white drop-shadow-lg" id="dash-card-nombre">NOMBRE</div>
                             <div class="grid grid-cols-2 gap-2 font-bold text-sm text-white/90">
                                 <div class="flex justify-between px-2"><span class="font-black text-white" id="stat-tec">60</span> TEC</div>
@@ -390,18 +435,18 @@
                         </div>
                     </div>
                 </div>
-                <!-- FIN ESTRUCTURA DE LA CARTA -->
                 
                 <button id="btn-share-main" class="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white py-2.5 px-6 rounded-full font-extrabold mt-5 flex items-center gap-2 shadow-[0_5px_15px_rgba(37,211,102,0.4)] hover:scale-105 transition-transform" onclick="window.compartirFicha()">
                     <i class="fas fa-qrcode text-lg"></i> Compartir mi Ficha
                 </button>
             </div>
 
-            <div class="bg-atmRed/10 p-5 rounded-2xl border-l-4 border-atmRed border-y border-r border-atmRed/20 shadow-sm mb-6 text-center">
+            <div class="bg-atmRed/10 p-5 rounded-2xl border-l-4 border-atmRed border-y border-r border-atmRed/20 shadow-sm mb-6 text-center" id="panel-mensaje-mister">
                 <div class="text-atmRed font-black text-xs uppercase mb-2 tracking-widest"><i class="fas fa-comment-dots mr-1"></i> Mensaje del Míster</div>
                 <div id="dash-feedback-content" class="italic font-bold text-lg leading-snug">...</div>
             </div>
 
+            <!-- Progreso Puntos -->
             <div class="glass-card rounded-2xl p-5 mb-6">
                  <div class="flex justify-between items-center mb-4">
                     <h3 id="level-title" class="text-lg font-black tracking-wide text-lvl1">Nivel: Inicio</h3>
@@ -420,7 +465,7 @@
                 </div>
             </div>
 
-            <!-- Gráficos -->
+            <!-- Gráficos Analíticos -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="glass-card rounded-2xl p-5">
                     <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Academia)</span></h3>
@@ -429,6 +474,14 @@
                 <div class="glass-card rounded-2xl p-5">
                     <h3 class="font-black text-sm uppercase tracking-widest mb-4">EVOLUCIÓN PUNTOS</h3>
                     <div class="relative h-56 w-full"><canvas id="evoChart"></canvas></div>
+                </div>
+            </div>
+
+            <div id="advanced-stats-container" class="glass-card rounded-2xl p-5 mb-6">
+                <h3 class="font-black text-lg uppercase tracking-wide mb-1">📈 Desglose Analítico</h3>
+                <p class="text-xs text-[var(--text-sec)] italic mb-4">Métricas de rendimiento detalladas generadas por el Cuerpo Técnico.</p>
+                <div class="grid grid-cols-2 gap-3" id="stats-breakdown-list">
+                    <!-- Rellenado por JS -->
                 </div>
             </div>
 
@@ -473,6 +526,7 @@
         </section>
     </main>
 
+    <!-- Barra Navegación Flotante -->
     <nav class="floating-nav" id="nav-bottom" style="display:none;">
         <button onclick="window.navApp('dashboard')" class="active" id="nav-btn-home">
             <i class="fas fa-user text-2xl" id="nav-home-icon"></i> 
@@ -517,10 +571,56 @@
         let targetDeleteId = null;
         let targetDeleteType = null;
         let tempRewards = []; 
+        let tempBotones = []; // Almacena botones durante la edición
         
         let isReadOnlyMode = false;
         let readOnlyId = null;
         let readOnlyTipoPlural = null;
+
+        const DEFAULT_EVAL_BUTTONS = [
+            // PORTEROS
+            { id: 'p_a1', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
+            { id: 'p_a2', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Atención', icon: 'fa-brain' },
+            { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Carácter', icon: 'fa-fire' },
+            { id: 'p_a4', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Reacción', icon: 'fa-undo' },
+            
+            { id: 'p_t1', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Blocaje', icon: 'fa-hand-rock' },
+            { id: 'p_t2', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Reflejos', icon: 'fa-bolt' },
+            { id: 'p_t3', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Aéreo', icon: 'fa-plane' },
+            { id: 'p_t4', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pies', icon: 'fa-shoe-prints' },
+            { id: 'p_t5', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-forward' },
+            
+            { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '1vs1', icon: 'fa-shield-alt' },
+            { id: 'p_j2', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Decisión', icon: 'fa-lightbulb' },
+            { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Posición', icon: 'fa-crosshairs' },
+            { id: 'p_j4', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Salida', icon: 'fa-rocket' },
+            
+            { id: 'p_r1', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Muro', icon: 'fa-brick' },
+            { id: 'p_r2', target: 'porteros', tab: 'ret', cat: 'ret', pts: 6, label: 'MVP', icon: 'fa-crown' },
+            { id: 'p_r3', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Clave', icon: 'fa-star' },
+            
+            { id: 'p_e1', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
+            { id: 'p_e2', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Mal Salida', icon: 'fa-exclamation-triangle' },
+            { id: 'p_e3', target: 'porteros', tab: 'err', cat: 'tec', pts: -2, label: 'Mal Pase', icon: 'fa-times-circle' },
+            { id: 'p_e4', target: 'porteros', tab: 'err', cat: 'tec', pts: -4, label: 'Gol Evitable', icon: 'fa-skull' },
+
+            // JUGADORES
+            { id: 'j_a1', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
+            { id: 'j_a2', target: 'jugadores', tab: 'act', cat: 'men', pts: 1, label: 'Equipo', icon: 'fa-users' },
+            
+            { id: 'j_t1', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase', icon: 'fa-exchange-alt' },
+            { id: 'j_t2', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Tiro', icon: 'fa-bullseye' },
+            { id: 'j_t3', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Regate', icon: 'fa-shoe-prints' },
+            
+            { id: 'j_f1', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Duelo', icon: 'fa-fist-raised' },
+            { id: 'j_f2', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 1, label: 'Resist.', icon: 'fa-heartbeat' },
+            
+            { id: 'j_c1', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Desmarque', icon: 'fa-running' },
+            { id: 'j_c2', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 1, label: 'Cobertura', icon: 'fa-shield-alt' },
+            
+            { id: 'j_e1', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
+            { id: 'j_e2', target: 'jugadores', tab: 'err', cat: 'tec', pts: -2, label: 'Mal Pase', icon: 'fa-times-circle' }
+        ];
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
@@ -532,8 +632,8 @@
                 osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.5);
             } else if (type === 'fail') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.4); gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
             }
         }
 
@@ -566,6 +666,7 @@
                 const btnShare = document.getElementById('btn-share-main'); if(btnShare) btnShare.style.display = 'none';
                 const navBottom = document.getElementById('nav-bottom'); if(navBottom) navBottom.style.display = 'none';
                 const sectionVestuario = document.getElementById('section-vestuario'); if(sectionVestuario) sectionVestuario.style.opacity = '0.5';
+                const panelMensaje = document.getElementById('panel-mensaje-mister'); if(panelMensaje) panelMensaje.style.display = 'none';
             }
 
             signInAnonymously(auth).catch((e) => { showToast("Atención: Dominio no autorizado en Firebase", true); });
@@ -626,8 +727,8 @@
                 setTimeout(() => {
                     if (roleType === 'admin') { window.navTo('view-admin'); }
                     else if (roleType === 'edp') { currentUser = edps.find(e => e.id == session.id); if (currentUser) window.navTo('view-edp'); } 
-                    else if (roleType === 'portero') { currentUser = porteros.find(p => p.id == session.id); if (currentUser) window.navTo('view-dashboard'); }
-                    else if (roleType === 'jugador') { currentUser = jugadores.find(j => j.id == session.id); if (currentUser) window.navTo('view-dashboard'); }
+                    else if (roleType === 'portero' || roleType === 'porteros') { currentUser = porteros.find(p => p.id == session.id); if (currentUser) window.navTo('view-dashboard'); }
+                    else if (roleType === 'jugador' || roleType === 'jugadores') { currentUser = jugadores.find(j => j.id == session.id); if (currentUser) window.navTo('view-dashboard'); }
                 }, 500);
             }
         }
@@ -638,7 +739,7 @@
             document.getElementById('home-login-form').style.display = 'flex';
             document.getElementById('home-pass').value = ''; 
             
-            const titleMap = { 'portero': 'ACCESO PORTERO', 'jugador': 'ACCESO JUGADOR', 'edp': 'ACCESO ENTRENADOR', 'admin': 'ADMINISTRADOR' };
+            const titleMap = { 'porteros': 'ACCESO PORTERO', 'jugadores': 'ACCESO JUGADOR', 'edp': 'ACCESO ENTRENADOR', 'admin': 'ADMINISTRADOR' };
             document.getElementById('login-role-title').innerHTML = `<i class="fas fa-lock"></i> ${titleMap[role]}`;
             setTimeout(() => document.getElementById('home-pass').focus(), 100); 
         }
@@ -657,8 +758,8 @@
 
             if(passClean === 'atleti2024') { roleType = 'admin'; success = true; sessionData = { role: 'admin', id: 'admin' }; }
             else if(roleType === 'edp') { const found = edps.find(e => e.clave && String(e.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'edp', id: found.id }; } }
-            else if(roleType === 'portero') { const found = porteros.find(p => p.clave && String(p.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'portero', id: found.id }; } }
-            else if(roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugador', id: found.id }; } }
+            else if(roleType === 'porteros' || roleType === 'portero') { const found = porteros.find(p => p.clave && String(p.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'porteros', id: found.id }; } }
+            else if(roleType === 'jugadores' || roleType === 'jugador') { const found = jugadores.find(j => j.clave && String(j.clave).trim().toLowerCase() === passClean); if (found) { currentUser = found; success = true; sessionData = { role: 'jugadores', id: found.id }; } }
 
             if(success) { 
                 document.getElementById('view-home').style.display = 'none';
@@ -729,14 +830,14 @@
 
             const session = JSON.parse(localStorage.getItem('guardianes_session'));
             if (!currentUser && session && session.role !== 'admin') {
-                const arr = session.role === 'portero' ? porteros : (session.role === 'jugador' ? jugadores : edps);
+                const arr = (session.role === 'porteros' || session.role === 'portero') ? porteros : ((session.role === 'jugadores' || session.role === 'jugador') ? jugadores : edps);
                 currentUser = arr.find(x => x.id == session.id);
             }
 
             if(roleType === 'admin') { renderAdminLists(); cargarSelectEDP(); }
             else if(roleType === 'edp' && currentUser) { renderEvaluacionList(); }
-            else if((roleType === 'portero' || roleType === 'jugador') && currentUser) { 
-                const tipoPlural = roleType === 'portero' ? 'porteros' : 'jugadores';
+            else if((roleType === 'porteros' || roleType === 'jugadores' || roleType === 'portero' || roleType === 'jugador') && currentUser) { 
+                const tipoPlural = (roleType === 'porteros' || roleType === 'portero') ? 'porteros' : 'jugadores';
                 const arr = tipoPlural === 'porteros' ? porteros : jugadores;
                 const updatedUser = arr.find(x => x.id == currentUser.id); 
                 
@@ -864,6 +965,96 @@
 
         function cargarSelectEDP() { const s = document.getElementById('reg-entrenador-select'); if(s) s.innerHTML = '<option value="">Asignar EDP...</option>' + edps.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join(''); }
 
+        window.abrirConfigBotones = function() {
+            if(!currentUser || roleType !== 'edp') return;
+            tempBotones = currentUser.botonesEval ? JSON.parse(JSON.stringify(currentUser.botonesEval)) : JSON.parse(JSON.stringify(DEFAULT_EVAL_BUTTONS));
+            window.renderBotonesConfig();
+            document.getElementById('modal-botones-config').style.display = 'flex';
+        }
+
+        window.renderBotonesConfig = function() {
+            const container = document.getElementById('dynamic-eval-btns-list');
+            const target = document.getElementById('new-btn-target').value;
+            const tab = document.getElementById('new-btn-tab').value;
+            
+            const list = tempBotones.filter(b => b.target === target && b.tab === tab);
+            
+            if(list.length === 0) {
+                container.innerHTML = `<p class="text-xs text-[var(--text-sec)] italic text-center py-4">No hay botones creados para esta categoría.</p>`;
+                return;
+            }
+
+            container.innerHTML = list.map(b => {
+                const colorHex = b.tab === 'err' ? '#ef4444' : (b.tab==='act' ? '#9b59b6' : b.tab==='tec' ? '#3498db' : b.tab==='jue' ? '#2ecc71' : b.tab==='ret' ? '#f1c40f' : b.tab==='fis' ? '#e67e22' : '#e74c3c');
+                return `
+                <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-2 rounded-xl flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-black/5" style="color:${colorHex}"><i class="fas ${b.icon}"></i></div>
+                        <div>
+                            <div class="font-bold text-sm text-[var(--text-main)]">${b.label}</div>
+                            <div class="text-[0.6rem] font-black uppercase" style="color:${colorHex}">${b.pts > 0 ? '+'+b.pts : b.pts} Puntos</div>
+                        </div>
+                    </div>
+                    <button onclick="window.removeBotonEvalConfig('${b.id}')" class="text-red-500 hover:bg-red-500/10 w-8 h-8 rounded-lg transition-colors"><i class="fas fa-trash"></i></button>
+                </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('new-btn-target').addEventListener('change', () => window.renderBotonesConfig());
+        document.getElementById('new-btn-tab').addEventListener('change', () => window.renderBotonesConfig());
+
+        window.addBotonEvalConfig = function() {
+            const target = document.getElementById('new-btn-target').value;
+            const tab = document.getElementById('new-btn-tab').value;
+            const label = document.getElementById('new-btn-label').value.trim();
+            const pts = parseInt(document.getElementById('new-btn-pts').value);
+
+            if(!label || isNaN(pts)) return showToast("Faltan datos en el botón", true);
+
+            // Mapeo automático de categorías estadísticas
+            let cat = 'men';
+            if(tab === 'tec') cat = 'tec';
+            if(tab === 'jue') cat = 'jue';
+            if(tab === 'ret') cat = 'ret';
+            if(tab === 'fis') cat = 'fis';
+            if(tab === 'tac') cat = 'tac';
+            if(tab === 'err') { cat = 'men'; } // Por defecto los errores restan en men (actitud) si no se complica.
+
+            // Mapeo automático de iconos chulos
+            let icon = 'fa-bolt';
+            if(tab === 'tec') icon = target === 'porteros' ? 'fa-hand-rock' : 'fa-futbol';
+            if(tab === 'jue') icon = 'fa-brain';
+            if(tab === 'ret') icon = 'fa-star';
+            if(tab === 'fis') icon = 'fa-dumbbell';
+            if(tab === 'tac') icon = 'fa-chess-knight';
+            if(tab === 'err') icon = 'fa-times-circle';
+
+            const newBtn = { id: 'btn_' + Date.now(), target, tab, cat, pts, label, icon };
+            tempBotones.push(newBtn);
+
+            document.getElementById('new-btn-label').value = '';
+            document.getElementById('new-btn-pts').value = '';
+            
+            window.renderBotonesConfig();
+            showToast("Botón añadido");
+        }
+
+        window.removeBotonEvalConfig = function(id) {
+            tempBotones = tempBotones.filter(b => b.id !== id);
+            window.renderBotonesConfig();
+        }
+
+        window.guardarBotonesEval = function() {
+            if(!currentUser || roleType !== 'edp') return;
+            update(ref(db, `edps/${currentUser.id}`), { botonesEval: tempBotones }).then(() => {
+                showToast("Panel de Botones Guardado");
+                document.getElementById('modal-botones-config').style.display = 'none';
+                currentUser.botonesEval = tempBotones;
+                renderEvaluacionList(); // Refrescar el panel del entrenador
+            }).catch(e => showToast("Error al guardar", true));
+        }
+
         window.abrirConfigRecompensas = function() {
             if(!currentUser || roleType !== 'edp') return;
             const r = currentUser.recompensas || [
@@ -883,13 +1074,14 @@
                 return;
             }
             container.innerHTML = tempRewards.map((rec, i) => `
-                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)] relative shadow-sm">
+                <div class="bg-[var(--input-bg)] p-3 rounded-xl border border-[var(--input-border)] relative shadow-sm transition-all hover:border-gold">
                     <button class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors" onclick="window.removeRecompensaConfig(${i})"><i class="fas fa-times"></i></button>
-                    <label class="block text-xs font-bold text-[var(--text-sec)] mb-1">Recompensa ${i+1}</label>
-                    <input type="text" id="rec-title-${i}" value="${rec.title}" placeholder="Ej: Ser Capitán" class="w-[85%] bg-transparent outline-none font-bold text-[var(--text-main)] mb-2 border-b border-[var(--input-border)] focus:border-gold">
+                    <label class="block text-xs font-black text-[var(--text-sec)] mb-2 tracking-wide uppercase">Recompensa ${i+1}</label>
+                    <input type="text" id="rec-title-${i}" value="${rec.title}" placeholder="Ej: Ser Capitán" class="w-[85%] bg-transparent outline-none font-bold text-sm text-[var(--text-main)] mb-3 border-b border-[var(--input-border)] focus:border-gold pb-1 transition-colors">
                     <div class="flex items-center gap-2">
-                        <i class="fas fa-coins text-gold"></i>
-                        <input type="number" id="rec-pts-${i}" value="${rec.req}" placeholder="Puntos" class="w-24 bg-transparent border border-[var(--input-border)] rounded px-2 py-1 text-sm text-[var(--text-main)] outline-none focus:border-gold">
+                        <div class="bg-yellow-500/20 text-gold w-6 h-6 rounded flex items-center justify-center"><i class="fas fa-coins text-xs"></i></div>
+                        <input type="number" id="rec-pts-${i}" value="${rec.req}" placeholder="Puntos" class="w-24 bg-transparent border border-[var(--input-border)] rounded-lg px-3 py-1.5 text-sm font-black text-[var(--text-main)] outline-none focus:border-gold transition-colors">
+                        <span class="text-xs text-[var(--text-sec)] font-bold">PTS</span>
                     </div>
                 </div>
             `).join('');
@@ -944,6 +1136,35 @@
             renderEvaluacionList();
         }
 
+        window.switchEvalTab = function(btn, targetId) {
+            const container = btn.closest('.hidden') || btn.closest('.bg-black\\/10'); 
+            if(!container) return;
+
+            const allContents = container.querySelectorAll('.eval-tab-content');
+            allContents.forEach(c => { c.classList.add('hidden'); c.classList.remove('flex'); });
+
+            const allBtns = btn.parentElement.querySelectorAll('button');
+            allBtns.forEach(b => {
+                b.className = "px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100";
+            });
+
+            const target = document.getElementById(targetId);
+            if(target) {
+                target.classList.remove('hidden');
+                target.classList.add('flex');
+            }
+
+            let colorClass = "text-[#9b59b6] bg-[#9b59b6]/20 border-[#9b59b6]/50"; 
+            if(targetId.includes('tec')) colorClass = "text-[#3498db] bg-[#3498db]/20 border-[#3498db]/50";
+            if(targetId.includes('jue')) colorClass = "text-[#2ecc71] bg-[#2ecc71]/20 border-[#2ecc71]/50";
+            if(targetId.includes('fis')) colorClass = "text-[#e67e22] bg-[#e67e22]/20 border-[#e67e22]/50";
+            if(targetId.includes('tac')) colorClass = "text-[#e74c3c] bg-[#e74c3c]/20 border-[#e74c3c]/50";
+            if(targetId.includes('ret')) colorClass = "text-[#f1c40f] bg-[#f1c40f]/20 border-[#f1c40f]/50";
+            if(targetId.includes('err')) colorClass = "text-red-500 bg-red-500/20 border-red-500/50";
+
+            btn.className = `px-3 py-1.5 rounded-lg text-xs font-black whitespace-nowrap transition-all ${colorClass} opacity-100`;
+        }
+
         window.filtrarListasEDP = function() {
             const q = document.getElementById('search-edp').value.toLowerCase();
             document.querySelectorAll('.eval-card').forEach(c => { c.style.display = c.getAttribute('data-name').includes(q) ? 'block' : 'none'; });
@@ -967,57 +1188,65 @@
         function isRacha(p) { return p.historial && p.historial.length >= 3 && p.historial[0].puntos>0 && p.historial[1].puntos>0 && p.historial[2].puntos>0; }
         function getColor(cat) { const c = {men:'#9b59b6', tec:'#3498db', jue:'#2ecc71', ret:'#f1c40f', fis:'#e67e22', tac:'#e74c3c'}; return c[cat]||'#fff'; }
 
+        function getBtnHTML(botones, target, tab, pId, tipo) {
+            const list = botones.filter(b => b.target === target && b.tab === tab);
+            if(list.length === 0) return `<div class="w-full text-center text-xs text-[var(--text-sec)] italic py-2">No hay botones creados en esta pestaña.</div>`;
+            
+            return list.map(b => {
+                const isErr = b.tab === 'err';
+                let colorHex = '#fff';
+                if(b.tab==='act') colorHex='#9b59b6'; if(b.tab==='tec') colorHex='#3498db'; if(b.tab==='jue') colorHex='#2ecc71';
+                if(b.tab==='ret') colorHex='#f1c40f'; if(b.tab==='fis') colorHex='#e67e22'; if(b.tab==='tac') colorHex='#e74c3c';
+                if(b.tab==='err') colorHex='#ef4444';
+
+                const bgClass = isErr ? 'bg-red-900/10 border-red-500/30' : 'bg-[var(--input-bg)] border-[var(--input-border)]';
+                const hoverStyle = `onmouseover="this.style.borderColor='${colorHex}'; ${isErr ? "this.style.backgroundColor='rgba(239, 68, 68, 0.1)';" : ""}" onmouseout="this.style.borderColor=''; ${isErr ? "this.style.backgroundColor='';" : ""}"`;
+
+                return `<button class="${bgClass} text-[var(--text-main)] w-[30%] py-2 rounded-xl flex flex-col items-center transition-colors shadow-sm border" ${hoverStyle} onclick="window.sumar(${pId}, ${b.pts}, '${b.cat}', '${b.label}', '${b.icon}', '${tipo}')">
+                    <i class="fas ${b.icon} text-lg mb-1" style="color:${colorHex}"></i>
+                    <span class="font-black" style="color:${isErr ? colorHex : 'inherit'}">${b.pts > 0 ? '+'+b.pts : b.pts}</span>
+                    <span class="text-[0.55rem] font-bold text-center leading-tight mt-1">${b.label}</span>
+                </button>`;
+            }).join('');
+        }
+
         function evalCardHTML(p, tipo) {
             let botonesHTML = '';
             const posBadge = p.posicion ? p.posicion : (tipo === 'porteros' ? 'POR' : 'JUG');
+            
+            const misBotones = currentUser.botonesEval || DEFAULT_EVAL_BUTTONS;
 
             if(tipo === 'porteros') {
                 botonesHTML = `
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#9b59b6] mb-2 mt-4 text-center"><i class="fas fa-brain"></i> ACTITUD</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'men', 'Esfuerzo', 'fa-bolt', 'porteros')"><i class="fas fa-bolt text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Esfuerzo</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'men', 'Ayuda', 'fa-handshake', 'porteros')"><i class="fas fa-handshake text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Ayuda</span></button>
+                    <div class="flex overflow-x-auto gap-2 pb-2 mt-4 custom-scrollbar border-b border-white/5 mb-4 px-1">
+                        <button onclick="window.switchEvalTab(this, 'tab-act-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[#9b59b6]/20 text-[#9b59b6] border border-[#9b59b6]/50 whitespace-nowrap transition-all opacity-100">🧠 ACT</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-tec-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🧤 TEC</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-jue-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🟢 JUE</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-ret-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🏆 RETOS</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-err-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🔴 ERR</button>
                     </div>
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#3498db] mb-2 text-center"><i class="fas fa-mitten"></i> TÉCNICA</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'tec', 'Blocaje', 'fa-hand-rock', 'porteros')"><i class="fas fa-hand-rock text-[#3498db] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Blocaje</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'tec', 'Reflejo', 'fa-bolt', 'porteros')"><i class="fas fa-bolt text-[#3498db] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Reflejo</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 3, 'tec', 'TOP', 'fa-star', 'porteros')"><i class="fas fa-star text-[#3498db] text-xl mb-1"></i><span class="font-black">+3</span><span class="text-[0.6rem] font-bold">TOP</span></button>
-                    </div>
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#2ecc71] mb-2 text-center"><i class="fas fa-running"></i> JUEGO</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#2ecc71] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'jue', '1vs1', 'fa-shield-alt', 'porteros')"><i class="fas fa-shield-alt text-[#2ecc71] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">1vs1</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#2ecc71] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'jue', 'Salida', 'fa-rocket', 'porteros')"><i class="fas fa-rocket text-[#2ecc71] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Salida</span></button>
-                    </div>
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#f1c40f] mb-2 text-center"><i class="fas fa-trophy"></i> RETOS</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#f1c40f] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 4, 'ret', 'Reto', 'fa-check-circle', 'porteros')"><i class="fas fa-check-circle text-[#f1c40f] text-xl mb-1"></i><span class="font-black">+4</span><span class="text-[0.6rem] font-bold">Reto</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#f1c40f] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'ret', 'MVP', 'fa-medal', 'porteros')"><i class="fas fa-medal text-[#f1c40f] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">MVP</span></button>
-                    </div>
+
+                    <div id="tab-act-${p.id}" class="eval-tab-content flex flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'act', p.id, tipo)}</div>
+                    <div id="tab-tec-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'tec', p.id, tipo)}</div>
+                    <div id="tab-jue-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'jue', p.id, tipo)}</div>
+                    <div id="tab-ret-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'ret', p.id, tipo)}</div>
+                    <div id="tab-err-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'porteros', 'err', p.id, tipo)}</div>
                 `;
             } else { 
                 botonesHTML = `
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#9b59b6] mb-2 mt-4 text-center"><i class="fas fa-brain"></i> ACTITUD</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'men', 'Esfuerzo', 'fa-bolt', 'jugadores')"><i class="fas fa-bolt text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Esfuerzo</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#9b59b6] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'men', 'Equipo', 'fa-users', 'jugadores')"><i class="fas fa-users text-[#9b59b6] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Equipo</span></button>
+                    <div class="flex overflow-x-auto gap-2 pb-2 mt-4 custom-scrollbar border-b border-white/5 mb-4 px-1">
+                        <button onclick="window.switchEvalTab(this, 'tab-act-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[#9b59b6]/20 text-[#9b59b6] border border-[#9b59b6]/50 whitespace-nowrap transition-all opacity-100">🧠 ACT</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-tec-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">⚽ TEC</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-fis-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">💪 FIS</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-tac-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">♟️ TAC</button>
+                        <button onclick="window.switchEvalTab(this, 'tab-err-${p.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-[var(--input-bg)] text-gray-500 border border-[var(--input-border)] whitespace-nowrap transition-all opacity-70 hover:opacity-100">🔴 ERR</button>
                     </div>
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#3498db] mb-2 text-center"><i class="fas fa-futbol"></i> TÉCNICA</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'tec', 'Pase', 'fa-exchange-alt', 'jugadores')"><i class="fas fa-exchange-alt text-[#3498db] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Pase</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'tec', 'Tiro', 'fa-bullseye', 'jugadores')"><i class="fas fa-bullseye text-[#3498db] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Tiro</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#3498db] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'tec', 'Regate', 'fa-shoe-prints', 'jugadores')"><i class="fas fa-shoe-prints text-[#3498db] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Regate</span></button>
-                    </div>
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#e67e22] mb-2 text-center"><i class="fas fa-dumbbell"></i> FÍSICO</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4 border-b border-white/5 pb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e67e22] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'fis', 'Duelo', 'fa-fist-raised', 'jugadores')"><i class="fas fa-fist-raised text-[#e67e22] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Duelo</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e67e22] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'fis', 'Resistencia', 'fa-heartbeat', 'jugadores')"><i class="fas fa-heartbeat text-[#e67e22] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Resist.</span></button>
-                    </div>
-                    <div class="text-[0.7rem] font-black uppercase tracking-wider text-[#e74c3c] mb-2 text-center"><i class="fas fa-chess-knight"></i> TÁCTICA</div>
-                    <div class="flex flex-wrap justify-center gap-2 mb-4">
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e74c3c] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 2, 'tac', 'Desmarque', 'fa-running', 'jugadores')"><i class="fas fa-running text-[#e74c3c] text-xl mb-1"></i><span class="font-black">+2</span><span class="text-[0.6rem] font-bold">Desmarque</span></button>
-                        <button class="bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] w-20 py-2 rounded-xl flex flex-col items-center hover:border-[#e74c3c] transition-colors shadow-sm" onclick="window.sumar(${p.id}, 1, 'tac', 'Cobertura', 'fa-shield-alt', 'jugadores')"><i class="fas fa-shield-alt text-[#e74c3c] text-xl mb-1"></i><span class="font-black">+1</span><span class="text-[0.6rem] font-bold">Cobertura</span></button>
-                    </div>
+
+                    <div id="tab-act-${p.id}" class="eval-tab-content flex flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'act', p.id, tipo)}</div>
+                    <div id="tab-tec-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'tec', p.id, tipo)}</div>
+                    <div id="tab-fis-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'fis', p.id, tipo)}</div>
+                    <div id="tab-tac-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'tac', p.id, tipo)}</div>
+                    <div id="tab-err-${p.id}" class="eval-tab-content hidden flex-wrap justify-center gap-2 mb-4">${getBtnHTML(misBotones, 'jugadores', 'err', p.id, tipo)}</div>
                 `;
             }
 
@@ -1063,9 +1292,9 @@
                                 ? p.historial.slice(0, 3).map(h => `
                                     <div class="flex justify-between items-center text-xs border-b border-[var(--input-border)] pb-1 last:border-0">
                                         <span class="w-12 text-[var(--text-sec)]">${h.fecha.split(' ')[1] || h.fecha}</span>
-                                        <span class="w-6 text-center" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
-                                        <span class="flex-1 truncate">${h.accion}</span>
-                                        <span class="font-black ${h.puntos>0?'text-lvl1':'text-atmRed'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
+                                        <span class="w-6 text-center ${h.puntos<0?'text-red-500':''}" style="${h.puntos>0?'color:'+getColor(h.categoria):''}"><i class="fas ${h.icon}"></i></span>
+                                        <span class="flex-1 truncate ${h.puntos<0?'text-red-500 font-semibold':''}">${h.accion}</span>
+                                        <span class="font-black ${h.puntos>0?'text-lvl1':'text-red-500'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
                                     </div>`).join('') 
                                 : '<div class="text-center text-xs text-[var(--text-sec)] py-2">Sin actividad</div>'}
                         </div>
@@ -1095,8 +1324,8 @@
             let unlocked = ""; for(let b of badges) { if(oldPts < b.limit && newPts >= b.limit) { unlocked = b.name; break; } }
             
             update(ref(db, `${tipoPlural}/` + id), { puntos: newPts, stats: { ...s, [statKey]: s[statKey] + pts }, historial: hist }).then(() => { 
-                if (unlocked) { showToast(`¡${p.nombre} desbloqueó: ${unlocked}! 🏆`); if(typeof confetti !== 'undefined') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } 
-                else { showToast(`${pts > 0 ? '+'+pts : pts} ${accionNombre}`); } 
+                if (unlocked && pts > 0) { showToast(`¡${p.nombre} desbloqueó: ${unlocked}! 🏆`); if(typeof confetti !== 'undefined') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } 
+                else { showToast(`${pts > 0 ? '+'+pts : pts} ${accionNombre}`, pts < 0); } 
             });
         }
 
@@ -1124,9 +1353,9 @@
             c.innerHTML = (p.historial && p.historial.length > 0) ? p.historial.map(h => `
                 <div class="flex justify-between items-center text-sm border-b border-[var(--input-border)] py-3">
                     <span class="w-24 text-[var(--text-sec)] text-xs">${h.fecha}</span>
-                    <span class="w-8 text-center text-lg" style="color:${getColor(h.categoria)}"><i class="fas ${h.icon}"></i></span>
-                    <span class="flex-1 font-semibold text-[var(--text-main)]">${h.accion}</span>
-                    <span class="font-black text-lg ${h.puntos>0?'text-lvl1':'text-atmRed'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
+                    <span class="w-8 text-center text-lg ${h.puntos<0?'text-red-500':''}" style="${h.puntos>0?'color:'+getColor(h.categoria):''}"><i class="fas ${h.icon}"></i></span>
+                    <span class="flex-1 font-semibold ${h.puntos<0?'text-red-500':'text-[var(--text-main)]'}">${h.accion}</span>
+                    <span class="font-black text-lg ${h.puntos>0?'text-lvl1':'text-red-500'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
                 </div>`).join('') : "<p class='text-center text-gray-500'>Sin actividad.</p>";
             document.getElementById('modal-history').style.display = 'flex';
         };
@@ -1134,7 +1363,7 @@
         const FONDOS = [
             { id: 'base', name: 'Gris Base', req: 0, class: 'fondo-base', img: '', desc: 'Por defecto' },
             { id: 'escudo', name: 'Escudo ATM', req: 250, class: 'fondo-escudo', img: 'escudo_ATM.png', desc: 'Rojiblanco' },
-            { id: 'metropolitano', name: 'Metropolitano', req: 500, class: 'fondo-metropolitano', img: 'metropolitano.jpeg', desc: 'Luces estadio' },
+            { id: 'metropolitano', name: 'Metropolitano', req: 500, class: 'fondo-metropolitano', img: 'metropolitano.jpg', desc: 'Luces estadio' },
             { id: 'neptuno', name: 'Neptuno', req: 800, class: 'fondo-neptuno', img: 'neptuno.jpg', desc: 'Magia azul' },
             { id: 'oblak', name: 'Leyendas', req: 1000, class: 'fondo-oblak', img: 'leyendas.jpg', desc: 'Puro Coraje' }
         ];
@@ -1200,6 +1429,30 @@
                 }
             });
 
+            // FASE 3: Desglose Analítico (Scouting Report)
+            const breakdownEl = document.getElementById('stats-breakdown-list');
+            if (breakdownEl) {
+                const isPor = tipoPlural === 'porteros';
+                breakdownEl.innerHTML = `
+                    <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas fa-brain text-[#9b59b6] w-4"></i> Actitud</span>
+                        <span class="font-black text-[#9b59b6] text-lg">${s.men || 60} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
+                    </div>
+                    <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-hand-rock' : 'fa-futbol'} text-[#3498db] w-4"></i> Técnica</span>
+                        <span class="font-black text-[#3498db] text-lg">${s.tec || 60} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
+                    </div>
+                    <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-shield-alt text-[#2ecc71]' : 'fa-dumbbell text-[#e67e22]'} w-4"></i> ${isPor ? 'Juego' : 'Físico'}</span>
+                        <span class="font-black ${isPor ? 'text-[#2ecc71]' : 'text-[#e67e22]'} text-lg">${isPor ? (s.jue||60) : (s.fis||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
+                    </div>
+                    <div class="bg-[var(--input-bg)] border border-[var(--input-border)] p-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <span class="text-xs font-black text-[var(--text-sec)] uppercase"><i class="fas ${isPor ? 'fa-star text-[#f1c40f]' : 'fa-chess-knight text-[#e74c3c]'} w-4"></i> ${isPor ? 'Retos' : 'Táctica'}</span>
+                        <span class="font-black ${isPor ? 'text-[#f1c40f]' : 'text-[#e74c3c]'} text-lg">${isPor ? (s.ret||60) : (s.tac||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
+                    </div>
+                `;
+            }
+
             const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Buen Inicio", limit: 80, icon: "thumbs-up" }, { name: "Chispa", limit: 120, icon: "bolt" }, { name: "Constancia", limit: 150, icon: "bullseye" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
             document.getElementById('insignias-container').innerHTML = badges.map(b => `<div class="flex flex-col items-center w-20 text-center"><div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-transform hover:scale-110 ${pts >= b.limit ? 'bg-yellow-500/20 border-2 border-gold text-gold shadow-[0_0_15px_rgba(255,215,0,0.4)]' : 'bg-[var(--bg-card)] border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)] shadow-sm'}"><i class="fas fa-${b.icon}"></i></div><div class="text-[0.6rem] font-bold mt-2 ${pts >= b.limit ? 'text-gold' : 'text-[var(--text-sec)]'}">${b.name}<br><span class="text-[0.5rem] font-normal opacity-70">${b.limit} pts</span></div></div>`).join('');
             
@@ -1213,11 +1466,19 @@
 
             const rIcons = ["copyright", "dice", "level-up-alt", "star", "bolt", "fire", "gem", "crown"];
             if(recompensas.length === 0) {
-                document.getElementById('shop-container').innerHTML = '<p class="text-xs text-[var(--text-sec)] italic">El entrenador no ha configurado recompensas aún.</p>';
+                document.getElementById('shop-container').innerHTML = '<p class="text-xs text-[var(--text-sec)] italic text-center py-4">El entrenador no ha configurado recompensas aún.</p>';
             } else {
                 document.getElementById('shop-container').innerHTML = recompensas.map((r, i) => {
                     const icon = rIcons[i % rIcons.length];
-                    return `<div class="glass-card flex items-center p-3 rounded-xl gap-4 border ${pts >= r.req ? 'border-gold bg-yellow-500/5' : 'border-[var(--card-border)] opacity-60 grayscale'}"><div class="w-10 h-10 rounded-full flex items-center justify-center text-xl ${pts >= r.req ? 'bg-yellow-500/20 text-gold' : 'bg-[var(--input-bg)] text-[var(--text-sec)] border border-[var(--input-border)]'}"><i class="fas fa-${icon}"></i></div><div class="flex-1"><div class="font-black text-sm">${r.title}</div><div class="text-xs font-bold ${pts >= r.req ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${pts >= r.req ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div></div></div>`;
+                    const unlocked = pts >= r.req;
+                    return `
+                    <div class="glass-card flex items-center p-3 rounded-xl gap-4 border transition-all ${unlocked ? 'recompensa-unlocked' : 'border-[var(--card-border)]'}">
+                        <div class="icon-box w-10 h-10 rounded-full flex items-center justify-center text-xl transition-all ${unlocked ? 'bg-yellow-500/20 text-gold' : 'bg-[var(--input-bg)] text-[var(--text-sec)] border border-[var(--input-border)]'}"><i class="fas fa-${icon}"></i></div>
+                        <div class="flex-1">
+                            <div class="font-black text-sm">${r.title}</div>
+                            <div class="text-xs font-bold ${unlocked ? 'text-lvl1' : 'text-[var(--text-sec)]'}">${unlocked ? '<i class="fas fa-check-circle"></i> Desbloqueado' : '<i class="fas fa-lock"></i> '+r.req+' pts'}</div>
+                        </div>
+                    </div>`;
                 }).join('');
             }
             
@@ -1229,12 +1490,11 @@
             const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
             let fondoActual = p.fondoActivo || 'base'; const pts = Number(p.puntos || 0);
             
-            // Para el menú Vestuario, usamos estilos inline para no interferir con el CSS de la carta
             container.innerHTML = FONDOS.map(f => {
                 const unl = pts >= f.req; const act = fondoActual === f.id;
-                const bgStyle = f.img ? `background-image: url('${f.img}'); background-size: ${f.id === 'escudo' ? 'contain' : 'cover'}; background-position: center top; background-repeat: no-repeat; opacity: 0.9;` : `background-color: var(--input-bg); opacity: 0.5;`;
+                const bgStyle = f.img ? `background-image: url('${f.img}');` : `background-color: var(--input-bg);`;
                 
-                return `<div onclick="${unl && !isReadOnlyMode ? `window.seleccionarFondo(${p.id}, '${f.id}', '${tipoPlural}')` : ''}" class="border-2 rounded-xl p-2 text-center relative transition-all overflow-hidden ${act ? 'border-gold shadow-[0_0_15px_rgba(255,215,0,0.2)] bg-[var(--bg-card)]' : 'border-[var(--card-border)] bg-[var(--bg-card)]'} ${unl ? (isReadOnlyMode ? 'cursor-default' : 'cursor-pointer') : 'opacity-50 cursor-not-allowed'}"><div class="h-14 w-full rounded-lg mb-2 border border-black/10" style="${bgStyle}"></div><div class="font-black text-[0.7rem] ${act ? 'text-gold' : ''}">${f.name}</div><div class="text-[0.6rem] text-[var(--text-sec)]">${unl ? f.desc : `<i class="fas fa-lock"></i> ${f.req} pts`}</div>${act ? '<i class="fas fa-check-circle absolute top-2 right-2 text-gold"></i>' : ''}</div>`;
+                return `<div onclick="${unl && !isReadOnlyMode ? `window.seleccionarFondo(${p.id}, '${f.id}', '${tipoPlural}')` : ''}" class="border-2 rounded-xl p-2 text-center relative transition-all overflow-hidden ${act ? 'border-gold shadow-[0_0_15px_rgba(255,215,0,0.2)] bg-[var(--bg-card)]' : 'border-[var(--card-border)] bg-[var(--bg-card)]'} ${unl ? (isReadOnlyMode ? 'cursor-default' : 'cursor-pointer') : 'opacity-50 cursor-not-allowed'}"><div class="h-14 w-full rounded-lg mb-2 border border-black/10 vestuario-mini" style="${bgStyle}"></div><div class="font-black text-[0.7rem] ${act ? 'text-gold' : ''}">${f.name}</div><div class="text-[0.6rem] text-[var(--text-sec)]">${unl ? f.desc : `<i class="fas fa-lock"></i> ${f.req} pts`}</div>${act ? '<i class="fas fa-check-circle absolute top-2 right-2 text-gold"></i>' : ''}</div>`;
             }).join('');
             
             const marco = document.getElementById('card-bg-layer');
@@ -1264,7 +1524,7 @@
             chartInstance = new Chart(ctxEl, { 
                 type: 'radar', 
                 data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
-                options: { responsive: true, maintainAspectRatio: false, layout: { padding: 35 }, scales: { r: { min: 0, suggestedMax: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#fff' : '#333', font: {size: 11, weight: 'bold'}, padding: 20 }, ticks: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#fff' : '#333', boxWidth: 10, font: {size: 10} } } } } 
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: 20 }, scales: { r: { min: 0, suggestedMax: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#fff' : '#333', font: {size: 11, weight: 'bold'}, padding: 15 }, ticks: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#fff' : '#333', boxWidth: 10, font: {size: 10} } } } } 
             });
         }
 
