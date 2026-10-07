@@ -40,7 +40,6 @@
             --bg-body: #f0f2f5; --bg-card: rgba(255, 255, 255, 0.85); --text-main: #1c1e21; --text-sec: #65676b;
             --input-bg: rgba(255,255,255,0.9); --input-border: #d1d5db; --card-border: rgba(0,0,0,0.1);
             --segment-bg: #e4e6eb; --segment-active: #ffffff;
-            --col-men: #9b59b6; --col-tec: #3498db; --col-jue: #2ecc71; --col-ret: #f1c40f; --col-fis: #e67e22; --col-tac: #e74c3c;
         }
 
         [data-theme="dark"] {
@@ -83,11 +82,29 @@
         .fifa-card-simple::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 3;}
         @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
 
+        /* FONDOS CON IMÁGENES REALES Y EFECTO CAMUFLAJE */
         .fondo-base { background: transparent; }
-        .fondo-escudo { background: repeating-linear-gradient(45deg, rgba(203,53,36,0.1), rgba(203,53,36,0.1) 15px, transparent 15px, transparent 30px); }
-        .fondo-metropolitano { background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 50%), radial-gradient(circle at 50% 100%, rgba(203,53,36,0.7) 0%, transparent 60%); }
-        .fondo-neptuno { background: linear-gradient(135deg, rgba(0,48,135,0.7) 0%, rgba(0,180,219,0.5) 50%, rgba(203,53,36,0.4) 100%); }
-        .fondo-oblak { border-top: 3px solid rgba(255,255,255,0.9); border-left: 3px solid rgba(255,255,255,0.9); border-right: 3px solid rgba(255,255,255,0.9); box-shadow: inset 0 20px 30px rgba(203,53,36,0.6); background: rgba(0,0,0,0.3); }
+        
+        .fondo-escudo { 
+            background: linear-gradient(to bottom, rgba(203,53,36,0.5) 0%, rgba(0,0,0,0.95) 100%), url('escudo_ATM.png');
+            background-size: cover; background-position: center; background-blend-mode: luminosity;
+        }
+        
+        .fondo-metropolitano { 
+            background: linear-gradient(to bottom, rgba(30,41,59,0.5) 0%, rgba(0,0,0,0.95) 100%), url('metropolitano.jpg');
+            background-size: cover; background-position: center; background-blend-mode: luminosity;
+        }
+        
+        .fondo-neptuno { 
+            background: linear-gradient(to bottom, rgba(28,44,91,0.6) 0%, rgba(0,0,0,0.95) 100%), url('neptuno.jpg');
+            background-size: cover; background-position: center; background-blend-mode: luminosity;
+        }
+        
+        .fondo-oblak { /* Leyendas */
+            background: linear-gradient(to bottom, rgba(255,215,0,0.4) 0%, rgba(0,0,0,0.95) 100%), url('leyendas.jpg');
+            background-size: cover; background-position: center top; background-blend-mode: luminosity;
+            border-top: 2px solid rgba(255,215,0,0.3);
+        }
 
         .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
         .toast.error { border-left-color: #CB3524; }
@@ -109,7 +126,7 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
-        .icon-glow { filter: drop-shadow(0 0 8px currentColor); }
+        .icon-glow { filter: drop-shadow(0 0 10px currentColor); transform: scale(1.1); }
         .icon-inactive { color: #9ca3af; filter: grayscale(100%); }
     </style>
 </head>
@@ -385,11 +402,11 @@
                 </div>
                 <div class="flex justify-between text-center relative">
                     <div class="absolute top-[14px] left-[10%] right-[10%] h-[2px] bg-[var(--input-border)] z-0"></div>
-                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-1" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-shoe-prints"></i></div><div id="lvl-text-1" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Inicio</div></div>
-                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-2" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-medal"></i></div><div id="lvl-text-2" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Plata</div></div>
-                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-3" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-trophy"></i></div><div id="lvl-text-3" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Oro</div></div>
-                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-4" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-gem"></i></div><div id="lvl-text-4" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Élite</div></div>
-                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-5" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-crown"></i></div><div id="lvl-text-5" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors">Leyenda</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-1" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-shoe-prints"></i></div><div id="lvl-text-1" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors mt-1">Inicio</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-2" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-medal"></i></div><div id="lvl-text-2" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors mt-1">Plata</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-3" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-trophy"></i></div><div id="lvl-text-3" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors mt-1">Oro</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-4" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-gem"></i></div><div id="lvl-text-4" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors mt-1">Élite</div></div>
+                    <div class="flex flex-col items-center z-10"><div id="lvl-icon-5" class="w-7 h-7 bg-[var(--bg-card)] border-2 border-[var(--input-border)] rounded-full flex items-center justify-center text-xs text-[#9ca3af] shadow-sm mb-1 transition-all"><i class="fas fa-crown"></i></div><div id="lvl-text-5" class="text-[0.55rem] text-[var(--text-sec)] font-bold uppercase transition-colors mt-1">Leyenda</div></div>
                 </div>
             </div>
 
@@ -489,12 +506,13 @@
         let evalViewMode = "porteros"; 
         let targetDeleteId = null;
         let targetDeleteType = null;
-        let tempRewards = []; // Almacena recompensas dinámicas en edición
+        let tempRewards = []; 
         
         let isReadOnlyMode = false;
         let readOnlyId = null;
         let readOnlyTipoPlural = null;
 
+        // Sonidos
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -844,7 +862,6 @@
                 {title: "Elegir Juego", req: 300},
                 {title: "Entrenar Cat. Superior", req: 800}
             ];
-            // Copia profunda para no alterar Firebase hasta guardar
             tempRewards = JSON.parse(JSON.stringify(r)); 
             window.renderRecompensasConfig();
             document.getElementById('modal-recompensas-config').style.display = 'flex';
@@ -900,7 +917,6 @@
                 .filter(r => r.title.trim() !== "" && r.req > 0)
                 .map(r => ({ title: r.title.trim(), req: parseInt(r.req) }));
 
-            // Ordena automáticamente por puntos
             validRewards.sort((a,b) => a.req - b.req);
 
             update(ref(db, `edps/${currentUser.id}`), { recompensas: validRewards }).then(() => {
@@ -1016,19 +1032,19 @@
                     
                     ${botonesHTML}
 
-                    <div class="bg-[var(--input-bg)] p-4 rounded-xl border border-[var(--input-border)] mb-4">
+                    <div class="bg-[var(--input-bg)] p-4 rounded-xl border border-[var(--input-border)] mb-4 shadow-sm">
                         <div class="text-gold font-black text-xs uppercase text-center mb-3"><i class="fas fa-plus-circle"></i> PUNTAJE LIBRE</div>
-                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" class="w-full bg-[var(--bg-body)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
+                        <input type="text" id="c-reason-${tipo}-${p.id}" placeholder="Motivo (Ej: Paradón o Llegar tarde)" class="w-full bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm mb-2 outline-none">
                         <div class="flex gap-2 mb-3">
-                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: 5 o -5)" class="w-1/2 bg-[var(--bg-body)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
-                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 bg-[var(--bg-body)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
+                            <input type="number" id="c-pts-${tipo}-${p.id}" placeholder="Pts (Ej: 5 o -5)" class="w-1/2 bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none text-center">
+                            <select id="c-cat-${tipo}-${p.id}" class="w-1/2 bg-[var(--input-bg)] text-[var(--text-main)] border border-[var(--input-border)] p-2 rounded-lg text-sm outline-none">
                                 <option value="men">Actitud</option>
                                 <option value="tec">Técnica</option>
                                 <option value="${tipo === 'porteros' ? 'jue' : 'fis'}">${tipo === 'porteros' ? 'Juego' : 'Físico'}</option>
                                 <option value="${tipo === 'porteros' ? 'ret' : 'tac'}">${tipo === 'porteros' ? 'Retos' : 'Táctica'}</option>
                             </select>
                         </div>
-                        <button onclick="window.sumarPersonalizado(${p.id}, '${tipo}')" class="w-full bg-gradient-to-r from-[#f1c40f] to-[#e67e22] text-black font-black py-2 rounded-lg text-sm hover:scale-[1.02] transition-transform">APLICAR PUNTAJE</button>
+                        <button onclick="window.sumarPersonalizado(${p.id}, '${tipo}')" class="w-full bg-gradient-to-r from-[#f1c40f] to-[#e67e22] text-black font-black py-2 rounded-lg text-sm hover:scale-[1.02] transition-transform shadow-md">APLICAR PUNTAJE</button>
                     </div>
 
                     <div class="bg-[var(--bg-card)] rounded-xl p-3 border border-[var(--card-border)]">
@@ -1111,7 +1127,7 @@
             { id: 'escudo', name: 'Escudo ATM', req: 250, class: 'fondo-escudo', desc: 'Rojiblanco' },
             { id: 'metropolitano', name: 'Metropolitano', req: 500, class: 'fondo-metropolitano', desc: 'Luces estadio' },
             { id: 'neptuno', name: 'Neptuno', req: 800, class: 'fondo-neptuno', desc: 'Magia azul' },
-            { id: 'oblak', name: 'Efecto Leyenda', req: 1000, class: 'fondo-oblak', desc: 'Borde neón' }
+            { id: 'oblak', name: 'Leyendas', req: 1000, class: 'fondo-oblak', desc: 'Puro Coraje' }
         ];
 
         function renderDashboard(id, tipo) {
@@ -1148,7 +1164,6 @@
 
             document.getElementById('progress-fill').style.width = Math.min(w, 100) + "%"; document.getElementById('progress-fill').style.background = lvlColor;
             
-            // Dynamic Icons Logic
             const iconTiers = [
                 {id: 1, limit: 0, color: 'var(--lvl-1)'},
                 {id: 2, limit: 151, color: 'var(--lvl-2)'},
@@ -1179,7 +1194,6 @@
             const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Buen Inicio", limit: 80, icon: "thumbs-up" }, { name: "Chispa", limit: 120, icon: "bolt" }, { name: "Constancia", limit: 150, icon: "bullseye" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
             document.getElementById('insignias-container').innerHTML = badges.map(b => `<div class="flex flex-col items-center w-20 text-center"><div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-transform hover:scale-110 ${pts >= b.limit ? 'bg-yellow-500/20 border-2 border-gold text-gold shadow-[0_0_15px_rgba(255,215,0,0.4)]' : 'bg-black/20 border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)]'}"><i class="fas fa-${b.icon}"></i></div><div class="text-[0.6rem] font-bold mt-2 ${pts >= b.limit ? 'text-gold' : 'text-[var(--text-sec)]'}">${b.name}<br><span class="text-[0.5rem] font-normal opacity-70">${b.limit} pts</span></div></div>`).join('');
             
-            // Dynamic Rewards System matching Custom EDP lists
             let recompensas = [ { title: "Ser Capitán", req: 150 }, { title: "Elegir Juego", req: 300 }, { title: "Entrenar Cat. Superior", req: 800 } ];
             if(p.entrenador) {
                 const coach = edps.find(e => e.nombre.toLowerCase() === p.entrenador.toLowerCase());
