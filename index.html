@@ -840,9 +840,9 @@
         }
 
         function updateThemeIcon(theme) { 
-            const html = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            const iconClass = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             const btn1 = document.getElementById('btn-theme'); const btn2 = document.getElementById('btn-theme-home');
-            if(btn1) btn1.innerHTML = html; if(btn2) btn2.innerHTML = html;
+            if(btn1) btn1.className = iconClass; if(btn2) btn2.className = iconClass;
         }
 
         window.togglePasswordVisibility = function() {
