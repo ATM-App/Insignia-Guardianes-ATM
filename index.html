@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ATM GAME POINTS</title>
+    <title>Atleti Game Points | Inicio</title>
     
     <link rel="icon" type="image/png" href="logo.png">
-    <!-- PWA Manifest dinámico en inyector -->
-    <link rel="manifest" id="dynamic-manifest" href="">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1C2C5B">
     <link rel="apple-touch-icon" href="GuardinesAtleti.png">
     <meta name="apple-mobile-web-app-title" content="ATM GAME POINTS">
@@ -131,7 +130,6 @@
         .recompensa-unlocked { border-color: #FFD700 !important; background-color: rgba(255, 215, 0, 0.05) !important; }
         .recompensa-unlocked .icon-box { background-color: rgba(255, 215, 0, 0.2) !important; color: #FFD700 !important; border: none !important; }
         
-        /* Miniaturas de Vestuario nítidas */
         .vestuario-mini { background-position: center center; background-size: cover; background-repeat: no-repeat; opacity: 1 !important; mix-blend-mode: normal !important; }
     </style>
 </head>
@@ -244,8 +242,14 @@
     <div id="modal-edp-add-player" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md p-6 flex flex-col">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-user-plus text-[#2ecc71] mr-2"></i> Alta en mi Equipo</h3>
-            <p class="text-xs text-[var(--text-sec)] italic mb-5">El jugador se asignará directamente a tu plantilla.</p>
+            <p class="text-xs text-[var(--text-sec)] italic mb-5">Añade foto, datos y se asignará a tu plantilla.</p>
             
+            <div class="w-24 h-24 mx-auto mb-4 relative cursor-pointer group" onclick="document.getElementById('fileInputEdp').click()">
+                <img id="fotoPreviewEdp" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=" class="w-full h-full object-cover rounded-full border-4 border-[#2ecc71] shadow-[0_5px_15px_rgba(46,204,113,0.4)] group-hover:scale-105 transition-transform">
+                <div class="absolute bottom-0 right-0 bg-[#2ecc71] w-8 h-8 rounded-full flex items-center justify-center border-2 border-[var(--bg-card)] text-white shadow-lg"><i class="fas fa-camera"></i></div>
+            </div>
+            <input type="file" id="fileInputEdp" accept="image/*" onchange="window.procesarImagenSeguraEdp(event)" class="hidden">
+
             <div class="space-y-3 text-left">
                 <div>
                     <label class="block text-[0.7rem] text-[var(--text-sec)] font-bold mb-1 uppercase">Tipo</label>
@@ -288,7 +292,7 @@
             <div class="text-center mb-10 mt-6">
                 <img src="logo.png" alt="Logo Atleti" class="h-16 mx-auto mb-4 drop-shadow-lg" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-black italic tracking-wider text-white">ATLETI <span class="text-atmRed">GAME POINTS</span></h1>
-                <p class="text-[0.65rem] text-gray-400 font-extrabold tracking-[0.2em] uppercase mt-1">*Juego de puntos*</p>
+                <p class="text-[0.65rem] text-gray-400 font-extrabold tracking-[0.2em] uppercase mt-1">*JUEGO DE PUNTOS*</p>
             </div>
 
             <div id="home-role-selection" class="flex-1 flex flex-col justify-center animate-[popIn_0.3s_ease]">
@@ -331,14 +335,14 @@
         <div class="split-right">
             <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i class="fas fa-sun" id="btn-theme-home"></i></button>
             <div>
-                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">TRABAJA.<br>APRENDE.<br>MEJORA.</h2>
-                <h1 class="text-[2.5rem] xl:text-[3rem] font-black italic leading-[1.1] tracking-tighter uppercase text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-6">
+                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">"NUNCA DEJES DE CREER"</h2>
+                <h1 class="text-[3rem] xl:text-[4rem] font-black italic leading-[1] tracking-tighter uppercase text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-8">
                     LUCHA POR CADA BALÓN.<br>
                     <span class="text-atmRed">AYUDA A TUS COMPAÑEROS.</span><br>
                     JUEGA CON CORAZÓN.<br>
                     SUMA CON TU ACTITUD.
                 </h1>
-                <div class="flex items-center gap-6 mt-10">
+                <div class="flex items-center gap-6 mt-12">
                     <div class="w-1.5 h-24 bg-atmRed shadow-[0_0_15px_rgba(203,53,36,0.6)]"></div>
                     <p class="text-white/80 text-lg max-w-md leading-relaxed font-bold italic">
                         LOS PUNTOS SE GANAN.<br>EL CORAJE SE DEMUESTRA.<br><br>
@@ -632,6 +636,7 @@
         let tempRewards = []; let tempBotones = []; 
         let isReadOnlyMode = false; let readOnlyId = null; let readOnlyTipoPlural = null;
 
+        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores (AHORA SÍ, COMPLETA)
         const DEFAULT_EVAL_BUTTONS = [
             // ============================================
             // --- 🧤 MEGA-LISTA PARA PORTEROS 🧤 ---
@@ -639,25 +644,25 @@
             // 🟣 ACTITUD (tab: 'act', cat: 'men')
             { id: 'p_a1', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
             { id: 'p_a2', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
-            { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda comp.', icon: 'fa-hands-helping' },
+            { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda', icon: 'fa-hands-helping' },
             { id: 'p_a4', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Comunicación', icon: 'fa-comments' },
             { id: 'p_a5', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Liderazgo', icon: 'fa-crown' },
             { id: 'p_a6', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Concentración', icon: 'fa-brain' },
-            { id: 'p_a7', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Reacc. error', icon: 'fa-undo' },
+            { id: 'p_a7', target: 'porteros', tab: 'act', cat: 'men', pts: 3, label: 'Reacción', icon: 'fa-undo' },
             { id: 'p_a8', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Competitividad', icon: 'fa-khanda' },
-            { id: 'p_a9', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Compromiso def.', icon: 'fa-shield-alt' },
+            { id: 'p_a9', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Compromiso', icon: 'fa-shield-alt' },
             { id: 'p_a10', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Iniciativa', icon: 'fa-rocket' },
             // 🔵 TÉCNICA (tab: 'tec', cat: 'tec')
             { id: 'p_t1', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Bloqueo', icon: 'fa-hand-rock' },
             { id: 'p_t2', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Reflejos', icon: 'fa-bolt' },
             { id: 'p_t3', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Parada TOP', icon: 'fa-star' },
-            { id: 'p_t4', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Estirada dif.', icon: 'fa-arrows-alt-h' },
-            { id: 'p_t5', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Mano Cambiada', icon: 'fa-hand-paper' },
+            { id: 'p_t4', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Estirada', icon: 'fa-arrows-alt-h' },
+            { id: 'p_t5', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Mano Camb.', icon: 'fa-hand-paper' },
             { id: 'p_t6', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Doble interv.', icon: 'fa-clone' },
             { id: 'p_t7', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Parada 1v1', icon: 'fa-user-shield' },
-            { id: 'p_t8', target: 'porteros', tab: 'tec', cat: 'tec', pts: 5, label: 'Parada Penalti', icon: 'fa-ban' },
-            { id: 'p_t9', target: 'porteros', tab: 'tec', cat: 'tec', pts: 5, label: 'Parada decisiva', icon: 'fa-exclamation' },
-            { id: 'p_t10', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Control orient.', icon: 'fa-shoe-prints' },
+            { id: 'p_t8', target: 'porteros', tab: 'tec', cat: 'tec', pts: 5, label: 'Penalti', icon: 'fa-ban' },
+            { id: 'p_t9', target: 'porteros', tab: 'tec', cat: 'tec', pts: 5, label: 'Decisiva', icon: 'fa-exclamation' },
+            { id: 'p_t10', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Cont. Orient.', icon: 'fa-shoe-prints' },
             { id: 'p_t11', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase corto', icon: 'fa-check' },
             { id: 'p_t12', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pase presión', icon: 'fa-compress-arrows-alt' },
             { id: 'p_t13', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Cambio Orient.', icon: 'fa-exchange-alt' },
@@ -665,40 +670,41 @@
             { id: 'p_t15', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-forward' },
             { id: 'p_t16', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Asistencia', icon: 'fa-hands-helping' },
             { id: 'p_t17', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Blocaje Aéreo', icon: 'fa-plane' },
-            { id: 'p_t18', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Salida Aéreo', icon: 'fa-space-shuttle' },
+            { id: 'p_t18', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Salida Aérea', icon: 'fa-space-shuttle' },
             { id: 'p_t19', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Despeje Aéreo', icon: 'fa-hand-sparkles' },
             { id: 'p_t20', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Salida Tráfico', icon: 'fa-users' },
-            { id: 'p_t21', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Salida decisiva', icon: 'fa-fighter-jet' },
+            { id: 'p_t21', target: 'porteros', tab: 'tec', cat: 'tec', pts: 4, label: 'Aéreo Decisivo', icon: 'fa-fighter-jet' },
             { id: 'p_t22', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Dominio Área', icon: 'fa-vector-square' },
-            { id: 'p_t23', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pierna no dom.', icon: 'fa-shoe-prints' },
-            { id: 'p_t24', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Control presión', icon: 'fa-compress' },
-            { id: 'p_t25', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Despeje difícil', icon: 'fa-bomb' },
-            { id: 'p_t26', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Acción consec.', icon: 'fa-link' },
+            { id: 'p_t23', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Pierna Mala', icon: 'fa-shoe-prints' },
+            { id: 'p_t24', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Cont. Presión', icon: 'fa-compress' },
+            { id: 'p_t25', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Desp. Difícil', icon: 'fa-bomb' },
+            { id: 'p_t26', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Acción Consec.', icon: 'fa-link' },
             // 🟢 JUEGO (tab: 'jue', cat: 'jue')
-            { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Buena decisión', icon: 'fa-lightbulb' },
+            { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Decisión', icon: 'fa-lightbulb' },
             { id: 'p_j2', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Dec. Presión', icon: 'fa-brain' },
-            { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Dec. evita ocas.', icon: 'fa-shield-alt' },
-            { id: 'p_j4', target: 'porteros', tab: 'jue', cat: 'jue', pts: 5, label: 'Dec. decisiva', icon: 'fa-crown' },
-            { id: 'p_j5', target: 'porteros', tab: 'jue', cat: 'jue', pts: 1, label: 'Buena posición', icon: 'fa-crosshairs' },
-            { id: 'p_j6', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Corrección pos.', icon: 'fa-map-marker-alt' },
-            { id: 'p_j7', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Pos. evita tiro', icon: 'fa-shield-alt' },
-            { id: 'p_j8', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Pos. decisiva', icon: 'fa-chess-king' },
-            { id: 'p_j9', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '1vs1', icon: 'fa-user-ninja' },
-            { id: 'p_j10', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: '1vs2', icon: 'fa-users' },
-            { id: 'p_j11', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Salida', icon: 'fa-door-open' },
-            { id: 'p_j12', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Salida fuera área', icon: 'fa-running' },
-            { id: 'p_j13', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Cobertura def.', icon: 'fa-umbrella' },
-            { id: 'p_j14', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Def. profund.', icon: 'fa-angle-double-down' },
-            { id: 'p_j15', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Segunda Jugada', icon: 'fa-redo' },
-            { id: 'p_j16', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Rechace Cont.', icon: 'fa-magnet' },
-            { id: 'p_j17', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Inicia Contra', icon: 'fa-fighter-jet' },
-            { id: 'p_j18', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Cen. Lateral', icon: 'fa-arrows-alt-h' },
-            { id: 'p_j19', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Balón Espalda', icon: 'fa-level-down-alt' },
-            { id: 'p_j20', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Pase Atrás', icon: 'fa-backward' },
-            { id: 'p_j21', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Tiro Lejano', icon: 'fa-rocket' },
-            { id: 'p_j22', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Tiro Cercano', icon: 'fa-bullseye' },
-            { id: 'p_j23', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Mano a Mano', icon: 'fa-handshake' },
-            { id: 'p_j24', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Acc. Tráfico', icon: 'fa-car-crash' },
+            { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Dec. Ventaja', icon: 'fa-arrow-up' },
+            { id: 'p_j4', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Dec. Ocasión', icon: 'fa-star' },
+            { id: 'p_j5', target: 'porteros', tab: 'jue', cat: 'jue', pts: 5, label: 'Acc. Decisiva', icon: 'fa-crown' },
+            { id: 'p_j6', target: 'porteros', tab: 'jue', cat: 'jue', pts: 1, label: 'Posición', icon: 'fa-crosshairs' },
+            { id: 'p_j7', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Corrección', icon: 'fa-map-marker-alt' },
+            { id: 'p_j8', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Evita Tiro', icon: 'fa-shield-alt' },
+            { id: 'p_j9', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Pos. Decisiva', icon: 'fa-chess-king' },
+            { id: 'p_j10', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '1vs1', icon: 'fa-user-ninja' },
+            { id: 'p_j11', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: '1vs2', icon: 'fa-users' },
+            { id: 'p_j12', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Salida', icon: 'fa-door-open' },
+            { id: 'p_j13', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Salida Fuera', icon: 'fa-running' },
+            { id: 'p_j14', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Cobertura', icon: 'fa-umbrella' },
+            { id: 'p_j15', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Profundidad', icon: 'fa-angle-double-down' },
+            { id: 'p_j16', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: '2ª Jugada', icon: 'fa-redo' },
+            { id: 'p_j17', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Rechace Cont.', icon: 'fa-magnet' },
+            { id: 'p_j18', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Inicia Contra', icon: 'fa-fighter-jet' },
+            { id: 'p_j19', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Cen. Lateral', icon: 'fa-arrows-alt-h' },
+            { id: 'p_j20', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Balón Espalda', icon: 'fa-level-down-alt' },
+            { id: 'p_j21', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Pase Atrás', icon: 'fa-backward' },
+            { id: 'p_j22', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Tiro Lejano', icon: 'fa-rocket' },
+            { id: 'p_j23', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Tiro Cercano', icon: 'fa-bullseye' },
+            { id: 'p_j24', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Mano a Mano', icon: 'fa-handshake' },
+            { id: 'p_j25', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Acc. Tráfico', icon: 'fa-car-crash' },
             // 🟡 RETOS (tab: 'ret', cat: 'ret')
             { id: 'p_r1', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Parada Partido', icon: 'fa-star' },
             { id: 'p_r2', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Muro', icon: 'fa-brick' },
@@ -707,7 +713,7 @@
             { id: 'p_r5', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Port. Completo', icon: 'fa-battery-full' },
             { id: 'p_r6', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Pase Decisivo', icon: 'fa-magic' },
             { id: 'p_r7', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Momento Clave', icon: 'fa-key' },
-            { id: 'p_r8', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Portería a cero', icon: 'fa-shield-alt' },
+            { id: 'p_r8', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Puerta a Cero', icon: 'fa-shield-alt' },
             { id: 'p_r9', target: 'porteros', tab: 'ret', cat: 'ret', pts: 6, label: 'MVP Portero', icon: 'fa-crown' },
             // 🔴 ERRORES (tab: 'err', cat: 'men/tec/jue')
             { id: 'p_e1', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
@@ -721,7 +727,7 @@
             { id: 'p_e9', target: 'porteros', tab: 'err', cat: 'jue', pts: -2, label: 'Mala Decisión', icon: 'fa-times-circle' },
             { id: 'p_e10', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Error Salida', icon: 'fa-door-closed' },
             { id: 'p_e11', target: 'porteros', tab: 'err', cat: 'tec', pts: -3, label: 'Err -> Ocasión', icon: 'fa-exclamation-triangle' },
-            { id: 'p_e12', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Mal 1v1', icon: 'fa-user-times' },
+            { id: 'p_e12', target: 'porteros', tab: 'err', cat: 'jue', pts: -3, label: 'Mal 1vs1', icon: 'fa-user-times' },
             { id: 'p_e13', target: 'porteros', tab: 'err', cat: 'tec', pts: -5, label: 'Err -> Gol', icon: 'fa-skull-crossbones' },
             { id: 'p_e14', target: 'porteros', tab: 'err', cat: 'men', pts: -5, label: 'Expulsión', icon: 'fa-square' },
 
@@ -731,77 +737,77 @@
             // 🟣 ACTITUD (tab: 'act', cat: 'men')
             { id: 'j_a1', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
             { id: 'j_a2', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
-            { id: 'j_a3', target: 'jugadores', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda comp.', icon: 'fa-hands-helping' },
+            { id: 'j_a3', target: 'jugadores', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda', icon: 'fa-hands-helping' },
             { id: 'j_a4', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Comunicación', icon: 'fa-comments' },
             { id: 'j_a5', target: 'jugadores', tab: 'act', cat: 'men', pts: 3, label: 'Liderazgo', icon: 'fa-crown' },
             { id: 'j_a6', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Concentración', icon: 'fa-brain' },
-            { id: 'j_a7', target: 'jugadores', tab: 'act', cat: 'men', pts: 3, label: 'Reacc. error', icon: 'fa-undo' },
+            { id: 'j_a7', target: 'jugadores', tab: 'act', cat: 'men', pts: 3, label: 'Reacción', icon: 'fa-undo' },
             { id: 'j_a8', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Competitividad', icon: 'fa-khanda' },
-            { id: 'j_a9', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Compromiso def.', icon: 'fa-shield-alt' },
+            { id: 'j_a9', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Compromiso', icon: 'fa-shield-alt' },
             { id: 'j_a10', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Iniciativa', icon: 'fa-rocket' },
             // 🔵 TÉCNICA (tab: 'tec', cat: 'tec')
             { id: 'j_t1', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Buen Control', icon: 'fa-shoe-prints' },
-            { id: 'j_t2', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Control orient.', icon: 'fa-compass' },
-            { id: 'j_t3', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase correcto', icon: 'fa-check' },
-            { id: 'j_t4', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Pase vertical', icon: 'fa-arrow-up' },
+            { id: 'j_t2', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Cont. Orient.', icon: 'fa-compass' },
+            { id: 'j_t3', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase Correcto', icon: 'fa-check' },
+            { id: 'j_t4', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Pase Vertical', icon: 'fa-arrow-up' },
             { id: 'j_t5', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 3, label: 'Rompelíneas', icon: 'fa-forward' },
-            { id: 'j_t6', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Cambio orient.', icon: 'fa-exchange-alt' },
+            { id: 'j_t6', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Cambio Orient.', icon: 'fa-exchange-alt' },
             { id: 'j_t7', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 4, label: 'Asistencia', icon: 'fa-star' },
-            { id: 'j_t8', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Regate sup.', icon: 'fa-magic' },
-            { id: 'j_t9', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 3, label: '1v1 ofensivo', icon: 'fa-running' },
+            { id: 'j_t8', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Regate Sup.', icon: 'fa-magic' },
+            { id: 'j_t9', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 3, label: '1v1 Ofensivo', icon: 'fa-running' },
             { id: 'j_t10', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Protección', icon: 'fa-shield-alt' },
-            { id: 'j_t11', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Centro preciso', icon: 'fa-crosshairs' },
-            { id: 'j_t12', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Tiro a puerta', icon: 'fa-bullseye' },
+            { id: 'j_t11', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Centro Preciso', icon: 'fa-crosshairs' },
+            { id: 'j_t12', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Tiro a Puerta', icon: 'fa-bullseye' },
             { id: 'j_t13', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 5, label: 'GOL', icon: 'fa-futbol' },
             // 🟢 JUEGO / FÍSICO (tab: 'fis', cat: 'fis')
-            { id: 'j_f1', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Buena decisión', icon: 'fa-lightbulb' },
-            { id: 'j_f2', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Dec. presión', icon: 'fa-brain' },
-            { id: 'j_f3', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Dec. ventaja', icon: 'fa-arrow-up' },
-            { id: 'j_f4', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 4, label: 'Dec. ocasión', icon: 'fa-star' },
-            { id: 'j_f5', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 5, label: 'Acc. decisiva', icon: 'fa-crown' },
+            { id: 'j_f1', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Buena Decisión', icon: 'fa-lightbulb' },
+            { id: 'j_f2', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Dec. Presión', icon: 'fa-brain' },
+            { id: 'j_f3', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Dec. Ventaja', icon: 'fa-arrow-up' },
+            { id: 'j_f4', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 4, label: 'Dec. Ocasión', icon: 'fa-star' },
+            { id: 'j_f5', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 5, label: 'Acc. Decisiva', icon: 'fa-crown' },
             { id: 'j_f6', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Desmarque', icon: 'fa-running' },
-            { id: 'j_f7', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Desm. ruptura', icon: 'fa-bolt' },
-            { id: 'j_f8', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Ocupación esp.', icon: 'fa-vector-square' },
-            { id: 'j_f9', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Genera espacio', icon: 'fa-expand' },
-            { id: 'j_f10', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Llegada área', icon: 'fa-map-marker-alt' },
-            { id: 'j_f11', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Ataque espacio', icon: 'fa-rocket' },
+            { id: 'j_f7', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Desm. Ruptura', icon: 'fa-bolt' },
+            { id: 'j_f8', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Ocupación', icon: 'fa-vector-square' },
+            { id: 'j_f9', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Genera Espacio', icon: 'fa-expand' },
+            { id: 'j_f10', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Llegada Área', icon: 'fa-map-marker-alt' },
+            { id: 'j_f11', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Ataque Espacio', icon: 'fa-rocket' },
             { id: 'j_f12', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Repliegue', icon: 'fa-backward' },
             { id: 'j_f13', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Cobertura', icon: 'fa-shield-alt' },
-            { id: 'j_f14', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Ayuda def.', icon: 'fa-hands-helping' },
+            { id: 'j_f14', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Ayuda Def.', icon: 'fa-hands-helping' },
             { id: 'j_f15', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Interceptación', icon: 'fa-hand-paper' },
-            { id: 'j_f16', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: '1v1 ganado', icon: 'fa-user-ninja' },
-            { id: 'j_f17', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Aéreo ganado', icon: 'fa-plane' },
-            { id: 'j_f18', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Def. ganado', icon: 'fa-lock' },
+            { id: 'j_f16', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: '1v1 Ganado', icon: 'fa-user-ninja' },
+            { id: 'j_f17', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Aéreo Ganado', icon: 'fa-plane' },
+            { id: 'j_f18', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Def. Ganado', icon: 'fa-lock' },
             { id: 'j_f19', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Recuperación', icon: 'fa-undo' },
-            { id: 'j_f20', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Rec. rival', icon: 'fa-arrow-alt-circle-up' },
+            { id: 'j_f20', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Rec. Arriba', icon: 'fa-arrow-alt-circle-up' },
             // 🟠 TÁCTICA (tab: 'tac', cat: 'tac')
-            { id: 'j_c1', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 1, label: 'Cumple pos.', icon: 'fa-chess-pawn' },
-            { id: 'j_c2', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ocupación esp.', icon: 'fa-vector-square' },
+            { id: 'j_c1', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 1, label: 'Cumple Pos.', icon: 'fa-chess-pawn' },
+            { id: 'j_c2', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ocup. Espacio', icon: 'fa-vector-square' },
             { id: 'j_c3', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Orientación', icon: 'fa-compass' },
             { id: 'j_c4', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Basculación', icon: 'fa-arrows-alt-h' },
             { id: 'j_c5', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Cobertura', icon: 'fa-shield-alt' },
             { id: 'j_c6', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Vigilancia', icon: 'fa-eye' },
-            { id: 'j_c7', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Presión corr.', icon: 'fa-compress-arrows-alt' },
-            { id: 'j_c8', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Activa presión', icon: 'fa-bullhorn' },
-            { id: 'j_c9', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Rompe presión', icon: 'fa-unlock-alt' },
-            { id: 'j_c10', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ayuda comp.', icon: 'fa-hands-helping' },
+            { id: 'j_c7', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Presión Corr.', icon: 'fa-compress-arrows-alt' },
+            { id: 'j_c8', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Activa Presión', icon: 'fa-bullhorn' },
+            { id: 'j_c9', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Rompe Presión', icon: 'fa-unlock-alt' },
+            { id: 'j_c10', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ayuda Comp.', icon: 'fa-hands-helping' },
             { id: 'j_c11', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Interpretación', icon: 'fa-brain' },
-            { id: 'j_c12', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 4, label: 'Tac. decisiva', icon: 'fa-chess-knight' },
+            { id: 'j_c12', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 4, label: 'Tac. Decisiva', icon: 'fa-chess-knight' },
             // 🔴 ERRORES (tab: 'err', cat: 'men/tec/tac')
             { id: 'j_e1', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
-            { id: 'j_e2', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Falta intensid.', icon: 'fa-battery-empty' },
+            { id: 'j_e2', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Falta Inten.', icon: 'fa-battery-empty' },
             { id: 'j_e3', target: 'jugadores', tab: 'err', cat: 'men', pts: -1, label: 'Protesta', icon: 'fa-comment-slash' },
-            { id: 'j_e4', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Falta concent.', icon: 'fa-brain' },
-            { id: 'j_e5', target: 'jugadores', tab: 'err', cat: 'men', pts: -3, label: 'Mala actitud', icon: 'fa-thumbs-down' },
-            { id: 'j_e6', target: 'jugadores', tab: 'err', cat: 'tec', pts: -1, label: 'Mal control', icon: 'fa-times-circle' },
-            { id: 'j_e7', target: 'jugadores', tab: 'err', cat: 'tec', pts: -1, label: 'Pase errado', icon: 'fa-times' },
-            { id: 'j_e8', target: 'jugadores', tab: 'err', cat: 'tec', pts: -2, label: 'Pérdida pelig.', icon: 'fa-exclamation-triangle' },
+            { id: 'j_e4', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Falta Concent.', icon: 'fa-brain' },
+            { id: 'j_e5', target: 'jugadores', tab: 'err', cat: 'men', pts: -3, label: 'Mala Actitud', icon: 'fa-thumbs-down' },
+            { id: 'j_e6', target: 'jugadores', tab: 'err', cat: 'tec', pts: -1, label: 'Mal Control', icon: 'fa-times-circle' },
+            { id: 'j_e7', target: 'jugadores', tab: 'err', cat: 'tec', pts: -1, label: 'Pase Errado', icon: 'fa-times' },
+            { id: 'j_e8', target: 'jugadores', tab: 'err', cat: 'tec', pts: -2, label: 'Pérdida Pelig.', icon: 'fa-exclamation-triangle' },
             { id: 'j_e9', target: 'jugadores', tab: 'err', cat: 'tec', pts: -3, label: 'Pérd. -> Ocasión', icon: 'fa-skull' },
             { id: 'j_e10', target: 'jugadores', tab: 'err', cat: 'tec', pts: -5, label: 'Fallo -> GOL', icon: 'fa-skull-crossbones' },
-            { id: 'j_e11', target: 'jugadores', tab: 'err', cat: 'tac', pts: -1, label: 'Mala ocupación', icon: 'fa-map-signs' },
-            { id: 'j_e12', target: 'jugadores', tab: 'err', cat: 'tac', pts: -1, label: 'Mala orient.', icon: 'fa-compass' },
-            { id: 'j_e13', target: 'jugadores', tab: 'err', cat: 'tac', pts: -2, label: 'Sin cobertura', icon: 'fa-user-slash' },
-            { id: 'j_e14', target: 'jugadores', tab: 'err', cat: 'tac', pts: -2, label: 'Rompe estruct.', icon: 'fa-unlink' },
+            { id: 'j_e11', target: 'jugadores', tab: 'err', cat: 'tac', pts: -1, label: 'Mala Ocupación', icon: 'fa-map-signs' },
+            { id: 'j_e12', target: 'jugadores', tab: 'err', cat: 'tac', pts: -1, label: 'Mala Orient.', icon: 'fa-compass' },
+            { id: 'j_e13', target: 'jugadores', tab: 'err', cat: 'tac', pts: -2, label: 'Sin Cobertura', icon: 'fa-user-slash' },
+            { id: 'j_e14', target: 'jugadores', tab: 'err', cat: 'tac', pts: -2, label: 'Rompe Estruct.', icon: 'fa-unlink' },
             { id: 'j_e15', target: 'jugadores', tab: 'err', cat: 'tac', pts: -3, label: 'Err. -> Ocasión', icon: 'fa-exclamation-triangle' },
             { id: 'j_e16', target: 'jugadores', tab: 'err', cat: 'tac', pts: -5, label: 'Err. -> GOL', icon: 'fa-skull-crossbones' }
         ];
@@ -863,7 +869,7 @@
                         const data = snapshot.val(); 
                         edps = data ? Object.values(data) : []; 
                         
-                        // AUTO-UPDATE: Si el entrenador tiene una lista de botones antigua, la actualizamos automáticamente a la Mega-Lista
+                        // AUTO-UPDATE: Actualización mágica de la lista de botones si el entrenador entra y no tiene la nueva súper lista
                         if (currentUser && roleType === 'edp') {
                             const me = edps.find(e => e.id === currentUser.id);
                             if (me && (!me.botonesEval || me.botonesEval.length < 80)) {
@@ -1072,6 +1078,23 @@
             reader.readAsDataURL(file);
         }
 
+        // Lógica de foto para el alta desde EDP (Entrenador)
+        window.procesarImagenSeguraEdp = function(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image(); img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                    const maxSize = 300; let width = img.width; let height = img.height;
+                    if (width > height) { if (width > maxSize) { height *= maxSize / width; width = maxSize; } } else { if (height > maxSize) { width *= maxSize / height; height = maxSize; } }
+                    canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height);
+                    fotoTemp = canvas.toDataURL('image/jpeg', 0.6); document.getElementById('fotoPreviewEdp').src = fotoTemp;
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+
         window.guardarDeportista = function() {
             const idEdit = document.getElementById('reg-id').value; 
             const nombre = document.getElementById('reg-nombre').value; 
@@ -1264,6 +1287,8 @@
             document.getElementById('edp-add-equipo').value = '';
             document.getElementById('edp-add-ano').value = '';
             document.getElementById('edp-add-clave').value = '';
+            fotoTemp = ""; // Reiniciamos la foto por si acaba de crear otro
+            document.getElementById('fotoPreviewEdp').src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=";
             document.getElementById('modal-edp-add-player').style.display = 'flex';
         };
 
@@ -1292,7 +1317,7 @@
                 ano,
                 entrenador: currentUser.nombre,
                 clave,
-                foto: "",
+                foto: fotoTemp || "", // Usamos la foto que acaba de subir
                 puntos: 0,
                 stats: statsBase,
                 mensajeManual: "",
@@ -1305,6 +1330,7 @@
                 .then(() => {
                     showToast("¡Jugador añadido a tu equipo!");
                     document.getElementById('modal-edp-add-player').style.display = 'none';
+                    fotoTemp = ""; // Vaciamos para el próximo
                 })
                 .catch((e) => {
                     showToast("Error al conectar con la base de datos.", true);
@@ -1547,6 +1573,8 @@
                                 : '<div class="text-center text-xs text-[var(--text-sec)] py-2">Sin actividad</div>'}
                         </div>
                         ${p.historial && p.historial.length > 0 ? `<button onclick="window.verHistorialCompleto(${p.id}, '${tipo}')" class="w-full text-[0.7rem] text-atmRed font-black uppercase bg-[var(--input-bg)] py-1.5 rounded-lg border border-[var(--input-border)] mt-2 hover:bg-atmRed/10 transition-colors shadow-sm"><i class="fas fa-list"></i> VER HISTORIAL COMPLETO</button>` : ''}
+                        
+                        <button onclick="window.confirmarBorrar(${p.id}, '${tipo}')" class="w-full text-[0.7rem] text-white font-black uppercase bg-red-600/90 py-1.5 rounded-lg border border-red-500 mt-2 hover:bg-red-700 transition-colors shadow-sm"><i class="fas fa-trash"></i> ELIMINAR DEPORTISTA</button>
                     </div>
                 </div>
             </div>`;
@@ -1877,6 +1905,9 @@
             document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Excel generado");
         };
 
+        // ==========================================
+        // MOTOR PWA (NO TOCAR)
+        // ==========================================
         const pwaManifest = {
             "name": "ATM GAME POINTS",
             "short_name": "ATM POINTS",
@@ -1891,7 +1922,15 @@
         };
         
         const manifestBlob = new Blob([JSON.stringify(pwaManifest)], { type: 'application/json' });
-        document.getElementById('dynamic-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        
+        let manifestLink = document.querySelector('link[rel="manifest"]');
+        if(!manifestLink) {
+            manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            document.head.appendChild(manifestLink);
+        }
+        manifestLink.href = manifestUrl;
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
