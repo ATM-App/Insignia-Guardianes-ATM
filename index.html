@@ -130,10 +130,27 @@
         .recompensa-unlocked { border-color: #FFD700 !important; background-color: rgba(255, 215, 0, 0.05) !important; }
         .recompensa-unlocked .icon-box { background-color: rgba(255, 215, 0, 0.2) !important; color: #FFD700 !important; border: none !important; }
         
+        /* Miniaturas de Vestuario nítidas */
         .vestuario-mini { background-position: center center; background-size: cover; background-repeat: no-repeat; opacity: 1 !important; mix-blend-mode: normal !important; }
     </style>
 </head>
 <body data-theme="dark" class="antialiased selection:bg-atmRed selection:text-white">
+
+    <!-- INSTALACIÓN PWA UI -->
+    <!-- Botón Instalar Android/Desktop -->
+    <button id="btn-install-pwa" class="hidden fixed top-4 left-4 z-[9999] bg-gradient-to-r from-atmRed to-red-900 text-white px-4 py-2 rounded-full font-black shadow-lg flex items-center gap-2 hover:scale-105 transition-transform border border-white/20 text-xs">
+        <i class="fas fa-download"></i> INSTALAR APP
+    </button>
+
+    <!-- Popup Instrucciones iOS -->
+    <div id="ios-install-popup" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white text-black p-4 rounded-2xl shadow-2xl z-[9999] border-2 border-atmRed">
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-black text-sm uppercase text-atmRed"><i class="fab fa-apple"></i> Instalar en iPhone</h4>
+            <button onclick="document.getElementById('ios-install-popup').style.display='none'"><i class="fas fa-times text-gray-500 hover:text-black"></i></button>
+        </div>
+        <p class="text-xs text-gray-700 font-bold leading-tight">Para instalar la App, pulsa el botón de <b>Compartir</b> <i class="fas fa-external-link-alt mx-1 text-blue-500"></i> en la barra de Safari y selecciona <b>"Añadir a la pantalla de inicio"</b>.</p>
+    </div>
+    <!-- FIN PWA UI -->
 
     <div id="toast-container"></div>
 
@@ -242,7 +259,7 @@
     <div id="modal-edp-add-player" class="modal-overlay" style="display:none;">
         <div class="modal-box w-full max-w-md p-6 flex flex-col">
             <h3 class="text-xl font-black mb-1 text-[var(--text-main)] uppercase"><i class="fas fa-user-plus text-[#2ecc71] mr-2"></i> Alta en mi Equipo</h3>
-            <p class="text-xs text-[var(--text-sec)] italic mb-5">Añade foto, datos y se asignará a tu plantilla.</p>
+            <p class="text-xs text-[var(--text-sec)] italic mb-5">El jugador se asignará directamente a tu plantilla.</p>
             
             <div class="w-24 h-24 mx-auto mb-4 relative cursor-pointer group" onclick="document.getElementById('fileInputEdp').click()">
                 <img id="fotoPreviewEdp" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=" class="w-full h-full object-cover rounded-full border-4 border-[#2ecc71] shadow-[0_5px_15px_rgba(46,204,113,0.4)] group-hover:scale-105 transition-transform">
@@ -333,9 +350,9 @@
         </div>
 
         <div class="split-right">
-            <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i class="fas fa-sun" id="btn-theme-home"></i></button>
+            <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i id="btn-theme-home"></i></button>
             <div>
-                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">"NUNCA DEJES DE CREER"</h2>
+                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">TRABAJA.<br>APRENDE.<br>MEJORA.</h2>
                 <h1 class="text-[3rem] xl:text-[4rem] font-black italic leading-[1] tracking-tighter uppercase text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-8">
                     LUCHA POR CADA BALÓN.<br>
                     <span class="text-atmRed">AYUDA A TUS COMPAÑEROS.</span><br>
@@ -361,7 +378,7 @@
                 <h1 class="text-lg font-black italic uppercase text-white tracking-wide">ATLETI <span class="text-atmRed">GAME POINTS</span></h1>
             </div>
             <div class="flex gap-4 items-center text-white">
-                <button onclick="window.toggleTheme()" class="text-xl hover:scale-110 transition-transform"><i class="fas fa-sun" id="btn-theme"></i></button>
+                <button onclick="window.toggleTheme()" class="text-xl hover:scale-110 transition-transform"><i id="btn-theme"></i></button>
                 <button id="btn-logout" onclick="window.logout()" class="text-xl text-atmRed hover:scale-110 transition-transform"><i class="fas fa-power-off"></i></button>
             </div>
         </div>
@@ -538,7 +555,7 @@
             <!-- Gráficos Analíticos -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="glass-card rounded-2xl p-5">
-                    <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Academia)</span></h3>
+                    <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Equipo)</span></h3>
                     <div class="relative h-64 w-full"><canvas id="adnChart"></canvas></div>
                 </div>
                 <div class="glass-card rounded-2xl p-5">
@@ -583,7 +600,7 @@
 
             <div class="glass-card rounded-2xl p-5 text-center mb-6">
                 <i class="fas fa-trophy text-4xl text-gold mb-3 drop-shadow-[0_2px_10px_rgba(255,215,0,0.5)]"></i>
-                <h2 class="font-black text-xl tracking-widest mb-4">CLASIFICACIÓN</h2>
+                <h2 class="font-black text-xl tracking-widest mb-4">CLASIFICACIÓN LIGA INTERNA</h2>
                 <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 border border-white/5 overflow-x-auto custom-scrollbar">
                     <button class="segment-btn active flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-1.5" id="rank-global" onclick="window.toggleRanking('global')"><i class="fas fa-globe"></i> Global</button>
                     <button class="segment-btn flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-1.5" id="rank-por" onclick="window.toggleRanking('porteros')"><i class="fas fa-mitten"></i> Porteros</button>
@@ -592,7 +609,7 @@
             </div>
 
             <div id="smart-rankings" class="grid grid-cols-2 gap-3 mb-8"></div>
-            <div class="text-center text-atmRed font-black uppercase tracking-widest mb-4 border-b-2 border-atmRed/20 pb-2" id="ranking-title-label">TABLA GLOBAL MVP</div>
+            <div class="text-center text-atmRed font-black uppercase tracking-widest mb-4 border-b-2 border-atmRed/20 pb-2" id="ranking-title-label">TABLA EQUIPO MVP</div>
             <div id="ranking-list-container" class="space-y-3"></div>
         </section>
     </main>
@@ -636,7 +653,7 @@
         let tempRewards = []; let tempBotones = []; 
         let isReadOnlyMode = false; let readOnlyId = null; let readOnlyTipoPlural = null;
 
-        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores (AHORA SÍ, COMPLETA)
+        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores
         const DEFAULT_EVAL_BUTTONS = [
             // ============================================
             // --- 🧤 MEGA-LISTA PARA PORTEROS 🧤 ---
@@ -869,7 +886,7 @@
                         const data = snapshot.val(); 
                         edps = data ? Object.values(data) : []; 
                         
-                        // AUTO-UPDATE: Actualización mágica de la lista de botones si el entrenador entra y no tiene la nueva súper lista
+                        // AUTO-UPDATE de Botones
                         if (currentUser && roleType === 'edp') {
                             const me = edps.find(e => e.id === currentUser.id);
                             if (me && (!me.botonesEval || me.botonesEval.length < 80)) {
@@ -1791,7 +1808,7 @@
             
             chartInstance = new Chart(ctxEl, { 
                 type: 'radar', 
-                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
+                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media Equipo', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: 20 }, scales: { r: { min: 0, suggestedMax: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#fff' : '#333', font: {size: 11, weight: 'bold'}, padding: 15 }, ticks: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#fff' : '#333', boxWidth: 10, font: {size: 10} } } } } 
             });
         }
@@ -1811,7 +1828,7 @@
             activeBtn.classList.remove('text-[var(--text-sec)]'); activeBtn.classList.add('bg-[var(--segment-active)]', 'text-[var(--text-main)]', 'shadow-md');
             
             const titleLabel = document.getElementById('ranking-title-label');
-            if(mode === 'global') titleLabel.innerText = "TABLA GLOBAL MVP";
+            if(mode === 'global') titleLabel.innerText = "TABLA EQUIPO MVP";
             if(mode === 'porteros') titleLabel.innerText = "GUANTE DE ORO (PORTEROS)";
             if(mode === 'jugadores') titleLabel.innerText = "BOTA DE ORO (JUGADORES)";
             
@@ -1906,38 +1923,54 @@
         };
 
         // ==========================================
-        // MOTOR PWA (NO TOCAR)
+        // MOTOR PWA - INSTALACIÓN DE APP
         // ==========================================
-        const pwaManifest = {
-            "name": "ATM GAME POINTS",
-            "short_name": "ATM POINTS",
-            "start_url": window.location.pathname,
-            "display": "standalone",
-            "background_color": "#0b1120",
-            "theme_color": "#1C2C5B",
-            "icons": [
-                { "src": "GuardinesAtleti.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-                { "src": "GuardinesAtleti.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-            ]
-        };
-        
-        const manifestBlob = new Blob([JSON.stringify(pwaManifest)], { type: 'application/json' });
-        const manifestUrl = URL.createObjectURL(manifestBlob);
-        
-        let manifestLink = document.querySelector('link[rel="manifest"]');
-        if(!manifestLink) {
-            manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            document.head.appendChild(manifestLink);
-        }
-        manifestLink.href = manifestUrl;
+        let deferredPrompt;
+        const installBtn = document.getElementById('btn-install-pwa');
+        const iosPopup = document.getElementById('ios-install-popup');
 
+        // Lógica Android / Desktop Chrome
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'flex';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            installBtn.style.display = 'none';
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the A2HS prompt');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+            deferredPrompt = null;
+            console.log('PWA was installed');
+        });
+
+        // Lógica iOS (iPhone/iPad)
+        const isIos = () => {
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            return /iphone|ipad|ipod/.test(userAgent);
+        };
+        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+        if (isIos() && !isInStandaloneMode()) {
+            iosPopup.style.display = 'block';
+        }
+
+        // Registro de Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('Motor PWA activado con éxito.'))
-                .catch(err => console.log('Error PWA:', err));
+                .then(() => console.log('Service Worker Registrado'))
+                .catch(err => console.log('Error SW:', err));
         }
-
     </script>
 </body>
 </html>
