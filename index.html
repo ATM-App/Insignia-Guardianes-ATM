@@ -127,12 +127,10 @@
 <body data-theme="dark" class="antialiased selection:bg-atmRed selection:text-white">
 
     <!-- INSTALACIÓN PWA UI -->
-    <!-- Botón Instalar Android/Desktop (Forzado) -->
     <button id="btn-install-pwa" class="hidden fixed top-4 left-4 z-[9999] bg-gradient-to-r from-atmRed to-red-900 text-white px-4 py-2 rounded-full font-black shadow-lg flex items-center gap-2 hover:scale-105 transition-transform border border-white/20 text-xs">
         <i class="fas fa-download"></i> INSTALAR APP
     </button>
 
-    <!-- Popup Instrucciones iOS -->
     <div id="ios-install-popup" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white text-black p-4 rounded-2xl shadow-2xl z-[9999] border-2 border-atmRed">
         <div class="flex justify-between items-start mb-2">
             <h4 class="font-black text-sm uppercase text-atmRed"><i class="fab fa-apple"></i> Instalar en iPhone</h4>
@@ -140,7 +138,6 @@
         </div>
         <p class="text-xs text-gray-700 font-bold leading-tight">Para instalar la App, pulsa el botón de <b>Compartir</b> <i class="fas fa-external-link-alt mx-1 text-blue-500"></i> en la barra de Safari y selecciona <b>"Añadir a la pantalla de inicio"</b>.</p>
     </div>
-    <!-- FIN PWA UI -->
 
     <div id="toast-container"></div>
 
@@ -164,7 +161,6 @@
             <p class="text-xs text-[var(--text-sec)] italic mb-5">Añade, edita o elimina recompensas para tu equipo. Se ordenarán automáticamente por puntos.</p>
             
             <div id="dynamic-rewards-container" class="flex-1 text-left overflow-y-auto custom-scrollbar pr-2 mb-4 space-y-3">
-                <!-- Rellenado con JS -->
             </div>
             
             <button class="w-full bg-[var(--input-bg)] border-2 border-dashed border-[var(--input-border)] text-[var(--text-sec)] font-bold py-3 rounded-xl mb-5 hover:border-gold hover:text-gold transition-colors" onclick="window.addRecompensaConfig()">
@@ -210,7 +206,6 @@
 
             <div class="text-left text-xs font-black uppercase text-[var(--text-sec)] mb-2 tracking-widest border-b border-[var(--card-border)] pb-1">TUS BOTONES ACTUALES</div>
             <div id="dynamic-eval-btns-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-2 mb-4 text-left">
-                <!-- Rellenado con JS -->
             </div>
 
             <div class="flex gap-2 mt-auto">
@@ -299,7 +294,7 @@
             <div class="text-center mb-10 mt-6">
                 <img src="logo.png" alt="Logo Atleti" class="h-16 mx-auto mb-4 drop-shadow-lg" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-black italic tracking-wider text-white">ATLETI <span class="text-atmRed">GAME POINTS</span></h1>
-                <p class="text-[0.65rem] text-gray-400 font-extrabold tracking-[0.2em] uppercase mt-1">*JUEGO DE PUNTOS*</p>
+                <p class="text-[0.65rem] text-gray-400 font-extrabold tracking-[0.2em] uppercase mt-1">*Juego de puntos*</p>
             </div>
 
             <div id="home-role-selection" class="flex-1 flex flex-col justify-center animate-[popIn_0.3s_ease]">
@@ -340,9 +335,9 @@
         </div>
 
         <div class="split-right">
-            <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i id="btn-theme-home"></i></button>
+            <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i class="fas fa-sun" id="btn-theme-home"></i></button>
             <div>
-                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">"NUNCA DEJES DE CREER"</h2>
+                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">TRABAJA. APRENDE. MEJORA.</h2>
                 <h1 class="text-[3rem] xl:text-[4rem] font-black italic leading-[1] tracking-tighter uppercase text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-8">
                     LUCHA POR CADA BALÓN.<br>
                     <span class="text-atmRed">AYUDA A TUS COMPAÑEROS.</span><br>
@@ -360,6 +355,7 @@
         </div>
     </section>
 
+    <!-- HEADER INTERNO -->
     <header id="main-header" class="hidden sticky top-0 z-50 bg-gradient-to-b from-[#1C2C5B] to-transparent pb-6 pt-4 px-5 backdrop-blur-sm">
         <div class="flex justify-between items-center max-w-4xl mx-auto w-full">
             <div class="flex items-center gap-3">
@@ -367,7 +363,7 @@
                 <h1 class="text-lg font-black italic uppercase text-white tracking-wide">ATLETI <span class="text-atmRed">GAME POINTS</span></h1>
             </div>
             <div class="flex gap-4 items-center text-white">
-                <button onclick="window.toggleTheme()" class="text-xl hover:scale-110 transition-transform"><i id="btn-theme"></i></button>
+                <button onclick="window.toggleTheme()" class="text-xl hover:scale-110 transition-transform"><i class="fas fa-sun" id="btn-theme"></i></button>
                 <button id="btn-logout" onclick="window.logout()" class="text-xl text-atmRed hover:scale-110 transition-transform"><i class="fas fa-power-off"></i></button>
             </div>
         </div>
@@ -562,6 +558,18 @@
                 </div>
             </div>
 
+            <!-- Historial Reciente (En el Perfil del Jugador) -->
+            <div class="glass-card rounded-2xl p-5 mb-6">
+                <h3 class="font-black text-lg uppercase tracking-wide mb-1"><i class="fas fa-history text-atmRed mr-2"></i> Historial</h3>
+                <p class="text-xs text-[var(--text-sec)] italic mb-4">Tus últimos puntos conseguidos en el campo.</p>
+                <div id="dash-history-list" class="space-y-2 mb-3">
+                    <!-- Rellenado por JS -->
+                </div>
+                <button id="btn-dash-full-history" class="w-full text-[0.7rem] text-atmRed font-black uppercase bg-[var(--input-bg)] py-2 rounded-xl border border-[var(--input-border)] hover:bg-atmRed/10 transition-colors shadow-sm hidden">
+                    <i class="fas fa-list"></i> VER HISTORIAL COMPLETO
+                </button>
+            </div>
+
             <div id="section-vestuario" class="glass-card rounded-2xl p-5 mb-6">
                 <h3 class="font-black text-lg uppercase tracking-wide mb-1">Vestuario</h3>
                 <p class="text-xs text-[var(--text-sec)] italic mb-4">Personaliza el fondo de tu carta según tus puntos.</p>
@@ -642,12 +650,11 @@
         let tempRewards = []; let tempBotones = []; 
         let isReadOnlyMode = false; let readOnlyId = null; let readOnlyTipoPlural = null;
 
-        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores (AHORA SÍ, COMPLETA)
+        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores
         const DEFAULT_EVAL_BUTTONS = [
             // ============================================
             // --- 🧤 MEGA-LISTA PARA PORTEROS 🧤 ---
             // ============================================
-            // 🟣 ACTITUD (tab: 'act', cat: 'men')
             { id: 'p_a1', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
             { id: 'p_a2', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
             { id: 'p_a3', target: 'porteros', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda', icon: 'fa-hands-helping' },
@@ -658,7 +665,6 @@
             { id: 'p_a8', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Competitividad', icon: 'fa-khanda' },
             { id: 'p_a9', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Compromiso', icon: 'fa-shield-alt' },
             { id: 'p_a10', target: 'porteros', tab: 'act', cat: 'men', pts: 2, label: 'Iniciativa', icon: 'fa-rocket' },
-            // 🔵 TÉCNICA (tab: 'tec', cat: 'tec')
             { id: 'p_t1', target: 'porteros', tab: 'tec', cat: 'tec', pts: 1, label: 'Bloqueo', icon: 'fa-hand-rock' },
             { id: 'p_t2', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Reflejos', icon: 'fa-bolt' },
             { id: 'p_t3', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Parada TOP', icon: 'fa-star' },
@@ -685,7 +691,6 @@
             { id: 'p_t24', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Cont. Presión', icon: 'fa-compress' },
             { id: 'p_t25', target: 'porteros', tab: 'tec', cat: 'tec', pts: 2, label: 'Desp. Difícil', icon: 'fa-bomb' },
             { id: 'p_t26', target: 'porteros', tab: 'tec', cat: 'tec', pts: 3, label: 'Acción Consec.', icon: 'fa-link' },
-            // 🟢 JUEGO (tab: 'jue', cat: 'jue')
             { id: 'p_j1', target: 'porteros', tab: 'jue', cat: 'jue', pts: 2, label: 'Decisión', icon: 'fa-lightbulb' },
             { id: 'p_j2', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Dec. Presión', icon: 'fa-brain' },
             { id: 'p_j3', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Dec. Ventaja', icon: 'fa-arrow-up' },
@@ -711,7 +716,6 @@
             { id: 'p_j23', target: 'porteros', tab: 'jue', cat: 'jue', pts: 3, label: 'Tiro Cercano', icon: 'fa-bullseye' },
             { id: 'p_j24', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Mano a Mano', icon: 'fa-handshake' },
             { id: 'p_j25', target: 'porteros', tab: 'jue', cat: 'jue', pts: 4, label: 'Acc. Tráfico', icon: 'fa-car-crash' },
-            // 🟡 RETOS (tab: 'ret', cat: 'ret')
             { id: 'p_r1', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Parada Partido', icon: 'fa-star' },
             { id: 'p_r2', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Muro', icon: 'fa-brick' },
             { id: 'p_r3', target: 'porteros', tab: 'ret', cat: 'ret', pts: 4, label: 'Dueño Área', icon: 'fa-home' },
@@ -721,7 +725,6 @@
             { id: 'p_r7', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Momento Clave', icon: 'fa-key' },
             { id: 'p_r8', target: 'porteros', tab: 'ret', cat: 'ret', pts: 5, label: 'Puerta a Cero', icon: 'fa-shield-alt' },
             { id: 'p_r9', target: 'porteros', tab: 'ret', cat: 'ret', pts: 6, label: 'MVP Portero', icon: 'fa-crown' },
-            // 🔴 ERRORES (tab: 'err', cat: 'men/tec/jue')
             { id: 'p_e1', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
             { id: 'p_e2', target: 'porteros', tab: 'err', cat: 'men', pts: -2, label: 'Falta Inten.', icon: 'fa-battery-empty' },
             { id: 'p_e3', target: 'porteros', tab: 'err', cat: 'men', pts: -1, label: 'Protesta', icon: 'fa-comment-slash' },
@@ -740,7 +743,6 @@
             // ============================================
             // --- 🏃‍♂️ MEGA-LISTA PARA JUGADORES 🏃‍♂️ ---
             // ============================================
-            // 🟣 ACTITUD (tab: 'act', cat: 'men')
             { id: 'j_a1', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Esfuerzo', icon: 'fa-bolt' },
             { id: 'j_a2', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Intensidad', icon: 'fa-fire' },
             { id: 'j_a3', target: 'jugadores', tab: 'act', cat: 'men', pts: 1, label: 'Ayuda', icon: 'fa-hands-helping' },
@@ -751,7 +753,6 @@
             { id: 'j_a8', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Competitividad', icon: 'fa-khanda' },
             { id: 'j_a9', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Compromiso', icon: 'fa-shield-alt' },
             { id: 'j_a10', target: 'jugadores', tab: 'act', cat: 'men', pts: 2, label: 'Iniciativa', icon: 'fa-rocket' },
-            // 🔵 TÉCNICA (tab: 'tec', cat: 'tec')
             { id: 'j_t1', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Buen Control', icon: 'fa-shoe-prints' },
             { id: 'j_t2', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Cont. Orient.', icon: 'fa-compass' },
             { id: 'j_t3', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 1, label: 'Pase Correcto', icon: 'fa-check' },
@@ -765,7 +766,6 @@
             { id: 'j_t11', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Centro Preciso', icon: 'fa-crosshairs' },
             { id: 'j_t12', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 2, label: 'Tiro a Puerta', icon: 'fa-bullseye' },
             { id: 'j_t13', target: 'jugadores', tab: 'tec', cat: 'tec', pts: 5, label: 'GOL', icon: 'fa-futbol' },
-            // 🟢 JUEGO / FÍSICO (tab: 'fis', cat: 'fis')
             { id: 'j_f1', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Buena Decisión', icon: 'fa-lightbulb' },
             { id: 'j_f2', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Dec. Presión', icon: 'fa-brain' },
             { id: 'j_f3', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Dec. Ventaja', icon: 'fa-arrow-up' },
@@ -786,7 +786,6 @@
             { id: 'j_f18', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Def. Ganado', icon: 'fa-lock' },
             { id: 'j_f19', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 2, label: 'Recuperación', icon: 'fa-undo' },
             { id: 'j_f20', target: 'jugadores', tab: 'fis', cat: 'fis', pts: 3, label: 'Rec. Arriba', icon: 'fa-arrow-alt-circle-up' },
-            // 🟠 TÁCTICA (tab: 'tac', cat: 'tac')
             { id: 'j_c1', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 1, label: 'Cumple Pos.', icon: 'fa-chess-pawn' },
             { id: 'j_c2', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ocup. Espacio', icon: 'fa-vector-square' },
             { id: 'j_c3', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Orientación', icon: 'fa-compass' },
@@ -799,7 +798,6 @@
             { id: 'j_c10', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 2, label: 'Ayuda Comp.', icon: 'fa-hands-helping' },
             { id: 'j_c11', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 3, label: 'Interpretación', icon: 'fa-brain' },
             { id: 'j_c12', target: 'jugadores', tab: 'tac', cat: 'tac', pts: 4, label: 'Tac. Decisiva', icon: 'fa-chess-knight' },
-            // 🔴 ERRORES (tab: 'err', cat: 'men/tec/tac')
             { id: 'j_e1', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Desconexión', icon: 'fa-ghost' },
             { id: 'j_e2', target: 'jugadores', tab: 'err', cat: 'men', pts: -2, label: 'Falta Inten.', icon: 'fa-battery-empty' },
             { id: 'j_e3', target: 'jugadores', tab: 'err', cat: 'men', pts: -1, label: 'Protesta', icon: 'fa-comment-slash' },
@@ -1627,7 +1625,7 @@
         window.verHistorialCompleto = function(id, tipo) {
             const tipoPlural = (tipo === 'portero' || tipo === 'porteros') ? 'porteros' : 'jugadores';
             const arr = tipoPlural === 'porteros' ? porteros : jugadores;
-            const p = arr.find(x => x.id === id); if(!p) return;
+            const p = arr.find(x => String(x.id) === String(id)); if(!p) return;
             document.getElementById('history-modal-title').innerText = `HISTORIAL: ${p.nombre}`;
             const c = document.getElementById('history-modal-content');
             c.innerHTML = (p.historial && p.historial.length > 0) ? p.historial.map(h => `
@@ -1725,6 +1723,27 @@
                         <span class="font-black ${isPor ? 'text-[#f1c40f]' : 'text-[#e67e22]'} text-lg">${isPor ? (s.ret||60) : (s.tac||60)} <span class="text-[0.5rem] font-bold text-[var(--text-sec)]">PTS</span></span>
                     </div>
                 `;
+            }
+
+            // Historial de Puntos en Dashboard
+            const historyContainer = document.getElementById('dash-history-list');
+            const btnFullHistory = document.getElementById('btn-dash-full-history');
+            if (historyContainer) {
+                if (p.historial && p.historial.length > 0) {
+                    historyContainer.innerHTML = p.historial.slice(0, 5).map(h => `
+                        <div class="flex justify-between items-center text-sm border-b border-[var(--input-border)] pb-2 last:border-0 last:pb-0">
+                            <span class="w-16 text-[var(--text-sec)] text-[0.65rem] font-bold leading-tight">${h.fecha.split(' ')[0]}<br>${h.fecha.split(' ')[1] || ''}</span>
+                            <span class="w-8 text-center text-lg ${h.puntos<0?'text-red-500':''}" style="${h.puntos>0?'color:'+getColor(h.categoria):''}"><i class="fas ${h.icon}"></i></span>
+                            <span class="flex-1 font-semibold text-[0.8rem] ${h.puntos<0?'text-red-500':'text-[var(--text-main)]'}">${h.accion}</span>
+                            <span class="font-black text-base ${h.puntos>0?'text-lvl1':'text-red-500'}">${h.puntos>0?'+'+h.puntos:h.puntos}</span>
+                        </div>
+                    `).join('');
+                    btnFullHistory.style.display = 'block';
+                    btnFullHistory.onclick = () => window.verHistorialCompleto(p.id, tipoPlural);
+                } else {
+                    historyContainer.innerHTML = '<p class="text-center text-xs text-[var(--text-sec)] py-2">Aún no hay registros de puntos.</p>';
+                    btnFullHistory.style.display = 'none';
+                }
             }
 
             const badges = [ { name: "Primeros Pasos", limit: 30, icon: "shoe-prints" }, { name: "Buen Inicio", limit: 80, icon: "thumbs-up" }, { name: "Chispa", limit: 120, icon: "bolt" }, { name: "Constancia", limit: 150, icon: "bullseye" }, { name: "Mentalidad Pro", limit: 200, icon: "brain" }, { name: "Espíritu Indio", limit: 250, icon: "heart" }, { name: "Leyenda", limit: 900, icon: "star" } ];
@@ -1909,19 +1928,15 @@
             document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Excel generado");
         };
 
-        // MOTOR PWA - INSTALACIÓN DE APP
         let deferredPrompt;
         const installBtn = document.getElementById('btn-install-pwa');
         const iosPopup = document.getElementById('ios-install-popup');
 
-        // Lógica Android / Desktop Chrome
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // Forzamos que se quite la clase oculta y se muestre
             installBtn.classList.remove('hidden');
             installBtn.style.display = 'flex';
-            console.log("¡Android/Windows permite instalación!");
         });
 
         installBtn.addEventListener('click', async () => {
@@ -1930,9 +1945,7 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    showToast("¡Instalando App!");
-                }
+                if (outcome === 'accepted') { showToast("¡Instalando App!"); }
                 deferredPrompt = null;
             }
         });
@@ -1941,25 +1954,19 @@
             installBtn.style.display = 'none';
             installBtn.classList.add('hidden');
             deferredPrompt = null;
-            console.log('PWA Instalada');
         });
 
-        // Lógica iOS (iPhone/iPad)
-        const isIos = () => {
-            const userAgent = window.navigator.userAgent.toLowerCase();
-            return /iphone|ipad|ipod/.test(userAgent);
-        };
+        const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
         const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
 
         if (isIos() && !isInStandaloneMode()) {
             iosPopup.style.display = 'block';
         }
 
-        // Registro de Service Worker mejorado
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('SW OK:', reg.scope))
+                    .then(reg => console.log('SW PWA OK:', reg.scope))
                     .catch(err => console.log('SW Falló:', err));
             });
         }
