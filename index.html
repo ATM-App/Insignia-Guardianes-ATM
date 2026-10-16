@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1C2C5B">
-    <link rel="apple-touch-icon" href="GuardinesAtleti.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <meta name="apple-mobile-web-app-title" content="ATM GAME POINTS">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
@@ -72,11 +72,8 @@
         }
 
         .fifa-card-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; perspective: 1000px; }
-        
-        /* Contenedor principal con tamaño fijo blindado */
         .fifa-card-simple { width: 270px; height: 390px; border-radius: 15px; position: relative; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden; background: #000; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         
-        /* Materiales de la Tarjeta */
         .card-bronce { background: linear-gradient(135deg, #a67c52 0%, #8b5a2b 50%, #5c3a21 100%); border: 2px solid #d4a373; }
         .card-plata { background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #9e9e9e 100%); border: 2px solid #fff; }
         .card-oro { background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%); border: 2px solid #fff; }
@@ -86,7 +83,6 @@
         .shine-effect { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); transform: rotate(45deg); animation: shine 3s infinite; pointer-events: none; z-index: 50; }
         @keyframes shine { 0% { left: -50%; } 100% { left: 150%; } }
 
-        /* Capa 0: Fondo de Estadios / Escudos */
         #card-bg-layer { position: absolute; inset: 0; z-index: 0; background-position: center top; background-size: cover; background-repeat: no-repeat; mix-blend-mode: luminosity; opacity: 0.8; }
         .fondo-base { background-image: none; opacity: 1; mix-blend-mode: normal !important; }
         .fondo-escudo { background-image: url('escudo_ATM.png'); background-size: 80% !important; opacity: 0.8; }
@@ -94,14 +90,9 @@
         .fondo-neptuno { background-image: url('neptuno.jpg'); background-position: center center !important; opacity: 0.8; }
         .fondo-oblak { background-image: url('leyendas.jpg'); opacity: 0.8; }
 
-        /* Capa 1: Degradado suave para lectura de textos */
         .fade-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 45%, rgba(5,5,5,0.8) 65%, rgba(0,0,0,1) 90%); z-index: 10; pointer-events: none; }
-
-        /* Capa 2: Foto del Jugador (Posición Absoluta Blindada) */
         .player-photo-layer { position: absolute; z-index: 20; bottom: 110px; left: 0; right: 0; height: 180px; display: flex; justify-content: center; align-items: flex-end; pointer-events: none; }
         .player-photo-layer img { max-height: 100%; max-width: 90%; object-fit: contain; object-position: bottom; filter: drop-shadow(0 15px 15px rgba(0,0,0,0.8)); pointer-events: auto; }
-
-        /* Capa 3: Textos (Por encima de todo) */
         .card-foreground { position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; padding: 1rem; }
 
         .toast { position: fixed; right: 20px; bottom: 100px; background: var(--bg-card); backdrop-filter: blur(15px); color: var(--text-main); padding: 15px 20px; border-radius: 12px; border-left: 5px solid #2ecc71; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; z-index: 9999; animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; border: 1px solid var(--input-border); }
@@ -130,14 +121,13 @@
         .recompensa-unlocked { border-color: #FFD700 !important; background-color: rgba(255, 215, 0, 0.05) !important; }
         .recompensa-unlocked .icon-box { background-color: rgba(255, 215, 0, 0.2) !important; color: #FFD700 !important; border: none !important; }
         
-        /* Miniaturas de Vestuario nítidas */
         .vestuario-mini { background-position: center center; background-size: cover; background-repeat: no-repeat; opacity: 1 !important; mix-blend-mode: normal !important; }
     </style>
 </head>
 <body data-theme="dark" class="antialiased selection:bg-atmRed selection:text-white">
 
     <!-- INSTALACIÓN PWA UI -->
-    <!-- Botón Instalar Android/Desktop -->
+    <!-- Botón Instalar Android/Desktop (Forzado) -->
     <button id="btn-install-pwa" class="hidden fixed top-4 left-4 z-[9999] bg-gradient-to-r from-atmRed to-red-900 text-white px-4 py-2 rounded-full font-black shadow-lg flex items-center gap-2 hover:scale-105 transition-transform border border-white/20 text-xs">
         <i class="fas fa-download"></i> INSTALAR APP
     </button>
@@ -352,7 +342,7 @@
         <div class="split-right">
             <button class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-xl" onclick="window.toggleTheme()"><i id="btn-theme-home"></i></button>
             <div>
-                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">TRABAJA.<br>APRENDE.<br>MEJORA.</h2>
+                <h2 class="text-2xl font-black italic text-atmRed mb-4 uppercase tracking-wider">"NUNCA DEJES DE CREER"</h2>
                 <h1 class="text-[3rem] xl:text-[4rem] font-black italic leading-[1] tracking-tighter uppercase text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] mb-8">
                     LUCHA POR CADA BALÓN.<br>
                     <span class="text-atmRed">AYUDA A TUS COMPAÑEROS.</span><br>
@@ -370,7 +360,6 @@
         </div>
     </section>
 
-    <!-- HEADER INTERNO -->
     <header id="main-header" class="hidden sticky top-0 z-50 bg-gradient-to-b from-[#1C2C5B] to-transparent pb-6 pt-4 px-5 backdrop-blur-sm">
         <div class="flex justify-between items-center max-w-4xl mx-auto w-full">
             <div class="flex items-center gap-3">
@@ -555,7 +544,7 @@
             <!-- Gráficos Analíticos -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="glass-card rounded-2xl p-5">
-                    <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Equipo)</span></h3>
+                    <h3 class="font-black text-sm uppercase tracking-widest mb-4">ADN <span class="text-[0.65rem] font-normal text-[var(--text-sec)] normal-case">(Vs Media Academia)</span></h3>
                     <div class="relative h-64 w-full"><canvas id="adnChart"></canvas></div>
                 </div>
                 <div class="glass-card rounded-2xl p-5">
@@ -600,7 +589,7 @@
 
             <div class="glass-card rounded-2xl p-5 text-center mb-6">
                 <i class="fas fa-trophy text-4xl text-gold mb-3 drop-shadow-[0_2px_10px_rgba(255,215,0,0.5)]"></i>
-                <h2 class="font-black text-xl tracking-widest mb-4">CLASIFICACIÓN LIGA INTERNA</h2>
+                <h2 class="font-black text-xl tracking-widest mb-4">CLASIFICACIÓN</h2>
                 <div class="bg-[var(--segment-bg)] p-1.5 rounded-xl flex gap-1 border border-white/5 overflow-x-auto custom-scrollbar">
                     <button class="segment-btn active flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold bg-[var(--segment-active)] text-[var(--text-main)] shadow-md transition-all flex items-center justify-center gap-1.5" id="rank-global" onclick="window.toggleRanking('global')"><i class="fas fa-globe"></i> Global</button>
                     <button class="segment-btn flex-1 min-w-[100px] py-2.5 rounded-lg text-xs font-bold text-gray-500 hover:text-[var(--text-main)] transition-all flex items-center justify-center gap-1.5" id="rank-por" onclick="window.toggleRanking('porteros')"><i class="fas fa-mitten"></i> Porteros</button>
@@ -609,7 +598,7 @@
             </div>
 
             <div id="smart-rankings" class="grid grid-cols-2 gap-3 mb-8"></div>
-            <div class="text-center text-atmRed font-black uppercase tracking-widest mb-4 border-b-2 border-atmRed/20 pb-2" id="ranking-title-label">TABLA EQUIPO MVP</div>
+            <div class="text-center text-atmRed font-black uppercase tracking-widest mb-4 border-b-2 border-atmRed/20 pb-2" id="ranking-title-label">TABLA GLOBAL MVP</div>
             <div id="ranking-list-container" class="space-y-3"></div>
         </section>
     </main>
@@ -653,7 +642,7 @@
         let tempRewards = []; let tempBotones = []; 
         let isReadOnlyMode = false; let readOnlyId = null; let readOnlyTipoPlural = null;
 
-        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores
+        // MEGA-BASE DE DATOS: Botones por defecto para Porteros y Jugadores (AHORA SÍ, COMPLETA)
         const DEFAULT_EVAL_BUTTONS = [
             // ============================================
             // --- 🧤 MEGA-LISTA PARA PORTEROS 🧤 ---
@@ -886,7 +875,6 @@
                         const data = snapshot.val(); 
                         edps = data ? Object.values(data) : []; 
                         
-                        // AUTO-UPDATE de Botones
                         if (currentUser && roleType === 'edp') {
                             const me = edps.find(e => e.id === currentUser.id);
                             if (me && (!me.botonesEval || me.botonesEval.length < 80)) {
@@ -1095,7 +1083,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Lógica de foto para el alta desde EDP (Entrenador)
         window.procesarImagenSeguraEdp = function(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
@@ -1304,7 +1291,7 @@
             document.getElementById('edp-add-equipo').value = '';
             document.getElementById('edp-add-ano').value = '';
             document.getElementById('edp-add-clave').value = '';
-            fotoTemp = ""; // Reiniciamos la foto por si acaba de crear otro
+            fotoTemp = ""; 
             document.getElementById('fotoPreviewEdp').src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJQXSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCI+Rk9UTzwvdGV4dD48L3N2Zz4=";
             document.getElementById('modal-edp-add-player').style.display = 'flex';
         };
@@ -1334,7 +1321,7 @@
                 ano,
                 entrenador: currentUser.nombre,
                 clave,
-                foto: fotoTemp || "", // Usamos la foto que acaba de subir
+                foto: fotoTemp || "",
                 puntos: 0,
                 stats: statsBase,
                 mensajeManual: "",
@@ -1347,7 +1334,7 @@
                 .then(() => {
                     showToast("¡Jugador añadido a tu equipo!");
                     document.getElementById('modal-edp-add-player').style.display = 'none';
-                    fotoTemp = ""; // Vaciamos para el próximo
+                    fotoTemp = "";
                 })
                 .catch((e) => {
                     showToast("Error al conectar con la base de datos.", true);
@@ -1808,7 +1795,7 @@
             
             chartInstance = new Chart(ctxEl, { 
                 type: 'radar', 
-                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media Equipo', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
+                data: { labels, datasets: [ { label: 'Mi Nivel', data: pData, backgroundColor: 'rgba(203,53,36,0.5)', borderColor: '#CB3524', borderWidth: 2, pointBackgroundColor: '#fff', pointRadius: 3 }, { label: 'Media Academia', data: avg, backgroundColor: 'rgba(52,152,219,0.2)', borderColor: 'rgba(52,152,219,0.6)', borderWidth: 1, borderDash: [5, 5], pointRadius: 0 } ] }, 
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: 20 }, scales: { r: { min: 0, suggestedMax: 100, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#fff' : '#333', font: {size: 11, weight: 'bold'}, padding: 15 }, ticks: { display: false } } }, plugins: { legend: { position: 'bottom', labels: { color: isDark ? '#fff' : '#333', boxWidth: 10, font: {size: 10} } } } } 
             });
         }
@@ -1828,7 +1815,7 @@
             activeBtn.classList.remove('text-[var(--text-sec)]'); activeBtn.classList.add('bg-[var(--segment-active)]', 'text-[var(--text-main)]', 'shadow-md');
             
             const titleLabel = document.getElementById('ranking-title-label');
-            if(mode === 'global') titleLabel.innerText = "TABLA EQUIPO MVP";
+            if(mode === 'global') titleLabel.innerText = "TABLA GLOBAL MVP";
             if(mode === 'porteros') titleLabel.innerText = "GUANTE DE ORO (PORTEROS)";
             if(mode === 'jugadores') titleLabel.innerText = "BOTA DE ORO (JUGADORES)";
             
@@ -1922,9 +1909,7 @@
             document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Excel generado");
         };
 
-        // ==========================================
         // MOTOR PWA - INSTALACIÓN DE APP
-        // ==========================================
         let deferredPrompt;
         const installBtn = document.getElementById('btn-install-pwa');
         const iosPopup = document.getElementById('ios-install-popup');
@@ -1933,16 +1918,20 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            // Forzamos que se quite la clase oculta y se muestre
+            installBtn.classList.remove('hidden');
             installBtn.style.display = 'flex';
+            console.log("¡Android/Windows permite instalación!");
         });
 
         installBtn.addEventListener('click', async () => {
             installBtn.style.display = 'none';
+            installBtn.classList.add('hidden');
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    console.log('User accepted the A2HS prompt');
+                    showToast("¡Instalando App!");
                 }
                 deferredPrompt = null;
             }
@@ -1950,8 +1939,9 @@
 
         window.addEventListener('appinstalled', () => {
             installBtn.style.display = 'none';
+            installBtn.classList.add('hidden');
             deferredPrompt = null;
-            console.log('PWA was installed');
+            console.log('PWA Instalada');
         });
 
         // Lógica iOS (iPhone/iPad)
@@ -1965,11 +1955,13 @@
             iosPopup.style.display = 'block';
         }
 
-        // Registro de Service Worker
+        // Registro de Service Worker mejorado
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('Service Worker Registrado'))
-                .catch(err => console.log('Error SW:', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW OK:', reg.scope))
+                    .catch(err => console.log('SW Falló:', err));
+            });
         }
     </script>
 </body>
